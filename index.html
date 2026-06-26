@@ -38,6 +38,44 @@
       <canvas id="hero-particles" aria-hidden="true"></canvas>
     </div>
 
+    <!-- Mid plane — abstract chapter art floating between bg and content -->
+    <div id="mid-plane" aria-hidden="true">
+      <div class="mid-art" data-chapter="wilderness">
+        <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="255" x2="1440" y2="275" stroke="rgba(42,76,255,0.08)" stroke-width="1"/>
+          <line x1="0" y1="445" x2="1440" y2="435" stroke="rgba(42,76,255,0.05)" stroke-width="1"/>
+          <line x1="0" y1="635" x2="1440" y2="650" stroke="rgba(42,76,255,0.04)" stroke-width="1"/>
+          <rect x="580" y="290" width="280" height="280" fill="none" stroke="rgba(42,76,255,0.04)" stroke-width="1" stroke-dasharray="6 12"/>
+        </svg>
+      </div>
+      <div class="mid-art" data-chapter="forge">
+        <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,460 C240,340 480,580 720,460 C960,340 1200,580 1440,460" fill="none" stroke="rgba(255,106,0,0.09)" stroke-width="2"/>
+          <path d="M0,510 C240,390 480,630 720,510 C960,390 1200,630 1440,510" fill="none" stroke="rgba(255,106,0,0.05)" stroke-width="1.5"/>
+          <circle cx="720" cy="450" r="130" fill="none" stroke="rgba(255,106,0,0.06)" stroke-width="1"/>
+          <circle cx="720" cy="450" r="58" fill="none" stroke="rgba(255,106,0,0.09)" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="mid-art" data-chapter="mission">
+        <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="720" cy="450" r="215" fill="none" stroke="rgba(0,188,212,0.07)" stroke-width="1"/>
+          <circle cx="720" cy="450" r="345" fill="none" stroke="rgba(0,188,212,0.04)" stroke-width="1"/>
+          <line x1="720" y1="60" x2="720" y2="840" stroke="rgba(0,188,212,0.05)" stroke-width="1"/>
+          <line x1="300" y1="450" x2="1140" y2="450" stroke="rgba(0,188,212,0.05)" stroke-width="1"/>
+          <circle cx="720" cy="450" r="7" fill="rgba(0,188,212,0.28)"/>
+        </svg>
+      </div>
+      <div class="mid-art" data-chapter="arena">
+        <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <line x1="940" y1="0" x2="340" y2="900" stroke="rgba(255,184,0,0.08)" stroke-width="1.5"/>
+          <line x1="1140" y1="0" x2="540" y2="900" stroke="rgba(255,184,0,0.05)" stroke-width="1"/>
+          <line x1="740" y1="0" x2="140" y2="900" stroke="rgba(255,184,0,0.05)" stroke-width="1"/>
+          <polygon points="720,165 845,385 595,385" fill="none" stroke="rgba(255,184,0,0.08)" stroke-width="1"/>
+          <circle cx="720" cy="450" r="6" fill="rgba(255,184,0,0.45)"/>
+        </svg>
+      </div>
+    </div>
+
     <!-- navbar (hidden in game mode) -->
     <nav id="nav">
       <a class="brand" href="#/">
@@ -47,9 +85,93 @@
       <div class="nav-links">
         <a href="#/">Home</a>
         <a href="#/read">My Story</a>
+        <span class="nav-divider" aria-hidden="true"></span>
+        <a href="https://www.linkedin.com/in/aahil-afraz-21512826a/" target="_blank" rel="noopener noreferrer" class="nav-social nav-linkedin" aria-label="LinkedIn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <span class="nav-social-label">LinkedIn</span>
+        </a>
+        <a href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" class="nav-social nav-github" aria-label="GitHub">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          <span class="nav-social-label">GitHub</span>
+        </a>
+        <a href="./resume.pdf" download="Aahil_Afraz_Resume.pdf" class="nav-resume" aria-label="Download Resume">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Resume</span>
+        </a>
+        <button class="nav-vault" id="vault-trigger" type="button" aria-haspopup="dialog">
+          <span class="vault-glyph">⬡</span> The Vault
+        </button>
         <a href="#/play" class="nav-play">Play ▸</a>
       </div>
     </nav>
+
+    <!-- =================== THE VAULT MODAL =================== -->
+    <div id="vault-modal" class="vault-modal" role="dialog" aria-modal="true" aria-labelledby="vault-title" hidden>
+      <div class="vault-backdrop" id="vault-backdrop"></div>
+      <div class="vault-panel">
+        <div class="vault-door-frame">
+          <div class="vault-header">
+            <span class="vault-led"></span>
+            <h2 class="vault-title" id="vault-title">THE VAULT</h2>
+            <button class="vault-close" id="vault-close" type="button" aria-label="Close vault">✕</button>
+          </div>
+          <p class="vault-subtitle">Artifacts from the arena.</p>
+
+          <div class="vault-grid">
+            <a class="vault-card" href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" data-accent="#00d9f5">
+              <span class="vc-icon">🌍</span>
+              <div class="vc-body">
+                <span class="vc-name">NASA Space Apps 2025</span>
+                <span class="vc-stat">Global Nominee — top 1,290 of 11,500+ projects</span>
+                <span class="vc-desc">AI air-quality forecasting platform on Azure. Zero to production in 48 hours.</span>
+              </div>
+              <span class="vc-arrow">↗</span>
+            </a>
+
+            <a class="vault-card" href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" data-accent="#ff7b00">
+              <span class="vc-icon">🧠</span>
+              <div class="vc-body">
+                <span class="vc-name">LearnFlow</span>
+                <span class="vc-stat">150+ beta users · startup expo · faculty demos</span>
+                <span class="vc-desc">AI-powered adaptive learning platform that understands how you study, not just what.</span>
+              </div>
+              <span class="vc-arrow">↗</span>
+            </a>
+
+            <a class="vault-card" href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" data-accent="#ffcf3a">
+              <span class="vc-icon">⚡</span>
+              <div class="vc-body">
+                <span class="vc-name">Comcast AI Analytics Engine</span>
+                <span class="vc-stat">Org-wide recognition · startup model inside enterprise</span>
+                <span class="vc-desc">Turns fragmented security data into prioritized action via specialized AI agents that reason about context.</span>
+              </div>
+              <span class="vc-arrow">↗</span>
+            </a>
+
+            <a class="vault-card" href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" data-accent="#9d5cff">
+              <span class="vc-icon">🤖</span>
+              <div class="vc-body">
+                <span class="vc-name">Internal AI Skills × 2</span>
+                <span class="vc-stat">Real adoption across engineering pods</span>
+                <span class="vc-desc">Automated cross-pod status updates and a shared-intelligence layer that surfaces blockers without another meeting.</span>
+              </div>
+              <span class="vc-arrow">↗</span>
+            </a>
+          </div>
+
+          <div class="vault-footer">
+            <a href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" class="vault-footer-link">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+              All projects on GitHub ↗
+            </a>
+            <a href="./resume.pdf" download="Aahil_Afraz_Resume.pdf" class="vault-footer-link vault-footer-dl">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Resume
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <main>
       <!-- ================= LANDING ================= -->
@@ -281,9 +403,9 @@
               to a conversation.
             </p>
             <div class="contact-links">
-              <a href="#" data-edit>LinkedIn</a>
-              <a href="#" data-edit>GitHub</a>
-              <a href="#" data-edit>Email</a>
+              <a href="https://www.linkedin.com/in/aahil-afraz-21512826a/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+              <a href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              <a href="./resume.pdf" download="Aahil_Afraz_Resume.pdf">Resume ↓</a>
             </div>
             <a class="back-to-play" href="#/play">Or play the story instead ▸</a>
           </section>

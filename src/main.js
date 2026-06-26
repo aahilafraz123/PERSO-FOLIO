@@ -2,6 +2,13 @@ import './site/site.css';
 import { initScreens } from './site/screens.js';
 import { initDialogue } from './site/dialogue.js';
 import { initHero } from './site/hero.js';
+import { resumeAudio } from './systems/audio.js';
+
+// Browsers gate Web Audio behind a user gesture — resume on the first one so the
+// prologue's sound (lamp hum, whooshes, the torch) can play.
+['pointerdown', 'keydown'].forEach((evt) =>
+  window.addEventListener(evt, () => resumeAudio()),
+);
 
 // ---------------------------------------------------------------------------
 // RELENTLESS — site shell
@@ -49,6 +56,16 @@ document.querySelectorAll('.bg-temp[data-temp]').forEach((el) => {
   tempOverlays[el.dataset.temp] = el;
 });
 
+const midPlane = document.getElementById('mid-plane');
+const midArts = {};
+document.querySelectorAll('.mid-art[data-chapter]').forEach((el) => {
+  midArts[el.dataset.chapter] = el;
+});
+
+window.addEventListener('scroll', () => {
+  if (midPlane) midPlane.style.transform = `translateY(${window.scrollY * 0.25}px)`;
+}, { passive: true });
+
 const MOOD_BLOBS = {
   wilderness: { b1: '#2a4cff', b2: '#1540cc' },
   forge:      { b1: '#ff6a00', b2: '#cc3300' },
@@ -59,6 +76,9 @@ const MOOD_BLOBS = {
 function setReadMood(mood) {
   Object.values(tempOverlays).forEach((el) => el.classList.remove('active'));
   if (mood) tempOverlays[mood]?.classList.add('active');
+
+  Object.values(midArts).forEach((el) => el.classList.remove('active'));
+  if (mood) midArts[mood]?.classList.add('active');
 
   const cols = mood ? MOOD_BLOBS[mood] : null;
   if (cols) {
@@ -94,6 +114,7 @@ function route() {
   } else {
     progressNav?.classList.remove('visible');
     setReadMood(null);
+    if (midPlane) midPlane.style.transform = '';
   }
 }
 
@@ -189,6 +210,36 @@ if (heroName) {
   // first hit after 3 s so the page has settled
   setTimeout(fireGlitch, 3000);
 }
+
+// --- The Vault modal --------------------------------------------------------
+(function initVault() {
+  const modal    = document.getElementById('vault-modal');
+  const trigger  = document.getElementById('vault-trigger');
+  const closeBtn = document.getElementById('vault-close');
+  const backdrop = document.getElementById('vault-backdrop');
+  if (!modal || !trigger) return;
+
+  function openVault() {
+    modal.hidden = false;
+    requestAnimationFrame(() => modal.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+    closeBtn?.focus();
+  }
+
+  function closeVault() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    modal.addEventListener('transitionend', () => { modal.hidden = true; }, { once: true });
+    trigger?.focus();
+  }
+
+  trigger.addEventListener('click', openVault);
+  closeBtn?.addEventListener('click', closeVault);
+  backdrop?.addEventListener('click', closeVault);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) closeVault();
+  });
+})();
 
 // --- year stamp + boot -----------------------------------------------------
 const yearEl = document.getElementById('year');
