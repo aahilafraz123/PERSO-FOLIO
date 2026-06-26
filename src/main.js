@@ -126,12 +126,33 @@ window.addEventListener('relentless:exit', () => {
   location.hash = '#/';
 });
 
+// --- heading scramble ------------------------------------------------------
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ▓░▒█◆◇';
+
+function scrambleHeading(h3) {
+  const real = h3.textContent;
+  const start = performance.now();
+  const duration = 520;
+  function tick(now) {
+    const p = Math.min(1, (now - start) / duration);
+    h3.textContent = real.split('').map((c, i) => {
+      if (c === ' ') return ' ';
+      return i / real.length < p ? c : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+    }).join('');
+    if (p < 1) requestAnimationFrame(tick);
+    else h3.textContent = real;
+  }
+  requestAnimationFrame(tick);
+}
+
 // --- scroll-reveal for the read view ---------------------------------------
 const io = new IntersectionObserver(
   (entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting) {
         e.target.classList.add('in-view');
+        const h3 = e.target.querySelector('h3');
+        if (h3) setTimeout(() => scrambleHeading(h3), 180);
         io.unobserve(e.target);
       }
     });

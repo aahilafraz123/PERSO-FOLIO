@@ -949,8 +949,8 @@ body.playing #exit-game { display: block; }
 }
 .screen-crt {
   position: relative;
-  width: min(680px, 92vw);
-  max-height: 86vh; overflow: auto;
+  width: min(920px, 94vw);
+  max-height: 92vh; overflow: auto;
   background: #0c0e16;
   border: 1px solid rgba(0,217,245,0.35);
   border-radius: 12px;
@@ -1025,18 +1025,32 @@ body.playing #exit-game { display: block; }
 .crt-email-img { width: 100%; border-radius: 8px; display: block; }
 
 /* ── Proof receipt links ── */
+.proof-wrap { position: relative; display: inline; }
 .proof-link {
-  display: inline; background: none; border: none; padding: 0; cursor: pointer;
-  font: inherit; color: inherit; text-decoration: none;
-  border-bottom: 1px solid rgba(0,188,212,0.35);
-  transition: border-color 0.2s ease, color 0.2s ease;
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(0,188,212,0.08); border: 1px solid rgba(0,188,212,0.4);
+  border-radius: 4px; padding: 2px 8px 2px 6px;
+  cursor: pointer; font: inherit; color: var(--cyan);
+  text-decoration: none; vertical-align: baseline;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.proof-link:hover { border-color: var(--cyan); color: var(--cyan); }
-.proof-icon {
-  font-size: 0.7em; vertical-align: super; opacity: 0.6;
-  transition: opacity 0.2s ease;
+.proof-link:hover {
+  background: rgba(0,188,212,0.16); border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(0,188,212,0.2);
 }
-.proof-link:hover .proof-icon { opacity: 1; }
+.proof-check { font-size: 0.78em; opacity: 0.85; }
+.proof-annotation {
+  display: none;
+}
+@media (min-width: 1100px) {
+  .proof-annotation {
+    display: block; position: absolute;
+    left: calc(100% + 14px); top: 50%; transform: translateY(-50%);
+    font-size: 0.6rem; font-family: var(--font-mono); letter-spacing: 0.1em;
+    color: var(--cyan); opacity: 0.45; white-space: nowrap; pointer-events: none;
+    text-transform: uppercase;
+  }
+}
 
 .crt-map { position: relative; height: 260px; border-radius: 10px; overflow: hidden; background: radial-gradient(120% 120% at 30% 20%, #0e2236, #07121f); border: 1px solid rgba(0,217,245,0.2); }
 .crt-map-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,217,245,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(0,217,245,0.12) 1px, transparent 1px); background-size: 32px 32px; }
