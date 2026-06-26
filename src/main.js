@@ -245,6 +245,12 @@ if (heroName) {
   });
 })();
 
+// --- proof receipt links (read view) ----------------------------------------
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-screen]');
+  if (el) window.dispatchEvent(new CustomEvent('relentless:screen', { detail: { id: el.dataset.screen } }));
+});
+
 // --- year stamp + boot -----------------------------------------------------
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = '2026';
