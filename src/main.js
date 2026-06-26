@@ -141,9 +141,13 @@ const io = new IntersectionObserver(
 
 function revealOnLoad(view) {
   if (view !== 'read') return;
-  document
-    .querySelectorAll('#view-read .reveal:not(.in-view)')
-    .forEach((el) => io.observe(el));
+  // Delay so the page renders first — without this, chapters already in the
+  // viewport get .in-view added before the user sees them, hiding the animation
+  setTimeout(() => {
+    document
+      .querySelectorAll('#view-read .reveal:not(.in-view)')
+      .forEach((el) => io.observe(el));
+  }, 120);
 }
 
 // --- read progress sidebar --------------------------------------------------
