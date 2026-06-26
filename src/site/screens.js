@@ -48,7 +48,7 @@ const SCREENS = {
 > impact      : -25% bundle   -35% load time
 > founded     : LearnFlow (150+ users)
 > recognized  : NASA Space Apps — Global Nominee
-> now         : Comcast — moving the needle
+> now         : in the arena — moving the needle
 > status      : <span class="crt-ok">RELENTLESS</span>
 > _</pre>`,
     caption: 'Real wins in a quiet room. The work spoke even when no one else did.',
@@ -112,9 +112,9 @@ const SCREENS = {
     title: 'your calendar — this week',
     body: `
       <div class="crt-cal crt-cal-full">
-        ${Array.from({ length: 30 }).map((_, i) => `<div class="crt-evt">${['Standup', 'Product Sync', 'Naresh 1:1', 'Pitch · Paul', 'CTO review', 'Capstone'][i % 6]}</div>`).join('')}
+        ${Array.from({ length: 30 }).map((_, i) => `<div class="crt-evt">${['Standup', 'Sync', '1:1', 'Review', 'Planning', 'Demo'][i % 6]}</div>`).join('')}
       </div>`,
-    caption: 'More meetings in a week than most have in a month. Joined the intern capstone 30 minutes late — too many conflicts. Grateful to carry the load.',
+    caption: 'More meetings in a week than most have in a month. Too many to make them all — grateful to be the one carrying the load.',
   },
 
   'teammate-calendar': {

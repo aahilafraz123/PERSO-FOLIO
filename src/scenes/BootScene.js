@@ -30,15 +30,115 @@ export default class BootScene extends Phaser.Scene {
     // shared props
     this.makeSign();
     this.makeEmber();
+    this.makeLight();
     this.makeShard();
     this.makeMonitor();
     this.makeNpc();
     this.makePortal();
     this.makePlayer();
+    this.makePrologueArt();
 
-    // go to the first zone (router passes which via scene data on (re)start)
-    const startZone = this.scene.settings.data?.zoneKey || ZONES[0].key;
-    this.scene.start('zone', { zoneKey: startZone });
+    // Fresh play opens on the prologue ("The Room"); it hands off to Chapter I.
+    // (Re)starting straight into a zone is still supported via scene data.
+    const startZone = this.scene.settings.data?.zoneKey;
+    if (startZone) this.scene.start('zone', { zoneKey: startZone });
+    else this.scene.start('prologue');
+  }
+
+  // ===========================================================================
+  // PROLOGUE ART — "The Room" (warm, lit, ordinary; top-down)
+  // ===========================================================================
+  makePrologueArt() {
+    // wood floor
+    this.paint('floor_room', 32, 32, (ctx) => {
+      ctx.fillStyle = '#3a2c20';
+      ctx.fillRect(0, 0, 32, 32);
+      ctx.fillStyle = '#43342655';
+      ctx.fillRect(0, 0, 32, 2);
+      ctx.fillStyle = '#2c2018';
+      ctx.fillRect(0, 15, 32, 1);
+      ctx.fillStyle = '#46362788';
+      ctx.fillRect(15, 0, 1, 15);
+      ctx.fillRect(7, 16, 1, 16);
+    });
+    // interior wall
+    this.paint('wall_room', 32, 32, (ctx) => {
+      ctx.fillStyle = '#241a30';
+      ctx.fillRect(0, 0, 32, 32);
+      ctx.fillStyle = '#2e2240';
+      ctx.fillRect(0, 0, 32, 22);
+      ctx.fillStyle = '#1a1322';
+      ctx.fillRect(0, 26, 32, 6); // baseboard shadow
+    });
+    // desk (top-down, wide)
+    this.paint('desk', 64, 30, (ctx) => {
+      ctx.fillStyle = '#4a3322';
+      ctx.fillRect(0, 4, 64, 24);
+      ctx.fillStyle = '#5d4129';
+      ctx.fillRect(0, 4, 64, 6);
+      ctx.fillStyle = '#33241799';
+      ctx.fillRect(0, 25, 64, 3);
+    });
+    // laptop with a glowing screen
+    this.paint('laptop', 22, 18, (ctx) => {
+      ctx.fillStyle = '#15171f';
+      ctx.fillRect(2, 9, 18, 8); // base
+      ctx.fillStyle = '#1d2029';
+      ctx.fillRect(3, 1, 16, 9); // lid
+      ctx.fillStyle = '#bfe9ff';
+      ctx.fillRect(4, 2, 14, 7); // screen glow
+      ctx.fillStyle = '#7fd4ff';
+      ctx.fillRect(5, 3, 9, 1);
+      ctx.fillRect(5, 5, 12, 1);
+      ctx.fillRect(5, 7, 6, 1);
+    });
+    // chair (top-down, back to camera)
+    this.paint('chair', 24, 24, (ctx) => {
+      ctx.fillStyle = '#2a2030';
+      ctx.fillRect(4, 2, 16, 6); // backrest
+      ctx.fillStyle = '#352942';
+      ctx.fillRect(4, 8, 16, 12); // seat
+    });
+    // seated kid (back to camera, no torch yet)
+    this.paint('kid_sit', 24, 28, (ctx) => {
+      const P = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(x, y, w, h); };
+      P(7, 12, 10, 14, '#3a3550');   // hoodie back
+      P(7, 12, 10, 4, '#2e2a40');    // hood
+      P(8, 4, 8, 9, '#241a2e');      // hair / back of head
+      P(6, 14, 2, 8, '#332e48');     // arms
+      P(16, 14, 2, 8, '#332e48');
+    });
+    // bed
+    this.paint('bed', 40, 56, (ctx) => {
+      ctx.fillStyle = '#3a2f4a';
+      ctx.fillRect(2, 2, 36, 52); // frame
+      ctx.fillStyle = '#4a5a7a';
+      ctx.fillRect(4, 8, 32, 44); // blanket
+      ctx.fillStyle = '#d8dcea';
+      ctx.fillRect(6, 3, 28, 9);  // pillow
+      ctx.fillStyle = '#3f4d68';
+      ctx.fillRect(4, 30, 32, 1);
+    });
+    // floor lamp (warm) — the room's light source
+    this.paint('lamp', 24, 40, (ctx) => {
+      ctx.fillStyle = '#2a2a32';
+      ctx.fillRect(11, 16, 2, 22); // pole
+      ctx.fillStyle = '#1f1f27';
+      ctx.fillRect(7, 37, 10, 2);  // base
+      ctx.fillStyle = '#ffe9a8';
+      ctx.fillRect(6, 2, 12, 12);  // shade glow
+      ctx.fillStyle = '#fff6d8';
+      ctx.fillRect(9, 5, 6, 7);
+    });
+    // exit door
+    this.paint('door', 40, 52, (ctx) => {
+      ctx.fillStyle = '#1a1422';
+      ctx.fillRect(2, 2, 36, 50);
+      ctx.fillStyle = '#0c0a12';
+      ctx.fillRect(7, 6, 26, 44); // dark opening
+      ctx.fillStyle = '#2e2440';
+      ctx.fillRect(2, 2, 36, 4);
+    });
   }
 
   // --- canvas helper ---------------------------------------------------------
@@ -132,6 +232,18 @@ export default class BootScene extends Phaser.Scene {
       g.addColorStop(1, 'rgba(255,80,0,0)');
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, 8, 8);
+    });
+  }
+
+  // soft radial glow, used for warm ambient washes (prologue lamp, etc.)
+  makeLight() {
+    this.paint('light', 256, 256, (ctx) => {
+      const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+      g.addColorStop(0, 'rgba(255,255,255,1)');
+      g.addColorStop(0.5, 'rgba(255,255,255,0.55)');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 256, 256);
     });
   }
 

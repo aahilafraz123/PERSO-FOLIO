@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import BootScene from '../scenes/BootScene.js';
+import PrologueScene from '../scenes/PrologueScene.js';
 import ZoneScene from '../scenes/ZoneScene.js';
 import { VIEW_W, VIEW_H } from './constants.js';
 
@@ -31,5 +32,5 @@ export const gameConfig = {
     },
   },
 
-  scene: [BootScene, ZoneScene],
+  scene: [BootScene, PrologueScene, ZoneScene],
 };

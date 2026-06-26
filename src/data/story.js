@@ -250,13 +250,15 @@ export const ZONES = [
   },
 
   // ===========================================================================
-  // ZONE 5 — THE ARENA (Comcast) — bright, in command (GDD §5)
+  // ZONE 5 — THE ARENA — bright, in command (the first real corporate room).
+  // White-labeled: no real people / employer named here; the Read view holds the
+  // specifics (recruiter-appropriate). The game keeps the feeling, not the names.
   // ===========================================================================
   {
     key: 'arena',
     chapter: 'V',
     name: 'THE ARENA',
-    subtitle: 'First time in the room — and dominating. Named in the CTO meeting.',
+    subtitle: 'First time in a real arena — and you belong.',
     torchRadius: 320,
     wallStyle: 'block',
     next: 'horizon',
@@ -290,9 +292,9 @@ export const ZONES = [
       '##############################',
     ],
     signs: [
-      'First time in the room.\nNamed in the CTO meeting. Pitched to Paul.',
-      'Daily standups. Product syncs. Naresh, 3× a day.\nMore meetings in a week than most have in a month.',
-      'More meetings than I could make.\nGrateful to be the one carrying the load.',
+      'First time in a room like this.\nYou did not ease in. You arrived.',
+      'Back-to-back. Sync after sync.\nMore in a week than most have in a month.',
+      'More than you could make it to.\nGrateful to be the one carrying the load.',
     ],
     shards: [
       { skill: 'Corporate', xp: 20 },
@@ -303,10 +305,10 @@ export const ZONES = [
     // monitors 'MM' = the absurd calendar gag + a teammate's near-empty one
     screens: ['calendar', 'teammate-calendar'],
     npcs: [
-      { name: 'Paul', lines: ['"So walk me through what you built."', '"...nice. Really nice. Keep going."'] },
-      { name: "Boss's boss", lines: ['"That product got mentioned upstairs."', '"Good work. People noticed."'] },
+      { name: 'A director', lines: ['"So walk me through what you built."', '"...nice. Really nice. Keep going."'] },
+      { name: 'Leadership', lines: ['"That work got mentioned upstairs."', '"People noticed. Keep going."'] },
     ],
-    achievement: { title: 'In the Arena', desc: 'Named in the CTO room, pitched to Paul.' },
+    achievement: { title: 'In the Arena', desc: 'Walked in with something to prove. Proved it.' },
   },
 
   // ===========================================================================

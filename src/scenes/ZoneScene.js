@@ -5,6 +5,7 @@ import { GameState } from '../systems/state.js';
 import Player from '../entities/Player.js';
 import LightSystem from '../systems/LightSystem.js';
 import Hud from '../systems/Hud.js';
+import Guide from '../systems/Guide.js';
 
 /**
  * ZoneScene — one generic, data-driven zone (GDD §5). Renders any zone from its
@@ -34,6 +35,8 @@ export default class ZoneScene extends Phaser.Scene {
     this.placeInteractables(z);
     this.setupInput();
     this.hud = new Hud(this, z);
+    this.guide = new Guide(this);
+    this.buildGuide();
     this.listenForOverlayClose();
     this.playIntro(z);
   }
@@ -234,6 +237,58 @@ export default class ZoneScene extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------------------
+  // GUIDE — maximal wayfinding (beacon the next beat, narrate the objective)
+  // ---------------------------------------------------------------------------
+  buildGuide() {
+    // the press-E beats worth leading the player to (signs, screens, npcs)
+    this.guideTargets = this.interactables.filter((it) =>
+      it.type === 'sign' || it.type === 'screen' || it.type === 'npc',
+    );
+    this.guideDone = new Set();
+    this.guideCurrent = null; // applied once the intro clears
+  }
+
+  refreshGuide() {
+    if (!this.guide) return;
+    const remaining = this.guideTargets.filter(
+      (it) => it.sprite.active && !this.guideDone.has(it),
+    );
+
+    if (remaining.length) {
+      // beacon the nearest un-done beat; stays put until you reach it
+      let near = remaining[0];
+      let best = Infinity;
+      remaining.forEach((it) => {
+        const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, it.sprite.x, it.sprite.y);
+        if (d < best) { best = d; near = it; }
+      });
+      this.guideCurrent = near;
+      const total = this.guideTargets.length;
+      this.guide.show(
+        { x: near.sprite.x, y: near.sprite.y },
+        `Follow the light — read what's here   ·   ${this.guideDone.size}/${total}`,
+      );
+    } else if (this.portal) {
+      // everything read — lead them to the way out
+      this.guideCurrent = null;
+      this.guide.show(
+        { x: this.portal.x, y: this.portal.y },
+        this.zone.portalLabel ? `Follow the light   ·   ${this.zone.portalLabel}` : 'Find the way forward →',
+      );
+    } else {
+      this.guideCurrent = null;
+      this.guide.hide();
+    }
+  }
+
+  markGuideDone(it) {
+    if (!this.guideTargets || !this.guideTargets.includes(it)) return;
+    if (this.guideDone.has(it)) return;
+    this.guideDone.add(it);
+    this.refreshGuide();
+  }
+
+  // ---------------------------------------------------------------------------
   // INPUT
   // ---------------------------------------------------------------------------
   setupInput() {
@@ -287,6 +342,7 @@ export default class ZoneScene extends Phaser.Scene {
     // unfreeze is decoupled from the tween so it can't get stuck
     this.time.delayedCall(3500, () => {
       this.frozen = false;
+      this.refreshGuide(); // light the first beacon now that you can move
       // final zone has no portal, so award its achievement on arrival
       if (!this.zone.next) {
         this.time.delayedCall(600, () => GameState.unlockAchievement(this.zone.achievement));
@@ -297,7 +353,7 @@ export default class ZoneScene extends Phaser.Scene {
   // ---------------------------------------------------------------------------
   // LOOP
   // ---------------------------------------------------------------------------
-  update() {
+  update(time) {
     const blocked = this.frozen || this.dialogueOpen || this.transitioning;
     if (blocked) {
       this.player.setVelocity(0, 0);
@@ -309,6 +365,7 @@ export default class ZoneScene extends Phaser.Scene {
     this.player.setDepth(this.player.y);
     this.embers.followOffset.x = this.player.flipX ? -7 : 7;
     this.light.update(this.player);
+    this.guide.update(this.player, time);
 
     if (!this.transitioning) {
       this.handleProximity();
@@ -327,8 +384,12 @@ export default class ZoneScene extends Phaser.Scene {
       if (d < best) { best = d; near = it; }
     });
     this.near = near;
-    if (near) this.prompt.setPosition(near.sprite.x, near.sprite.y - 22).setVisible(true);
-    else this.prompt.setVisible(false);
+    if (near) {
+      const verb = near.type === 'screen' ? 'View' : near.type === 'npc' ? 'Talk' : 'Read';
+      this.prompt.setText(`[E] ${verb}`).setPosition(near.sprite.x, near.sprite.y - 22).setVisible(true);
+    } else {
+      this.prompt.setVisible(false);
+    }
   }
 
   handleKeys() {
@@ -361,6 +422,7 @@ export default class ZoneScene extends Phaser.Scene {
       this.frozen = true;
       window.dispatchEvent(new CustomEvent('relentless:screen', { detail: { id: it.payload, zone: this.zone.key } }));
     }
+    this.markGuideDone(it); // advance the beacon to the next beat
   }
 
   handlePortal() {
