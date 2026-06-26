@@ -1,0 +1,18 @@
+{
+  "name": "relentless",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "RELENTLESS — a top-down pixel-art RPG portfolio. v1: The Wilderness.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
