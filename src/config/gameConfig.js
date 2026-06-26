@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import BootScene from '../scenes/BootScene.js';
-import ForestScene from '../scenes/ForestScene.js';
+import ZoneScene from '../scenes/ZoneScene.js';
 import { VIEW_W, VIEW_H } from './constants.js';
 
 // Re-export for convenience.
@@ -31,5 +31,5 @@ export const gameConfig = {
     },
   },
 
-  scene: [BootScene, ForestScene],
+  scene: [BootScene, ZoneScene],
 };

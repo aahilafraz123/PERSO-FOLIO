@@ -2,56 +2,333 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>RELENTLESS — The Wilderness</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aahil Afraz — Relentless</title>
+    <meta
+      name="description"
+      content="Software engineer. A darkness-to-light story you can read — or play."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      :root { color-scheme: dark; }
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        background: #05060a;
-        overflow: hidden;
-        font-family: "Courier New", ui-monospace, monospace;
-      }
-      #app {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background:
-          radial-gradient(120% 120% at 50% 40%, #0b0d16 0%, #05060a 70%, #000 100%);
-      }
-      /* Crisp pixels, no smoothing */
-      #game canvas {
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-        /* soft vignette baked around the canvas */
-        box-shadow: 0 0 120px 40px rgba(0, 0, 0, 0.9) inset,
-                    0 0 60px rgba(0, 0, 0, 0.8);
-      }
-      /* faint scanline texture over the whole thing */
-      #app::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        background: repeating-linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0) 0px,
-          rgba(0, 0, 0, 0) 2px,
-          rgba(0, 0, 0, 0.18) 3px
-        );
-        mix-blend-mode: multiply;
-        z-index: 10;
-      }
+      /* critical: dark background before the stylesheet lands (no flash) */
+      html, body { margin: 0; height: 100%; background: #08080d; }
     </style>
   </head>
   <body>
-    <div id="app">
-      <div id="game"></div>
+    <!-- animated backdrop -->
+    <div id="bg" aria-hidden="true">
+      <div class="blob blob-violet"></div>
+      <div class="blob blob-cyan"></div>
+      <div class="grid"></div>
+      <div class="embers">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <!-- chapter temperature overlays — read view only, faded in/out by JS -->
+      <div class="bg-temp" data-temp="wilderness"></div>
+      <div class="bg-temp" data-temp="forge"></div>
+      <div class="bg-temp" data-temp="mission"></div>
+      <div class="bg-temp" data-temp="arena"></div>
+      <!-- particle canvas lives here so it spans the full viewport always -->
+      <canvas id="hero-particles" aria-hidden="true"></canvas>
     </div>
+
+    <!-- navbar (hidden in game mode) -->
+    <nav id="nav">
+      <a class="brand" href="#/">
+        <span class="brand-mark">▲</span>
+        <span class="brand-name">RELENTLESS</span>
+      </a>
+      <div class="nav-links">
+        <a href="#/">Home</a>
+        <a href="#/read">My Story</a>
+        <a href="#/play" class="nav-play">Play ▸</a>
+      </div>
+    </nav>
+
+    <main>
+      <!-- ================= LANDING ================= -->
+      <section class="view active" data-view="landing" id="view-landing">
+        <div class="hero">
+          <h1 class="hero-name" data-text="AAHIL AFRAZ">AAHIL AFRAZ</h1>
+          <p class="hero-tag">
+            Software engineer. From zero interviews to the arena — a
+            darkness-to-light story you can <em>read</em>, or <em>play</em>.
+          </p>
+
+          <div class="paths">
+            <a class="path path-play" href="#/play">
+              <span class="path-icon">🔥</span>
+              <span class="path-kicker">Interactive</span>
+              <span class="path-title">Play My Story</span>
+              <span class="path-desc">
+                Walk through the dark with a torch. A top-down RPG through the
+                real chapters — the rejections, the grind, the wins.
+              </span>
+              <span class="path-cta">Enter the wilderness ▸</span>
+            </a>
+
+            <a class="path path-read" href="#/read">
+              <span class="path-icon">📖</span>
+              <span class="path-kicker">Editorial</span>
+              <span class="path-title">Read My Story</span>
+              <span class="path-desc">
+                The journey in plain words. Built for five minutes and a coffee —
+                clean, fast, and recruiter-friendly.
+              </span>
+              <span class="path-cta">Read the bio ▸</span>
+            </a>
+          </div>
+
+          <p class="scroll-hint">Pick a path — you can switch anytime ↑</p>
+        </div>
+      </section>
+
+      <!-- ================= READ ================= -->
+      <section class="view" data-view="read" id="view-read">
+        <article class="read">
+          <header class="read-hero reveal">
+            <p class="eyebrow">The story, in plain words</p>
+            <h2>Darkness to light.</h2>
+            <p class="lede">
+              I&rsquo;m Aahil — a software engineer who learned the hard way that
+              the only light is the one you carry. Here&rsquo;s the honest arc,
+              from no path at all to a seat in the arena.
+            </p>
+          </header>
+
+          <section class="chapter reveal" data-mood="wilderness" id="ch-wilderness">
+            <span class="chapter-no">01</span>
+            <h3>The Wilderness</h3>
+            <p>
+              Three rounds of co-op applications. Zero interviews. A market that
+              did not care how hard I was working or how much I wanted it. I
+              watched peers land roles while I kept getting silence. No rejection
+              &mdash; just nothing. Which is somehow worse.
+            </p>
+            <p>
+              What the wilderness teaches you that nothing else can is this: when
+              nobody is pulling you forward you find out fast whether you pull
+              yourself. I did not have a mentor mapping out my path or a network
+              opening doors. I had time, frustration, and a choice about what to
+              do with both. I chose to build anyway. Not because I knew it would
+              work. Because standing still felt worse than moving in the dark.
+            </p>
+          </section>
+
+          <blockquote class="chapter-pull reveal" data-mood="wilderness">
+            &ldquo;I chose to build anyway. Not because I knew it would work. Because standing still felt worse than moving in the dark.&rdquo;
+          </blockquote>
+
+          <section class="chapter reveal" data-mood="forge" id="ch-forge">
+            <span class="chapter-no">02</span>
+            <h3>The Forge</h3>
+            <p>
+              My first role gave me almost nothing &mdash; no structure, no
+              direction, no one checking if I was growing. Most people would have
+              coasted. I treated it like a lab. I taught myself to ship things
+              that actually worked, learned what it costs to stay in the work when
+              nobody is watching, and started to understand the difference between
+              being busy and building something real.
+            </p>
+            <p>
+              Then came <strong>LearnFlow</strong>. 30+ hour weeks on top of a
+              full course load. A startup expo. A pitch competition. Faculty demos
+              across the school. LearnFlow is an AI-powered learning platform
+              &mdash; the kind of tool that actually understands how a student
+              learns, not just what they are studying. It connects your notes,
+              your exams, your assignments, and your study sessions into one
+              intelligent experience that adapts to you over time. We grew to 150+
+              beta users &mdash; not from a launch moment but from listening,
+              iterating, and going back to users with something meaningfully better
+              than what they asked for.
+            </p>
+            <p>
+              LearnFlow did not just teach me to code. It taught me that I could
+              figure out whatever I needed to figure out. That skill &mdash;
+              learning how to learn &mdash; turned out to be worth more than
+              anything on my transcript.
+            </p>
+          </section>
+
+          <blockquote class="chapter-pull reveal" data-mood="forge">
+            &ldquo;That skill &mdash; learning how to learn &mdash; turned out to be worth more than anything on my transcript.&rdquo;
+          </blockquote>
+
+          <section class="chapter reveal" data-mood="mission" id="ch-mission">
+            <span class="chapter-no">03</span>
+            <h3>The World Stage</h3>
+            <p>
+              With <strong>Team Relentless</strong>, we built something we
+              believed in and entered it into one of the most competitive global
+              hackathons in the world. Out of more than 11,500 projects submitted
+              to the 2025 NASA Space Apps Challenge, ours was recognized as a
+              <strong>Global Nominee</strong> &mdash; placing in the top 1,290
+              teams worldwide and earning acknowledgment from NASA for the work.
+            </p>
+            <p>
+              What made it mean something beyond the recognition was how we got
+              there. One working weekend. An idea on Friday, a live production URL
+              on Azure by Sunday &mdash; fully automated CI/CD pipeline, real data
+              integrations, real users. We built an AI-powered air quality
+              forecasting platform pulling from NASA TEMPO satellite data, OpenAQ
+              ground sensors, and OpenWeather APIs, generating 6-hour AQI
+              predictions and surfacing them through an interactive geospatial map
+              and a conversational AI interface. From zero to production in 48
+              hours.
+            </p>
+            <p>
+              Most people never find out if what they build can stand next to the
+              best in the world. We found out. It can. And we built it in a
+              weekend.
+            </p>
+          </section>
+
+          <blockquote class="chapter-pull reveal" data-mood="mission">
+            &ldquo;Most people never find out if what they build can stand next to the best in the world. We found out. It can.&rdquo;
+          </blockquote>
+
+          <section class="chapter reveal" data-mood="arena" id="ch-arena">
+            <span class="chapter-no">04</span>
+            <h3>The Arena</h3>
+            <p>
+              <strong>Comcast</strong> is my first real corporate environment and
+              I did not ease into it. Within my first week I identified and
+              resolved a critical authentication vulnerability in a production
+              system &mdash; nobody asked me to find it, I just found it. That set
+              the tone for everything after.
+            </p>
+            <p>
+              My managers bet on me early and put me on something that mattered
+              &mdash; a new org-wide AI initiative running a startup operating
+              model inside a large enterprise. No traditional agile, no safety
+              net, just build something real and make it count.
+            </p>
+            <p>
+              From there I co-built an AI-powered analytics engine that turns
+              fragmented security data into clear, prioritized action for the
+              people responsible for it. Instead of leaders drowning in dashboards
+              and manually piecing together where the risk actually lives, the
+              system does that work &mdash; ingesting data across sources, scoring
+              it by what actually matters, and surfacing insights through a layer
+              of specialized AI agents that understand the context of the
+              organization they are analyzing. The agents do not just report data.
+              They reason about it.
+            </p>
+            <p>
+              I also built two internal AI skills that changed how the engineering
+              team operated day to day. Automated status updates across developer
+              pods. Shared intelligence surfacing blockers, progress, and next
+              steps without another meeting. Small tools. Real adoption. The kind
+              of thing that disappears into the workflow and makes everything move
+              faster.
+            </p>
+            <p>
+              The work reached senior leadership and was recognized at the
+              organizational level as an example of what the initiative was built
+              to produce. What that meant to me was not the recognition &mdash; it
+              was knowing I had earned it starting from zero in an environment I
+              had never operated in before.
+            </p>
+            <p>
+              I came into this co-op with something to prove. I leave having
+              proved it &mdash; not to anyone else first, but to myself.
+            </p>
+          </section>
+
+          <blockquote class="chapter-pull reveal" data-mood="arena">
+            &ldquo;I came into this co-op with something to prove. I leave having proved it &mdash; not to anyone else first, but to myself.&rdquo;
+          </blockquote>
+
+          <blockquote class="pull reveal">
+            &ldquo;Money was the first motivator. Somewhere along the way, the
+            work became the reason.&rdquo;
+          </blockquote>
+
+          <section class="skills reveal">
+            <h3>What I work with</h3>
+            <ul class="chips">
+              <li>React</li>
+              <li>TypeScript</li>
+              <li>JavaScript</li>
+              <li>Node.js</li>
+              <li>Python</li>
+              <li>Angular</li>
+              <li>Redis</li>
+              <li>PostgreSQL</li>
+              <li>GraphQL</li>
+              <li>REST APIs</li>
+              <li>LangChain and agentic AI systems</li>
+              <li>MCP tool integration</li>
+              <li>AI agent prompt engineering</li>
+              <li>CI/CD pipelines</li>
+              <li>Azure</li>
+              <li>System design</li>
+              <li>Performance optimization</li>
+            </ul>
+          </section>
+
+          <section class="contact reveal">
+            <h3>Let&rsquo;s talk</h3>
+            <p>
+              If you are building something that matters and you want someone who
+              will figure out whatever needs figuring out &mdash; I am always open
+              to a conversation.
+            </p>
+            <div class="contact-links">
+              <a href="#" data-edit>LinkedIn</a>
+              <a href="#" data-edit>GitHub</a>
+              <a href="#" data-edit>Email</a>
+            </div>
+            <a class="back-to-play" href="#/play">Or play the story instead ▸</a>
+          </section>
+        </article>
+      </section>
+    </main>
+
+    <!-- Read progress sidebar — shown only when #/read is active -->
+    <nav id="read-progress" aria-label="Chapter progress">
+      <div class="rp-item">
+        <div class="rp-dot" data-chapter="wilderness" title="01 — The Wilderness">
+          <span class="rp-label">01 Wilderness</span>
+        </div>
+      </div>
+      <div class="rp-connector" data-fill="wilderness"></div>
+      <div class="rp-item">
+        <div class="rp-dot" data-chapter="forge" title="02 — The Forge">
+          <span class="rp-label">02 Forge</span>
+        </div>
+      </div>
+      <div class="rp-connector" data-fill="forge"></div>
+      <div class="rp-item">
+        <div class="rp-dot" data-chapter="mission" title="03 — The World Stage">
+          <span class="rp-label">03 World Stage</span>
+        </div>
+      </div>
+      <div class="rp-connector" data-fill="mission"></div>
+      <div class="rp-item">
+        <div class="rp-dot" data-chapter="arena" title="04 — The Arena">
+          <span class="rp-label">04 Arena</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ================= GAME (immersive; lazy-booted) ================= -->
+    <div id="game"></div>
+    <button id="exit-game" type="button" onclick="location.hash='#/'">
+      ⟵ Exit
+    </button>
+
+    <footer id="footer">
+      <span>© <span id="year">2026</span> Aahil Afraz</span>
+      <span class="footer-tag">Built for the love of the game.</span>
+    </footer>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

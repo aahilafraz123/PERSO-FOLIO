@@ -22,6 +22,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.play('idle-down');
   }
 
+  /** Hold still in the last-faced direction (used when input is frozen). */
+  idle() {
+    this.setVelocity(0, 0);
+    if (this.facing === 'up') this.play('idle-up', true);
+    else if (this.facing === 'down') this.play('idle-down', true);
+    else { this.play('idle-side', true); this.setFlipX(this.facing === 'left'); }
+  }
+
   static createAnims(scene) {
     if (scene.anims.exists('walk-down')) return;
     const mk = (key, frames, rate = 8, repeat = -1) =>
