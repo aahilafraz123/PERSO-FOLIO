@@ -130,11 +130,12 @@ export default class ZoneScene extends Phaser.Scene {
   }
 
   setupLight(z) {
-    const start = GameState.lastRadius ?? 56;
+    const start = GameState.lastRadius ?? 120;
     this.light = new LightSystem(this, {
       radius: start,
-      // the final zone is full daylight — almost no darkness
-      darkness: z.torchRadius > 1000 ? 0.45 : 0.985,
+      // softened so the whole map stays dimly visible (not pitch black); the
+      // torch pool is still brighter and grows zone-to-zone for the arc.
+      darkness: z.torchRadius > 1000 ? 0.22 : 0.74,
     });
     this.light.growTo(z.torchRadius);
     GameState.lastRadius = z.torchRadius;

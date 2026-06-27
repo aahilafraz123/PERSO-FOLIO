@@ -27,6 +27,7 @@ const ROUTES = {
   '#/': 'landing',
   '#/read': 'read',
   '#/play': 'play',
+  '#/vault': 'vault',
 };
 
 async function enterPlay() {
@@ -117,6 +118,8 @@ function route() {
     setReadMood(null);
     if (midPlane) midPlane.style.transform = '';
   }
+
+  if (view === 'vault') initVaultPage();
 }
 
 window.addEventListener('hashchange', route);
@@ -237,35 +240,46 @@ if (heroName) {
   setTimeout(fireGlitch, 3000);
 }
 
-// --- The Vault modal --------------------------------------------------------
-(function initVault() {
-  const modal    = document.getElementById('vault-modal');
-  const trigger  = document.getElementById('vault-trigger');
-  const closeBtn = document.getElementById('vault-close');
-  const backdrop = document.getElementById('vault-backdrop');
-  if (!modal || !trigger) return;
-
-  function openVault() {
-    modal.hidden = false;
-    requestAnimationFrame(() => modal.classList.add('open'));
-    document.body.style.overflow = 'hidden';
-    closeBtn?.focus();
-  }
-
-  function closeVault() {
-    modal.classList.remove('open');
-    document.body.style.overflow = '';
-    modal.addEventListener('transitionend', () => { modal.hidden = true; }, { once: true });
-    trigger?.focus();
-  }
-
-  trigger.addEventListener('click', openVault);
-  closeBtn?.addEventListener('click', closeVault);
-  backdrop?.addEventListener('click', closeVault);
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.hidden) closeVault();
+// --- Vault page logic -------------------------------------------------------
+let vaultInited = false;
+function initVaultPage() {
+  // Staggered entrance — add .vp-visible to each card with a delay
+  const cards = document.querySelectorAll('#vp-grid .vp-card');
+  cards.forEach((card, i) => {
+    card.style.animationDelay = `${i * 90}ms`;
+    card.classList.add('vp-entering');
   });
-})();
+
+  // Mouse-tracking inner glow
+  cards.forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+    });
+  });
+
+  if (vaultInited) return;
+  vaultInited = true;
+
+  // Filter tabs
+  document.querySelectorAll('.vp-filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.vp-filter').forEach((b) => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+
+      const f = btn.dataset.filter;
+      document.querySelectorAll('#vp-grid .vp-card').forEach((card) => {
+        const match = f === 'all' || card.dataset.cat === f;
+        card.style.display = match ? '' : 'none';
+      });
+    });
+  });
+}
 
 // --- proof receipt links (read view) ----------------------------------------
 document.addEventListener('click', (e) => {
@@ -276,6 +290,12 @@ document.addEventListener('click', (e) => {
 // --- year stamp + boot -----------------------------------------------------
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = '2026';
+
+// read-view artifact chips dispatch the same event the game uses
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('.read-artifact[data-screen]');
+  if (el) window.dispatchEvent(new CustomEvent('relentless:screen', { detail: { id: el.dataset.screen } }));
+});
 
 initScreens(); // PC-screen artifact modals (NASA email, résumé, contact…)
 initDialogue(); // sign / NPC speech as a viewport-pinned DOM bar (never clipped)

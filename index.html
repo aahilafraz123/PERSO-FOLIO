@@ -111,80 +111,12 @@
       <!-- Right: The Vault -->
       <div class="nav-right">
         <a href="#/play" class="nav-play">Play ▸</a>
-        <button class="nav-vault" id="vault-trigger" type="button" aria-haspopup="dialog">
+        <a href="#/vault" class="nav-vault">
           <svg class="nav-vault-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
           The Vault
-        </button>
+        </a>
       </div>
     </nav>
-
-    <!-- =================== THE VAULT MODAL =================== -->
-    <div id="vault-modal" class="vault-modal" role="dialog" aria-modal="true" aria-labelledby="vault-title" hidden>
-      <div class="vault-backdrop" id="vault-backdrop"></div>
-      <div class="vault-panel">
-        <div class="vault-door-frame">
-          <div class="vault-header">
-            <span class="vault-led"></span>
-            <h2 class="vault-title" id="vault-title">THE VAULT</h2>
-            <button class="vault-close" id="vault-close" type="button" aria-label="Close vault">✕</button>
-          </div>
-          <p class="vault-subtitle">Artifacts from the arena.</p>
-
-          <div class="vault-grid">
-            <a class="vault-card" href="https://github.com/allenvarghese05/aircast-nasa-hackathon" target="_blank" rel="noopener noreferrer" data-accent="#00d9f5">
-              <span class="vc-icon">🌍</span>
-              <div class="vc-body">
-                <span class="vc-name">NASA Space Apps 2025 — AirCast</span>
-                <span class="vc-stat">Global Nominee — top 1,290 of 11,500+ projects</span>
-                <span class="vc-desc">AI air-quality forecasting platform on Azure. Zero to production in 48 hours.</span>
-              </div>
-              <span class="vc-arrow">↗</span>
-            </a>
-
-            <a class="vault-card" href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" data-accent="#ff7b00">
-              <span class="vc-icon">🧠</span>
-              <div class="vc-body">
-                <span class="vc-name">LearnFlow</span>
-                <span class="vc-stat">150+ beta users · startup expo · faculty demos</span>
-                <span class="vc-desc">AI-powered adaptive learning platform that understands how you study, not just what.</span>
-              </div>
-              <span class="vc-arrow">↗</span>
-            </a>
-
-            <a class="vault-card" href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" data-accent="#ffcf3a">
-              <span class="vc-icon">⚡</span>
-              <div class="vc-body">
-                <span class="vc-name">Comcast AI Analytics Engine</span>
-                <span class="vc-stat">Org-wide recognition · startup model inside enterprise</span>
-                <span class="vc-desc">Turns fragmented security data into prioritized action via specialized AI agents that reason about context.</span>
-              </div>
-              <span class="vc-arrow">↗</span>
-            </a>
-
-            <a class="vault-card" href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" data-accent="#9d5cff">
-              <span class="vc-icon">🤖</span>
-              <div class="vc-body">
-                <span class="vc-name">Internal AI Skills × 2</span>
-                <span class="vc-stat">Real adoption across engineering pods</span>
-                <span class="vc-desc">Automated cross-pod status updates and a shared-intelligence layer that surfaces blockers without another meeting.</span>
-              </div>
-              <span class="vc-arrow">↗</span>
-            </a>
-          </div>
-
-          <div class="vault-footer">
-            <a href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" class="vault-footer-link">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-              All projects on GitHub ↗
-            </a>
-            <a href="./resume.pdf" download="Aahil_Afraz_Resume.pdf" class="vault-footer-link vault-footer-dl">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download Resume
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <main>
       <!-- ================= LANDING ================= -->
@@ -320,7 +252,10 @@
               <span class="bp-spec">SCALE 1:1 · NASA SPACE APPS 2025 · GLOBAL</span>
             </div>
             <div class="bp-body">
-              <h3>The World Stage</h3>
+              <div class="bp-title-row">
+                <h3>The World Stage</h3>
+                <a href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" class="bp-github-link">GitHub — Click Here !</a>
+              </div>
               <p>
                 With Team Relentless, we built something we believed in and
                 entered it into one of the <strong>most competitive global
@@ -385,13 +320,13 @@
               was. But the co-op is not over.
               <strong>I am still in it. Still building.</strong>
             </p>
-            <button class="offer-card" data-screen="comcast" aria-label="View Comcast offer letter">
-              <div class="offer-card-icon">📄</div>
-              <div class="offer-card-info">
-                <span class="offer-card-label">OFFER LETTER · VERIFIED</span>
-                <span class="offer-card-sub">Comcast University Relations &mdash; Spring 2026 Co-op</span>
-              </div>
-              <span class="offer-card-cta">VIEW ↗</span>
+            <button class="read-artifact read-artifact--arena" data-screen="comcast" type="button" aria-label="View Comcast offer email">
+              <span class="ra-dot"></span>
+              <span class="ra-body">
+                <span class="ra-cta">View offer ↗</span>
+                <span class="ra-from">Comcast University Relations</span>
+                <span class="ra-subj">Spring 2026 Co-op Program — Congratulations</span>
+              </span>
             </button>
 
             <div class="bracket-stats" aria-hidden="true">
@@ -402,15 +337,6 @@
               <span class="bracket-pill">ORG-WIDE INITIATIVE</span>
             </div>
           </section>
-
-          <button class="read-artifact reveal" data-screen="comcast" type="button" aria-label="View Comcast offer email">
-            <span class="ra-dot"></span>
-            <span class="ra-body">
-              <span class="ra-cta">View offer ↗</span>
-              <span class="ra-from">Comcast University Relations</span>
-              <span class="ra-subj">Spring 2026 Co-op Program — Congratulations</span>
-            </span>
-          </button>
 
           <blockquote class="chapter-pull reveal" data-mood="arena">
             &ldquo;I came into this co-op with something to prove. I leave having proved it &mdash; not to anyone else first, but to myself.&rdquo;
@@ -461,6 +387,176 @@
         </article>
       </section>
     </main>
+
+      <!-- ================= VAULT ================= -->
+      <section class="view" data-view="vault" id="view-vault">
+        <div class="vp-wrap">
+
+          <header class="vp-header">
+            <div class="vp-eyebrow">
+              <span class="vp-led"></span>
+              CLASSIFIED ARCHIVE · ACCESS GRANTED
+            </div>
+            <h1 class="vp-title">THE VAULT</h1>
+            <p class="vp-desc">Every project that mattered. Proof the work was real.</p>
+
+            <div class="vp-statbar">
+              <div class="vp-stat"><span class="vp-stat-n">4</span><span class="vp-stat-l">Projects</span></div>
+              <div class="vp-stat-sep"></div>
+              <div class="vp-stat"><span class="vp-stat-n">150+</span><span class="vp-stat-l">Users</span></div>
+              <div class="vp-stat-sep"></div>
+              <div class="vp-stat"><span class="vp-stat-n">11,500+</span><span class="vp-stat-l">Competed Against</span></div>
+              <div class="vp-stat-sep"></div>
+              <div class="vp-stat"><span class="vp-stat-n">48h</span><span class="vp-stat-l">Zero to Production</span></div>
+            </div>
+
+            <div class="vp-filters" role="tablist" aria-label="Filter projects">
+              <button class="vp-filter active" data-filter="all" role="tab" aria-selected="true">All</button>
+              <button class="vp-filter" data-filter="hackathon" role="tab" aria-selected="false">Hackathon</button>
+              <button class="vp-filter" data-filter="product" role="tab" aria-selected="false">Product</button>
+              <button class="vp-filter" data-filter="enterprise" role="tab" aria-selected="false">Enterprise</button>
+            </div>
+          </header>
+
+          <div class="vp-grid" id="vp-grid">
+
+            <!-- AirCast — FEATURED -->
+            <a class="vp-card vp-card--featured" data-cat="hackathon"
+               href="https://github.com/allenvarghese05/aircast-nasa-hackathon"
+               target="_blank" rel="noopener noreferrer"
+               style="--accent:#00d9f5;--accent-rgb:0,217,245">
+              <div class="vp-card-glow"></div>
+              <div class="vp-card-content">
+                <div class="vp-card-toprow">
+                  <span class="vp-badge" style="--badge-c:#00d9f5">🏆 NASA Global Nominee</span>
+                  <span class="vp-cat">HACKATHON</span>
+                </div>
+                <div class="vp-card-hero-row">
+                  <span class="vp-icon">🌍</span>
+                  <div>
+                    <h2 class="vp-name">AirCast</h2>
+                    <p class="vp-tagline">AI air-quality forecasting on NASA TEMPO satellite data. Zero to production in 48 hours.</p>
+                  </div>
+                </div>
+                <div class="vp-chips">
+                  <span class="vp-chip">Azure</span>
+                  <span class="vp-chip">CI/CD</span>
+                  <span class="vp-chip">NASA TEMPO</span>
+                  <span class="vp-chip">OpenAQ</span>
+                  <span class="vp-chip">OpenWeather</span>
+                  <span class="vp-chip">Geospatial AI</span>
+                </div>
+                <div class="vp-metrics">
+                  <div class="vp-metric"><span class="vp-mn">11,500+</span><span class="vp-ml">projects entered</span></div>
+                  <div class="vp-metric"><span class="vp-mn">top 1,290</span><span class="vp-ml">global teams</span></div>
+                  <div class="vp-metric"><span class="vp-mn">48 hrs</span><span class="vp-ml">idea → live prod</span></div>
+                </div>
+                <div class="vp-cta">View on GitHub <span class="vp-arrow">↗</span></div>
+              </div>
+            </a>
+
+            <!-- LearnFlow -->
+            <a class="vp-card" data-cat="product"
+               href="https://github.com/aahilafraz123"
+               target="_blank" rel="noopener noreferrer"
+               style="--accent:#ff7b00;--accent-rgb:255,123,0">
+              <div class="vp-card-glow"></div>
+              <div class="vp-card-content">
+                <div class="vp-card-toprow">
+                  <span class="vp-badge" style="--badge-c:#ff7b00">📈 150+ Users</span>
+                  <span class="vp-cat">PRODUCT</span>
+                </div>
+                <span class="vp-icon">🧠</span>
+                <h2 class="vp-name">LearnFlow</h2>
+                <p class="vp-tagline">AI-powered adaptive learning platform. Six integrated systems. Built in a weekend, iterated for months.</p>
+                <div class="vp-chips">
+                  <span class="vp-chip">GPT-4</span>
+                  <span class="vp-chip">OCR</span>
+                  <span class="vp-chip">Whisper</span>
+                  <span class="vp-chip">Electron</span>
+                  <span class="vp-chip">Supabase</span>
+                </div>
+                <div class="vp-metrics">
+                  <div class="vp-metric"><span class="vp-mn">150+</span><span class="vp-ml">beta users</span></div>
+                  <div class="vp-metric"><span class="vp-mn">30h/wk</span><span class="vp-ml">nights + weekends</span></div>
+                  <div class="vp-metric"><span class="vp-mn">6</span><span class="vp-ml">integrated systems</span></div>
+                </div>
+                <div class="vp-cta">View on GitHub <span class="vp-arrow">↗</span></div>
+              </div>
+            </a>
+
+            <!-- Comcast AI Analytics Engine -->
+            <div class="vp-card vp-card--internal" data-cat="enterprise"
+                 style="--accent:#ffcf3a;--accent-rgb:255,207,58">
+              <div class="vp-card-glow"></div>
+              <div class="vp-card-content">
+                <div class="vp-card-toprow">
+                  <span class="vp-badge" style="--badge-c:#ffcf3a">⚡ Org-Wide Adoption</span>
+                  <span class="vp-cat">ENTERPRISE</span>
+                </div>
+                <span class="vp-icon">⚡</span>
+                <h2 class="vp-name">AI Analytics Engine</h2>
+                <p class="vp-tagline">Turns fragmented Comcast security data into prioritized action via specialized AI agents that reason about context.</p>
+                <div class="vp-chips">
+                  <span class="vp-chip">Multi-agent AI</span>
+                  <span class="vp-chip">Security Data</span>
+                  <span class="vp-chip">Python</span>
+                </div>
+                <div class="vp-metrics">
+                  <div class="vp-metric"><span class="vp-mn">Org-wide</span><span class="vp-ml">recognition</span></div>
+                  <div class="vp-metric"><span class="vp-mn">Co-op</span><span class="vp-ml">shipped this</span></div>
+                </div>
+                <div class="vp-internal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+                  INTERNAL · NDA
+                </div>
+              </div>
+            </div>
+
+            <!-- Internal AI Skills × 2 -->
+            <div class="vp-card vp-card--internal" data-cat="enterprise"
+                 style="--accent:#9d5cff;--accent-rgb:157,92,255">
+              <div class="vp-card-glow"></div>
+              <div class="vp-card-content">
+                <div class="vp-card-toprow">
+                  <span class="vp-badge" style="--badge-c:#9d5cff">🤖 Real Adoption</span>
+                  <span class="vp-cat">ENTERPRISE</span>
+                </div>
+                <span class="vp-icon">🤖</span>
+                <h2 class="vp-name">AI Skills × 2</h2>
+                <p class="vp-tagline">Automated cross-pod status updates and a shared-intelligence layer that surfaces blockers without another meeting.</p>
+                <div class="vp-chips">
+                  <span class="vp-chip">AI Agents</span>
+                  <span class="vp-chip">Automation</span>
+                  <span class="vp-chip">Internal Tooling</span>
+                </div>
+                <div class="vp-metrics">
+                  <div class="vp-metric"><span class="vp-mn">Adopted</span><span class="vp-ml">across eng pods</span></div>
+                  <div class="vp-metric"><span class="vp-mn">2</span><span class="vp-ml">deployed skills</span></div>
+                </div>
+                <div class="vp-internal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+                  INTERNAL · NDA
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /vp-grid -->
+
+          <div class="vp-page-footer">
+            <a href="https://github.com/aahilafraz123" target="_blank" rel="noopener noreferrer" class="vp-flink">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+              All repos on GitHub ↗
+            </a>
+            <a href="./resume.pdf" download="Aahil_Afraz_Resume.pdf" class="vp-flink vp-flink--gold">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Resume
+            </a>
+            <a href="#/read" class="vp-flink">Read the full story →</a>
+          </div>
+
+        </div><!-- /vp-wrap -->
+      </section>
 
     <!-- Read progress sidebar — shown only when #/read is active -->
     <nav id="read-progress" aria-label="Chapter progress">

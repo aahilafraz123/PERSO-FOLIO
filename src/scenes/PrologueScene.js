@@ -297,10 +297,10 @@ export default class PrologueScene extends Phaser.Scene {
       .setDepth(1100);
     this.embers.startFollow(this.player, 7, -8);
 
-    // torch lighting fades IN as the room goes dark
-    this.light = new LightSystem(this, { radius: 70 });
+    // torch lighting fades IN as the room goes dark (kept navigable, not pitch black)
+    this.light = new LightSystem(this, { radius: 130 });
     this.light.darknessAlpha = 0;
-    this.tweens.add({ targets: this.light, darknessAlpha: 0.985, duration: 1100, ease: 'Sine.easeIn' });
+    this.tweens.add({ targets: this.light, darknessAlpha: 0.8, duration: 1100, ease: 'Sine.easeIn' });
     Audio.startCrackle();
     this.time.delayedCall(500, () => Audio.ignite());
 
