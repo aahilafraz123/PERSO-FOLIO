@@ -258,16 +258,14 @@ export default class PrologueScene extends Phaser.Scene {
   }
 
   // one quiet first-person line in the silence (plan.md §7 — Aahil's call: kept)
+  // DOM card so the long line wraps with the real font and never clips
   showSilenceLine() {
-    this.silenceLine = this.add
-      .text(VIEW_W / 2, VIEW_H - 72,
-        "I did everything they told me to. It wasn't enough — because I'd never actually built anything real. Yet.",
-        {
-          fontFamily: 'JetBrains Mono, monospace', fontSize: '14px', color: '#9aa0bd',
-          align: 'center', wordWrap: { width: VIEW_W - 150 }, lineSpacing: 5,
-        })
-      .setOrigin(0.5).setScrollFactor(0).setDepth(1900).setAlpha(0);
-    this.tweens.add({ targets: this.silenceLine, alpha: 1, duration: 800 });
+    window.dispatchEvent(new CustomEvent('relentless:card', {
+      detail: {
+        body: "I did everything they told me to. It wasn't enough — because I'd never actually built anything real. Yet.",
+        variant: 'body',
+      },
+    }));
   }
 
   // ---------------------------------------------------------------------------
@@ -278,10 +276,9 @@ export default class PrologueScene extends Phaser.Scene {
     Audio.stopHum(true);
     Audio.lightsOutThud();
 
-    // kill the warm ambient + lamp glow (+ the silence line, if shown)
-    const fade = [this.ambient, this.lampGlow, this.laptop];
-    if (this.silenceLine) fade.push(this.silenceLine);
-    this.tweens.add({ targets: fade, alpha: 0, duration: 500 });
+    // kill the warm ambient + lamp glow; clear the silence-line DOM card
+    this.tweens.add({ targets: [this.ambient, this.lampGlow, this.laptop], alpha: 0, duration: 500 });
+    window.dispatchEvent(new Event('relentless:card-hide'));
 
     // the kid stands and becomes you — now holding the torch
     this.kid.destroy();

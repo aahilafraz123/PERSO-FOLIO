@@ -255,24 +255,15 @@ export default class ZoneScene extends Phaser.Scene {
       .setDepth(1500);
   }
 
-  // a centered first-person card: fade in / hold / fade out (revelation, portal reveal)
-  showCard(text, { duration = 4200, color = '#f0f0f5' } = {}) {
-    const card = this.add
-      .text(VIEW_W / 2, VIEW_H / 2, text, {
-        fontFamily: 'JetBrains Mono, monospace', fontSize: '17px', color,
-        align: 'center', wordWrap: { width: VIEW_W - 130 }, lineSpacing: 7,
-      })
-      .setOrigin(0.5).setScrollFactor(0).setDepth(2100).setAlpha(0)
-      .setShadow(0, 2, '#000', 6);
-    this.tweens.add({ targets: card, alpha: 1, duration: 700 });
-    this.time.delayedCall(Math.max(800, duration - 700), () => {
-      this.tweens.add({ targets: card, alpha: 0, duration: 700, onComplete: () => card.destroy() });
-    });
+  // a centered first-person card (revelation, portal reveal, closing) — DOM
+  showCard(text, { duration = 4200, variant = 'body' } = {}) {
+    window.dispatchEvent(new CustomEvent('relentless:card', { detail: { body: text, variant } }));
+    this.time.delayedCall(duration, () => window.dispatchEvent(new Event('relentless:card-hide')));
   }
 
   showRevelation(text) {
     // the one spoken-metaphor beat (§8.3) — warm, held longer, earned
-    this.showCard(text, { duration: 6000, color: '#ffe9a8' });
+    this.showCard(text, { duration: 6000, variant: 'revelation' });
   }
 
   // the hidden grind exit appears once everything's been read (§8.1)
@@ -402,6 +393,9 @@ export default class ZoneScene extends Phaser.Scene {
     this.events.once('shutdown', () => {
       window.removeEventListener('relentless:screen-close', this._onScreenClose);
       window.removeEventListener('relentless:dialogue-close', this._onDialogueClose);
+      // clear any lingering DOM narration when the zone tears down
+      window.dispatchEvent(new Event('relentless:card-hide'));
+      window.dispatchEvent(new Event('relentless:objective-hide'));
     });
   }
 
@@ -415,38 +409,28 @@ export default class ZoneScene extends Phaser.Scene {
     else runTitle();
   }
 
-  // timed, skippable centered cards (reused for preludes) — scene stays frozen
+  // timed, skippable narration cards (preludes) — DOM, never clipped. Scene frozen.
   playCardSequence(lines, onDone) {
     let idx = -1;
     let timer = null;
     let finished = false;
 
-    const card = this.add
-      .text(VIEW_W / 2, VIEW_H / 2, '', {
-        fontFamily: 'JetBrains Mono, monospace', fontSize: '18px', color: '#e6e8f5',
-        align: 'center', wordWrap: { width: VIEW_W - 130 }, lineSpacing: 7,
-      })
-      .setOrigin(0.5).setScrollFactor(0).setDepth(2100).setAlpha(0).setShadow(0, 2, '#000', 5);
-    const hint = this.add
-      .text(VIEW_W - 18, VIEW_H - 16, 'press any key to skip', {
-        fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color: '#5a607c',
-      })
-      .setOrigin(1, 1).setScrollFactor(0).setDepth(2100);
-
     const onKey = () => finish();
     const cleanup = () => {
       if (timer) timer.remove();
       this.input.keyboard.off('keydown', onKey);
-      card.destroy(); hint.destroy();
+      window.dispatchEvent(new Event('relentless:card-hide'));
     };
     const finish = () => { if (finished) return; finished = true; cleanup(); onDone(); };
     const next = () => {
       idx += 1;
       if (idx >= lines.length) { finish(); return; }
-      card.setText(lines[idx]).setAlpha(0);
-      this.tweens.add({ targets: card, alpha: 1, duration: 450 });
-      timer = this.time.delayedCall(1900, () => {
-        this.tweens.add({ targets: card, alpha: 0, duration: 400, onComplete: next });
+      window.dispatchEvent(new CustomEvent('relentless:card', {
+        detail: { body: lines[idx], variant: 'prelude', hint: 'press any key to skip' },
+      }));
+      timer = this.time.delayedCall(2000, () => {
+        window.dispatchEvent(new Event('relentless:card-hide'));
+        timer = this.time.delayedCall(450, next);
       });
     };
 
@@ -455,27 +439,11 @@ export default class ZoneScene extends Phaser.Scene {
   }
 
   playTitleCard(z) {
-    const title = this.add
-      .text(VIEW_W / 2, VIEW_H / 2 - 14, z.intro[0], {
-        fontFamily: 'Orbitron, Courier New, monospace', fontSize: '34px', color: '#f0f0f5',
-        align: 'center', wordWrap: { width: VIEW_W - 80 },
-      })
-      .setOrigin(0.5).setScrollFactor(0).setDepth(2100).setAlpha(0).setShadow(0, 3, '#000', 6);
-    const sub = this.add
-      .text(VIEW_W / 2, VIEW_H / 2 + 26, z.intro[1] ?? '', {
-        fontFamily: 'JetBrains Mono, monospace', fontSize: '15px', color: '#8a90ad',
-        align: 'center', wordWrap: { width: VIEW_W - 80 },
-      })
-      .setOrigin(0.5).setScrollFactor(0).setDepth(2100).setAlpha(0);
-
-    this.tweens.add({ targets: [title, sub], alpha: 1, duration: 800 });
-    this.time.delayedCall(2600, () => {
-      this.tweens.add({
-        targets: [title, sub], alpha: 0, duration: 800,
-        onComplete: () => { title.destroy(); sub.destroy(); },
-      });
-    });
-    // unfreeze decoupled from the tween so it can't get stuck
+    window.dispatchEvent(new CustomEvent('relentless:card', {
+      detail: { title: z.intro[0], sub: z.intro[1] ?? '', variant: 'title' },
+    }));
+    this.time.delayedCall(2600, () => window.dispatchEvent(new Event('relentless:card-hide')));
+    // unfreeze decoupled from the card so it can't get stuck
     this.time.delayedCall(3500, () => {
       this.frozen = false;
       this.refreshGuide(); // light the first beacon + first thought

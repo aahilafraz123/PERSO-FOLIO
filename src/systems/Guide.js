@@ -18,14 +18,7 @@ export default class Guide {
     this.target = null;
     const mono = 'JetBrains Mono, monospace';
 
-    this.objective = scene.add
-      .text(VIEW_W / 2, 40, '', {
-        fontFamily: mono, fontSize: '13px', color: '#9fefff', align: 'center',
-        backgroundColor: '#05060abb', padding: { x: 10, y: 4 },
-      })
-      .setOrigin(0.5, 0).setScrollFactor(0).setDepth(1850).setAlpha(0)
-      .setShadow(0, 1, '#000', 3);
-
+    // the inner-voice line is now DOM (see show()/hide()); the beacon stays canvas
     this.glow = scene.add
       .image(0, 0, 'light')
       .setTint(0x00d9f5).setBlendMode(Phaser.BlendModes.ADD)
@@ -49,15 +42,16 @@ export default class Guide {
 
   show(pos, objective) {
     this.target = { x: pos.x, y: pos.y };
-    this.objective.setText(objective || '');
-    this.scene.tweens.add({ targets: this.objective, alpha: 1, duration: 350 });
+    // inner-voice line rendered as DOM (Phaser canvas text mis-wraps web fonts)
+    window.dispatchEvent(new CustomEvent('relentless:objective', { detail: { text: objective || '' } }));
     this.glow.setPosition(pos.x, pos.y).setVisible(true);
     this.chevron.setVisible(true);
   }
 
   hide() {
     this.target = null;
-    this.scene.tweens.add({ targets: [this.objective, this.glow, this.chevron], alpha: 0, duration: 300 });
+    window.dispatchEvent(new Event('relentless:objective-hide'));
+    this.scene.tweens.add({ targets: [this.glow, this.chevron], alpha: 0, duration: 300 });
     this.dots.forEach((d) => d.setVisible(false));
   }
 

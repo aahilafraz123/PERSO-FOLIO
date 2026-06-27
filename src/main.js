@@ -1,6 +1,7 @@
 import './site/site.css';
 import { initScreens } from './site/screens.js';
 import { initDialogue } from './site/dialogue.js';
+import { initCards } from './site/cards.js';
 import { initHero } from './site/hero.js';
 import { resumeAudio } from './systems/audio.js';
 
@@ -278,6 +279,7 @@ if (yearEl) yearEl.textContent = '2026';
 
 initScreens(); // PC-screen artifact modals (NASA email, résumé, contact…)
 initDialogue(); // sign / NPC speech as a viewport-pinned DOM bar (never clipped)
+initCards(); // in-game narration cards + inner-voice line as DOM (never clipped)
 initHero(document.getElementById('hero-particles')); // particle-initials title
 
 route();
