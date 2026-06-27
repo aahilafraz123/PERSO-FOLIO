@@ -157,6 +157,35 @@ guidance (visibly different, so leading the way for free doesn't dilute the fire
 - Extend the Guide's objective copy per-zone (bespoke narration vs the generic
   "read what's here") and decide which beats each zone beacons.
 
+## Done — v2 narrative overhaul (plan.md)
+
+Closed the "mood without meaning" gap: every zone is now as legible as the
+prologue. Four narration registers, all from `story.js` data:
+- **prelude** — first-person entry cards before the title (skippable). Reuses the
+  prologue card pattern.
+- **thoughts** — the Guide objective line is now the inner voice, advancing by
+  progress (no more "Follow the light · N/total"); tiny dim progress dots instead.
+- **two-beat signs** — `{ quote, inner }`: press E for the artifact, again for the
+  inner response. `dialogue.js` now PAGES (backward compatible with `text`).
+- **revelation** — the metaphor spoken once (Forge), tied to a mid-zone `torchBeat`
+  light jump after the pitch sign (Forge enters dim 125 → jumps to 172).
+- **hidden grind exit** (`portalHiddenUntilRead`, Wilderness): no marked exit until
+  every beat is read, then it reveals with "The way out was never handed to me…".
+- Prologue silence line + Horizon closing card + the `contact` screen reveal
+  ("I'm Aahil…") — the late reveal payoff.
+
+Mark-done moved to overlay CLOSE (not open) so the beacon doesn't jump mid-read.
+Whitelabel preserved (no employers/people in the game). Clean-spice default.
+
+**Verified:** build clean; two-beat paging confirmed live (both pages + hint
+changes screenshotted); engine boots the Wilderness with no console errors; guide
+shows the first thought + progress dots; hidden portal reveals after all read with
+the §8.1 line. Independent QA subagent: PASS, no copy drift, whitelabel clean, all
+six zones legible to a stranger (§10 acceptance test).
+
+**Owed to a human (§10):** the real acceptance test is a stranger playing once and
+narrating the arc back — that's the playtest only Aahil can run.
+
 ## Backlog / next iterations
 
 - Audio: torch crackle, footsteps, pickup chime, per-zone ambient pads that warm

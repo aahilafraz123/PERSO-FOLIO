@@ -147,11 +147,11 @@ export default class ZoneScene extends Phaser.Scene {
     this.blockers = this.physics.add.staticGroup();
     this.interactables = []; // { sprite, type, payload }
 
-    // signs
+    // signs — two-beat { quote, inner }
     this.markers.S.forEach((m, i) => {
       const img = this.blockers.create(m.px, m.py, 'sign').setDepth(m.py);
       img.body.setSize(20, 10).setOffset(6, 18);
-      this.interactables.push({ sprite: img, type: 'sign', payload: z.signs[i] ?? '...' });
+      this.interactables.push({ sprite: img, type: 'sign', signIndex: i, payload: this.normalizeSign(z.signs[i]) });
     });
 
     // monitors (PC-screen modals)
@@ -187,21 +187,21 @@ export default class ZoneScene extends Phaser.Scene {
       this.shardSprites.push(s);
     });
 
-    // exit portal
+    // exit portal — may stay hidden until every beat is read (the grind path, §8.1)
     const p = this.markers['>'][0];
+    this.portalHidden = false;
     if (p) {
+      this.portalPos = { x: p.px, y: p.py };
       this.portal = this.add.image(p.px, p.py, 'portal').setOrigin(0.5, 0.7).setDepth(p.py);
       this.portal.postFX?.addGlow(0x7b2fbe, 6, 0, false, 0.1, 12);
       this.tweens.add({ targets: this.portal, scaleX: 1.06, scaleY: 1.03, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-      if (z.portalLabel) {
-        this.add
-          .text(p.px, p.py - 40, z.portalLabel, {
-            fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: '#cdb8ff',
-          })
-          .setOrigin(0.5, 1)
-          .setDepth(1500);
+      if (z.portalHiddenUntilRead) {
+        this.portal.setAlpha(0);
+        this.portalHidden = true; // no collision / label / beacon until revealed
+      } else {
+        this.addPortalLabel();
+        this.portalZone = new Phaser.Geom.Circle(p.px, p.py, 26);
       }
-      this.portalZone = new Phaser.Geom.Circle(p.px, p.py, 26);
     }
 
     // floating "[E]" prompt for the nearest interactable
@@ -237,6 +237,79 @@ export default class ZoneScene extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------------------
+  // v2 NARRATION HELPERS
+  // ---------------------------------------------------------------------------
+  normalizeSign(s) {
+    if (s == null) return { quote: '...', inner: null };
+    if (typeof s === 'string') return { quote: s, inner: null };
+    return { quote: s.quote ?? '...', inner: s.inner ?? null };
+  }
+
+  addPortalLabel() {
+    if (!this.zone.portalLabel || !this.portalPos) return;
+    this.add
+      .text(this.portalPos.x, this.portalPos.y - 40, this.zone.portalLabel, {
+        fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: '#cdb8ff',
+      })
+      .setOrigin(0.5, 1)
+      .setDepth(1500);
+  }
+
+  // a centered first-person card: fade in / hold / fade out (revelation, portal reveal)
+  showCard(text, { duration = 4200, color = '#f0f0f5' } = {}) {
+    const card = this.add
+      .text(VIEW_W / 2, VIEW_H / 2, text, {
+        fontFamily: 'JetBrains Mono, monospace', fontSize: '17px', color,
+        align: 'center', wordWrap: { width: VIEW_W - 130 }, lineSpacing: 7,
+      })
+      .setOrigin(0.5).setScrollFactor(0).setDepth(2100).setAlpha(0)
+      .setShadow(0, 2, '#000', 6);
+    this.tweens.add({ targets: card, alpha: 1, duration: 700 });
+    this.time.delayedCall(Math.max(800, duration - 700), () => {
+      this.tweens.add({ targets: card, alpha: 0, duration: 700, onComplete: () => card.destroy() });
+    });
+  }
+
+  showRevelation(text) {
+    // the one spoken-metaphor beat (§8.3) — warm, held longer, earned
+    this.showCard(text, { duration: 6000, color: '#ffe9a8' });
+  }
+
+  // the hidden grind exit appears once everything's been read (§8.1)
+  revealPortal() {
+    if (!this.portalHidden || !this.portal) return;
+    this.portalHidden = false;
+    this.tweens.add({ targets: this.portal, alpha: { from: 0, to: 1 }, duration: 900 });
+    this.addPortalLabel();
+    this.portalZone = new Phaser.Geom.Circle(this.portalPos.x, this.portalPos.y, 26);
+    if (this.zone.portalRevealLine) this.showCard(this.zone.portalRevealLine);
+    this.refreshGuide(); // now beacon the way out
+  }
+
+  // called when a sign/screen/npc overlay closes — mark it read, fire torch beats
+  finishInteraction() {
+    const it = this.activeInteractable;
+    this.activeInteractable = null;
+    if (!it) return;
+
+    const tb = this.zone.torchBeat;
+    if (tb && it.type === 'sign' && it.signIndex === tb.afterSignIndex && !this._torchBeatFired) {
+      this._torchBeatFired = true;
+      this.light.growTo(tb.growTo, 1500);
+      GameState.lastRadius = tb.growTo;
+      if (this.zone.revelation) this.time.delayedCall(450, () => this.showRevelation(this.zone.revelation));
+    }
+    this.markGuideDone(it);
+  }
+
+  updateProgress() {
+    if (!this.progressText) return;
+    const total = this.guideTargets.length;
+    const done = Math.min(this.guideDone.size, total);
+    this.progressText.setText(total ? '●'.repeat(done) + '○'.repeat(total - done) : '');
+  }
+
+  // ---------------------------------------------------------------------------
   // GUIDE — maximal wayfinding (beacon the next beat, narrate the objective)
   // ---------------------------------------------------------------------------
   buildGuide() {
@@ -246,16 +319,23 @@ export default class ZoneScene extends Phaser.Scene {
     );
     this.guideDone = new Set();
     this.guideCurrent = null; // applied once the intro clears
+
+    // tiny dim progress dots (the counter words would break the inner voice)
+    this.progressText = this.add
+      .text(VIEW_W - 16, 40, '', { fontFamily: 'monospace', fontSize: '12px', color: '#3a3f57' })
+      .setOrigin(1, 0).setScrollFactor(0).setDepth(1850);
   }
 
   refreshGuide() {
     if (!this.guide) return;
+    this.updateProgress();
+    const thoughts = this.zone.thoughts || [];
     const remaining = this.guideTargets.filter(
       (it) => it.sprite.active && !this.guideDone.has(it),
     );
 
     if (remaining.length) {
-      // beacon the nearest un-done beat; stays put until you reach it
+      // beacon the nearest un-done beat; the words are the inner voice (§4)
       let near = remaining[0];
       let best = Infinity;
       remaining.forEach((it) => {
@@ -263,21 +343,33 @@ export default class ZoneScene extends Phaser.Scene {
         if (d < best) { best = d; near = it; }
       });
       this.guideCurrent = near;
-      const total = this.guideTargets.length;
-      this.guide.show(
-        { x: near.sprite.x, y: near.sprite.y },
-        `Follow the light — read what's here   ·   ${this.guideDone.size}/${total}`,
-      );
-    } else if (this.portal) {
-      // everything read — lead them to the way out
-      this.guideCurrent = null;
-      this.guide.show(
-        { x: this.portal.x, y: this.portal.y },
-        this.zone.portalLabel ? `Follow the light   ·   ${this.zone.portalLabel}` : 'Find the way forward →',
-      );
+      const thought = thoughts.length
+        ? thoughts[Math.min(this.guideDone.size, thoughts.length - 1)]
+        : 'Follow the light.';
+      this.guide.show({ x: near.sprite.x, y: near.sprite.y }, thought);
+      return;
+    }
+
+    // everything read
+    this.guideCurrent = null;
+    if (this.portalHidden) { this.revealPortal(); return; } // grind exit appears now
+
+    const lastThought = thoughts.length ? thoughts[thoughts.length - 1] : '';
+    if (this.portal) {
+      this.guide.show({ x: this.portal.x, y: this.portal.y }, lastThought || 'Follow the light →');
     } else {
-      this.guideCurrent = null;
+      // final zone, no portal — this is the end
       this.guide.hide();
+      this.finishFinalZone();
+    }
+  }
+
+  finishFinalZone() {
+    if (this._zoneFinished) return;
+    this._zoneFinished = true;
+    GameState.unlockAchievement(this.zone.achievement);
+    if (this.zone.closingCard) {
+      this.time.delayedCall(900, () => this.showCard(this.zone.closingCard, { duration: 7000 }));
     }
   }
 
@@ -303,8 +395,8 @@ export default class ZoneScene extends Phaser.Scene {
   listenForOverlayClose() {
     // both the PC-screen modal and the DOM dialogue bar live in the site layer;
     // they tell us when they close so we can unfreeze the scene.
-    this._onScreenClose = () => { this.frozen = false; };
-    this._onDialogueClose = () => { this.frozen = false; this.dialogueOpen = false; };
+    this._onScreenClose = () => { this.frozen = false; this.finishInteraction(); };
+    this._onDialogueClose = () => { this.frozen = false; this.dialogueOpen = false; this.finishInteraction(); };
     window.addEventListener('relentless:screen-close', this._onScreenClose);
     window.addEventListener('relentless:dialogue-close', this._onDialogueClose);
     this.events.once('shutdown', () => {
@@ -317,6 +409,52 @@ export default class ZoneScene extends Phaser.Scene {
   // INTRO
   // ---------------------------------------------------------------------------
   playIntro(z) {
+    // prelude cards (the events, in first person) THEN the big title card
+    const runTitle = () => this.playTitleCard(z);
+    if (z.prelude && z.prelude.length) this.playCardSequence(z.prelude, runTitle);
+    else runTitle();
+  }
+
+  // timed, skippable centered cards (reused for preludes) — scene stays frozen
+  playCardSequence(lines, onDone) {
+    let idx = -1;
+    let timer = null;
+    let finished = false;
+
+    const card = this.add
+      .text(VIEW_W / 2, VIEW_H / 2, '', {
+        fontFamily: 'JetBrains Mono, monospace', fontSize: '18px', color: '#e6e8f5',
+        align: 'center', wordWrap: { width: VIEW_W - 130 }, lineSpacing: 7,
+      })
+      .setOrigin(0.5).setScrollFactor(0).setDepth(2100).setAlpha(0).setShadow(0, 2, '#000', 5);
+    const hint = this.add
+      .text(VIEW_W - 18, VIEW_H - 16, 'press any key to skip', {
+        fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color: '#5a607c',
+      })
+      .setOrigin(1, 1).setScrollFactor(0).setDepth(2100);
+
+    const onKey = () => finish();
+    const cleanup = () => {
+      if (timer) timer.remove();
+      this.input.keyboard.off('keydown', onKey);
+      card.destroy(); hint.destroy();
+    };
+    const finish = () => { if (finished) return; finished = true; cleanup(); onDone(); };
+    const next = () => {
+      idx += 1;
+      if (idx >= lines.length) { finish(); return; }
+      card.setText(lines[idx]).setAlpha(0);
+      this.tweens.add({ targets: card, alpha: 1, duration: 450 });
+      timer = this.time.delayedCall(1900, () => {
+        this.tweens.add({ targets: card, alpha: 0, duration: 400, onComplete: next });
+      });
+    };
+
+    this.input.keyboard.on('keydown', onKey); // any key skips the whole prelude
+    next();
+  }
+
+  playTitleCard(z) {
     const title = this.add
       .text(VIEW_W / 2, VIEW_H / 2 - 14, z.intro[0], {
         fontFamily: 'Orbitron, Courier New, monospace', fontSize: '34px', color: '#f0f0f5',
@@ -330,8 +468,6 @@ export default class ZoneScene extends Phaser.Scene {
       })
       .setOrigin(0.5).setScrollFactor(0).setDepth(2100).setAlpha(0);
 
-    // fade in, hold, fade out — sequenced with timers so a single alpha tween
-    // owns the targets at a time (two competing alpha tweens never resolve).
     this.tweens.add({ targets: [title, sub], alpha: 1, duration: 800 });
     this.time.delayedCall(2600, () => {
       this.tweens.add({
@@ -339,14 +475,10 @@ export default class ZoneScene extends Phaser.Scene {
         onComplete: () => { title.destroy(); sub.destroy(); },
       });
     });
-    // unfreeze is decoupled from the tween so it can't get stuck
+    // unfreeze decoupled from the tween so it can't get stuck
     this.time.delayedCall(3500, () => {
       this.frozen = false;
-      this.refreshGuide(); // light the first beacon now that you can move
-      // final zone has no portal, so award its achievement on arrival
-      if (!this.zone.next) {
-        this.time.delayedCall(600, () => GameState.unlockAchievement(this.zone.achievement));
-      }
+      this.refreshGuide(); // light the first beacon + first thought
     });
   }
 
@@ -407,22 +539,27 @@ export default class ZoneScene extends Phaser.Scene {
     if (esc && !this.frozen) window.dispatchEvent(new Event('relentless:exit'));
   }
 
-  openDialogue(text, speaker) {
+  openDialogue(payload, speaker) {
     this.frozen = true;
     this.dialogueOpen = true;
-    window.dispatchEvent(new CustomEvent('relentless:dialogue', { detail: { text, speaker } }));
+    const detail = Array.isArray(payload) ? { pages: payload, speaker } : { text: payload, speaker };
+    window.dispatchEvent(new CustomEvent('relentless:dialogue', { detail }));
   }
 
   activate(it) {
+    // mark which beat is open; it's counted as read when the overlay CLOSES
+    this.activeInteractable = it;
     if (it.type === 'sign') {
-      this.openDialogue(it.payload);
+      const s = it.payload; // { quote, inner }
+      const pages = [s.quote];
+      if (s.inner) pages.push(s.inner);
+      this.openDialogue(pages);
     } else if (it.type === 'npc') {
-      this.openDialogue(it.payload.lines.join('\n'), it.payload.name);
+      this.openDialogue(it.payload.lines, it.payload.name); // each line a page
     } else if (it.type === 'screen' && it.payload) {
       this.frozen = true;
       window.dispatchEvent(new CustomEvent('relentless:screen', { detail: { id: it.payload, zone: this.zone.key } }));
     }
-    this.markGuideDone(it); // advance the beacon to the next beat
   }
 
   handlePortal() {

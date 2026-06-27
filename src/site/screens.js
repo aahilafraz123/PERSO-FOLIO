@@ -35,7 +35,7 @@ const SCREENS = {
           <div class="crt-btnghost">Get Started</div>
         </div>
       </div>`,
-    caption: 'No structure, no map, long silences. I learned what good structure looks like by living without any — and I learned the grind.',
+    caption: 'They called localhost "production" and shipped my work as theirs. I learned what good structure was by surviving the total absence of it.',
   },
 
   resume: {
@@ -131,12 +131,13 @@ const SCREENS = {
   contact: {
     title: 'contact — let\'s build something',
     body: `
+      <div class="crt-reveal">I'm Aahil.</div>
       <div class="crt-contact">
         <a href="#" data-edit>LinkedIn ↗</a>
         <a href="#" data-edit>GitHub ↗</a>
         <a href="#" data-edit>Email ↗</a>
       </div>`,
-    caption: 'The story\'s still being written. The torch was never the point — learning to see in the dark was.',
+    caption: 'That was my story — the real one. If you felt any of it, that was the whole point. Let\'s build something.',
   },
 
   'read-hatch': {

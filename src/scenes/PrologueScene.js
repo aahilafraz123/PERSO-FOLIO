@@ -244,9 +244,10 @@ export default class PrologueScene extends Phaser.Scene {
     this.tweens.add({ targets: this.kid, y: 102, duration: 90, yoyo: true });
 
     if (this.apps >= TARGET_APPS) {
-      // the silence — let it sit before the lights die
+      // the silence — let it sit, one quiet line, then the lights die
       this.flashInterviewsZero();
-      this.time.delayedCall(1900, () => this.lightsOut());
+      this.time.delayedCall(700, () => this.showSilenceLine());
+      this.time.delayedCall(3000, () => this.lightsOut());
     }
   }
 
@@ -254,6 +255,19 @@ export default class PrologueScene extends Phaser.Scene {
     // the 0 that never moves — twist the knife with color, not words
     this.counter.setColor('#c98080');
     this.tweens.add({ targets: this.counter, scale: { from: 1.12, to: 1 }, duration: 500, ease: 'Back.easeOut' });
+  }
+
+  // one quiet first-person line in the silence (plan.md §7 — Aahil's call: kept)
+  showSilenceLine() {
+    this.silenceLine = this.add
+      .text(VIEW_W / 2, VIEW_H - 72,
+        "I did everything they told me to. It wasn't enough — because I'd never actually built anything real. Yet.",
+        {
+          fontFamily: 'JetBrains Mono, monospace', fontSize: '14px', color: '#9aa0bd',
+          align: 'center', wordWrap: { width: VIEW_W - 150 }, lineSpacing: 5,
+        })
+      .setOrigin(0.5).setScrollFactor(0).setDepth(1900).setAlpha(0);
+    this.tweens.add({ targets: this.silenceLine, alpha: 1, duration: 800 });
   }
 
   // ---------------------------------------------------------------------------
@@ -264,8 +278,10 @@ export default class PrologueScene extends Phaser.Scene {
     Audio.stopHum(true);
     Audio.lightsOutThud();
 
-    // kill the warm ambient + lamp glow
-    this.tweens.add({ targets: [this.ambient, this.lampGlow, this.laptop], alpha: 0, duration: 500 });
+    // kill the warm ambient + lamp glow (+ the silence line, if shown)
+    const fade = [this.ambient, this.lampGlow, this.laptop];
+    if (this.silenceLine) fade.push(this.silenceLine);
+    this.tweens.add({ targets: fade, alpha: 0, duration: 500 });
 
     // the kid stands and becomes you — now holding the torch
     this.kid.destroy();

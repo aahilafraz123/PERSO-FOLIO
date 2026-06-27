@@ -9,12 +9,20 @@
  * Markers are consumed in row-major (top→bottom, left→right) order from the
  * matching array below, so the Nth 'S' uses signs[N], the Nth '*' uses shards[N].
  *
+ * v2 narration layer (plan.md): four registers per zone —
+ *   prelude:   first-person entry cards (what is this chapter?)
+ *   thoughts:  inner-voice fed to the Guide line, advanced by progress
+ *   signs:     two-beat { quote, inner } — artifact, then the inner response
+ *   revelation: the ONE spoken-metaphor beat (Forge only), tied to torchBeat
+ * Plus: torchBeat (mid-zone light jump), portalHiddenUntilRead (hidden grind exit).
+ * Voice = plan.md §2 (clean-but-blunt). Whitelabel = §3 (no employers/people).
+ *
  * Torch radius per zone encodes the thesis (GDD §0, §2): darkness → light.
  */
 
 export const ZONES = [
   // ===========================================================================
-  // ZONE 1 — THE WILDERNESS (the rejection arc)
+  // ZONE 1 — THE WILDERNESS (the rejection arc) · hidden grind exit
   // ===========================================================================
   {
     key: 'wilderness',
@@ -30,7 +38,22 @@ export const ZONES = [
       wallDark: 0x16361f, wallLight: 0x1f4a2b, trunk: 0x3a2616,
       accent: 0x00d9f5,
     },
+    prelude: [
+      `First co-op cycle. I applied everywhere that would take a resume.`,
+      `Three rounds of it. A, B, C.`,
+      `Zero interviews. Not one.`,
+      `Not even a no. Just silence — which is so much worse than a no.`,
+    ],
     intro: ['THE WILDERNESS', 'Round A. Round B. Round C. The path was never lit.'],
+    thoughts: [
+      `No map out here. Nobody's coming to give me one.`,
+      `Every sign says the same thing in a different font.`,
+      `Standing still is the only way to lose for sure. Keep moving.`,
+      `The way out was never going to be handed to me. I have to find it.`,
+    ],
+    revelation: null,
+    torchBeat: null,
+    portalHiddenUntilRead: true,
     map: [
       '##############################',
       '#@...........................#',
@@ -48,19 +71,34 @@ export const ZONES = [
       '#......###........####.......#',
       '#.................####.......#',
       '#....*..................S....#',
-      '#...........###..............#',
+      '#...........###.........S....#',
       '#...........###..........>...#',
       '#............................#',
       '##############################',
     ],
-    // 4 signs (rejection-speak, GDD §5 + §10)
+    // 5 signs — two-beat { quote, inner }. The 5th is nearest the exit.
     signs: [
-      '"We\'ve decided to move forward with other candidates."',
-      'Round A: no. Round B: no. Round C: no.\nThe path was never lit — so I made my own light.',
-      '"We\'ll keep your resume on file for future openings."',
-      '"This position has been closed."',
+      {
+        quote: `"We've decided to move forward with other candidates."`,
+        inner: `The fourth this week. I stopped reading past the first line.`,
+      },
+      {
+        quote: `"We'll keep your resume on file for future openings."`,
+        inner: `My resume was thin and I knew it. The paper version of me wasn't worth much yet — because I hadn't built anything real yet.`,
+      },
+      {
+        quote: `Syllabus: HTML tags. CSS. A div is a box.`,
+        inner: `It's 2026 and school is teaching me what a box is — not how the web actually works, not the tools everyone really uses. I coasted through most of it on AI and learned almost nothing. That's on them and on me both.`,
+      },
+      {
+        quote: `"Unfortunately, this position has been closed."`,
+        inner: `Closed. Like the door was never really open.`,
+      },
+      {
+        quote: `Round A: no. Round B: no. Round C: no.`,
+        inner: `The path was never lit for me. So I quit waiting for someone to light it — and decided to make my own.`,
+      },
     ],
-    // 4 shards
     shards: [
       { skill: 'Resilience', xp: 14 },
       { skill: 'Grit', xp: 12 },
@@ -70,7 +108,9 @@ export const ZONES = [
     // 1 monitor → the rejection inbox
     screens: ['rejections'],
     npcs: [],
-    achievement: { title: 'Still Standing', desc: '0 offers, didn\'t quit.' },
+    // shown on the centered card when the hidden grind exit reveals (§8.1)
+    portalRevealLine: `The way out was never going to be handed to me. I have to find it.`,
+    achievement: { title: 'Still Standing', desc: `0 offers, didn't quit.` },
   },
 
   // ===========================================================================
@@ -90,7 +130,21 @@ export const ZONES = [
       wallDark: 0x2a2d3a, wallLight: 0x3a3e4f, trunk: 0x20232e,
       accent: 0x6b7088,
     },
+    prelude: [
+      `I finally got a yes. An unpaid spot at a tiny place. Eight people.`,
+      `No structure. No map. No one checking whether I learned anything.`,
+      `Weeks would pass with no contact. I'd send work into a void.`,
+      `It wasn't really a job. It was a test of whether I'd keep going with nobody watching.`,
+    ],
     intro: ['THE HOLLOW', 'It looked like a job. It was really a trial.'],
+    thoughts: [
+      `Nobody's going to tell me what to do here. That's the whole lesson.`,
+      `Quiet rooms teach you things loud ones can't.`,
+      `I stopped waiting to be managed and started managing myself.`,
+    ],
+    revelation: null,
+    torchBeat: null,
+    portalHiddenUntilRead: false,
     map: [
       '##############################',
       '#@.........#........#........#',
@@ -114,10 +168,22 @@ export const ZONES = [
       '##############################',
     ],
     signs: [
-      'No structure, no map, long silences.\nI learned the grind by living without anything else.',
-      'Weeks would pass with no contact.\nSo I stopped waiting to be told what to do.',
-      'I shipped a Redis caching layer here.\nReal work, in a quiet room.',
-      'Migrated 30+ components Angular → React.\n−25% bundle. −35% load time. Kept going.',
+      {
+        quote: `Eight people. One of them my "manager" — a grad student.`,
+        inner: `There was barely a company here. Respectfully. I learned what good looks like by living inside something that had none of it.`,
+      },
+      {
+        quote: `They shipped what I built as their own. Right on their front page.`,
+        inner: `I could've built that page in my sleep with one hand. Watching them undervalue the work taught me exactly what it was worth — and that I'd never let it be priced that low again.`,
+      },
+      {
+        quote: `Shipped a Redis caching layer. Real work, in a silent room.`,
+        inner: `Nobody asked. Nobody noticed. I did it because it needed doing — and because I needed to know I could.`,
+      },
+      {
+        quote: `Migrated 30+ components, Angular → React. −25% bundle. −35% load.`,
+        inner: `Real numbers, real wins, in a place that gave me nothing to work with. This is where the grind got forged.`,
+      },
     ],
     shards: [
       { skill: 'Grind', xp: 16 },
@@ -132,14 +198,15 @@ export const ZONES = [
   },
 
   // ===========================================================================
-  // ZONE 3 — THE FORGE (LearnFlow) — light really starts to grow (GDD §5)
+  // ZONE 3 — THE FORGE (LearnFlow) — the light JUMPS here · carries the one revelation
+  // Enters dim (125) on purpose so the torchBeat after the pitch is a visible jump.
   // ===========================================================================
   {
     key: 'forge',
     chapter: 'III',
     name: 'THE FORGE',
     subtitle: 'Built it myself. 150+ users. Thirty-hour weeks. My own thing.',
-    torchRadius: 172,
+    torchRadius: 125,
     wallStyle: 'block',
     next: 'mission',
     portalLabel: 'THE WORLD STAGE →',
@@ -148,7 +215,21 @@ export const ZONES = [
       wallDark: 0x4a2e1c, wallLight: 0x6e4322, trunk: 0x32201a,
       accent: 0xff7b00,
     },
+    prelude: [
+      `If no one would hand me a real shot, I'd build my own.`,
+      `LearnFlow. Co-founder. Founding engineer. My thing.`,
+      `30-hour weeks on top of a full course load.`,
+      `This was the chapter that actually taught me — not how to pass a test. How to learn anything.`,
+    ],
     intro: ['THE FORGE', 'Build your own weapon. 30-hour weeks. Pitch to anyone who\'ll listen.'],
+    thoughts: [
+      `Build the weapon. Then show it to anyone who'll look.`,
+      `First time the work felt like it was actually mine.`,
+      `The light's bigger in here. I'm starting to see what I can do.`,
+    ],
+    revelation: `The light got bigger here. And I finally got it — it was never the world brightening. It was me. The confidence I never had growing up, I was building it one real thing at a time.`,
+    torchBeat: { afterSignIndex: 2, growTo: 172 }, // fire after the pitch sign
+    portalHiddenUntilRead: false,
     map: [
       '##############################',
       '#@..........................*#',
@@ -172,9 +253,18 @@ export const ZONES = [
       '##############################',
     ],
     signs: [
-      'LearnFlow. Co-founder, founding engineer.\nOCR, transcription, a 6-stage retrieval pipeline — forged into one tool.',
-      'Built it myself. 150+ users, thirty-hour weeks,\npitched to anyone who\'d listen.',
-      'Startup expo. Pitch fest. 5+ professors and faculty.\nIt taught me how to learn, not how to solve a puzzle.',
+      {
+        quote: `LearnFlow — OCR, transcription, a 6-stage retrieval pipeline. One tool.`,
+        inner: `An AI study tool that understands how you learn, not just what you're studying. I forged six systems into one thing that worked.`,
+      },
+      {
+        quote: `150+ users. 30-hour weeks. Built mostly alone.`,
+        inner: `Nobody assigned this. No grade attached. I built it because building it was the point.`,
+      },
+      {
+        quote: `Startup expo. Pitch fest. Demoed to 5+ professors and faculty.`,
+        inner: `I put it in front of full rooms and made them care. That's when I found out I could pitch — not just build.`,
+      },
     ],
     shards: [
       { skill: 'Founder', xp: 18 },
@@ -185,7 +275,7 @@ export const ZONES = [
     screens: ['learnflow'],
     npcs: [
       { name: 'Professor', lines: ['"You presented this to my class?"', '"...this is genuinely good work."'] },
-      { name: 'Classmate', lines: ['"Wait, you BUILT this? Like the whole thing?"'] },
+      { name: 'Classmate', lines: ['"Wait — you BUILT this? The whole thing?"'] },
     ],
     achievement: { title: 'Built the Weapon', desc: '150+ users, 30-hour weeks, your own thing.' },
   },
@@ -207,7 +297,20 @@ export const ZONES = [
       wallDark: 0x1a2238, wallLight: 0x2a3656, trunk: 0x141c30,
       accent: 0x00d9f5,
     },
+    prelude: [
+      `We took something we believed in to one of the biggest hackathons on Earth.`,
+      `Team Relentless. The name was real before it was ever a portfolio.`,
+      `An idea on Friday. A live production URL by Sunday.`,
+      `I needed to know if the work could stand next to the best in the world.`,
+    ],
     intro: ['MISSION CONTROL', 'The work could stand on a world stage.'],
+    thoughts: [
+      `Most people never find out if they're good enough at this level. I wanted to find out.`,
+      `Cleaner air, real data, real users — built in one weekend.`,
+    ],
+    revelation: null,
+    torchBeat: null,
+    portalHiddenUntilRead: false,
     map: [
       '##############################',
       '#@..........................*#',
@@ -231,9 +334,18 @@ export const ZONES = [
       '##############################',
     ],
     signs: [
-      'AirCast — AI air-quality forecasting on NASA TEMPO data.\n6-hour AQI predictions. Azure + CI/CD. Maps + charts.',
-      'Team Relentless.\nWe didn\'t just enter. We stood out.',
-      'The name was real before it was a portfolio.\nIt described the people first.',
+      {
+        quote: `AirCast — AI air-quality forecasting on NASA TEMPO data. 6-hour AQI. Azure + CI/CD.`,
+        inner: `Zero to production in 48 hours. Satellite data, ground sensors, a live map. Real — not a demo.`,
+      },
+      {
+        quote: `Team Relentless. We didn't just enter. We stood out.`,
+        inner: `Out of more than 11,500 projects, ours was named a Global Nominee. Top ~1,290 in the world.`,
+      },
+      {
+        quote: `The name described the people before it described a portfolio.`,
+        inner: `Relentless wasn't branding. It was just true about everyone who showed up that weekend.`,
+      },
     ],
     shards: [
       { skill: 'NASA', xp: 20 },
@@ -250,9 +362,7 @@ export const ZONES = [
   },
 
   // ===========================================================================
-  // ZONE 5 — THE ARENA — bright, in command (the first real corporate room).
-  // White-labeled: no real people / employer named here; the Read view holds the
-  // specifics (recruiter-appropriate). The game keeps the feeling, not the names.
+  // ZONE 5 — THE ARENA — first real corporate room (white-labeled: no names) (GDD §5)
   // ===========================================================================
   {
     key: 'arena',
@@ -268,7 +378,21 @@ export const ZONES = [
       wallDark: 0x2a2d4a, wallLight: 0x3c4068, trunk: 0x22243c,
       accent: 0xffcf3a,
     },
+    prelude: [
+      `First time in a real corporate room. I didn't ease in.`,
+      `First week, I found and fixed a critical auth vulnerability in production. Nobody asked me to. I just found it.`,
+      `They bet on me early — put me on something that mattered. A startup operating model inside a giant company.`,
+      `No safety net. Just: build something real and make it count.`,
+    ],
     intro: ['THE ARENA', 'You carry your own light now.'],
+    thoughts: [
+      `More meetings in a week than most people here have in a month.`,
+      `I don't carry a torch in here anymore. I am the light.`,
+      `I came in with something to prove. I'm proving it.`,
+    ],
+    revelation: null,
+    torchBeat: null,
+    portalHiddenUntilRead: false,
     map: [
       '##############################',
       '#@..........................*#',
@@ -292,9 +416,18 @@ export const ZONES = [
       '##############################',
     ],
     signs: [
-      'First time in a room like this.\nYou did not ease in. You arrived.',
-      'Back-to-back. Sync after sync.\nMore in a week than most have in a month.',
-      'More than you could make it to.\nGrateful to be the one carrying the load.',
+      {
+        quote: `First time in a room like this. I didn't ease in — I arrived.`,
+        inner: `I co-built an analytics engine that turns scattered security data into clear, prioritized action. AI agents that don't just report it — they reason about it.`,
+      },
+      {
+        quote: `Back-to-back. Sync after sync. More in a week than most have in a month.`,
+        inner: `Once I joined the intern capstone 30 minutes late — not slacking, just buried in conflicts. Grateful to be the one carrying that much load.`,
+      },
+      {
+        quote: `The work reached senior leadership — named as an example of what this was built to produce.`,
+        inner: `What it meant to me wasn't the recognition. It was knowing I earned it from zero, in a room I'd never operated in before.`,
+      },
     ],
     shards: [
       { skill: 'Corporate', xp: 20 },
@@ -312,7 +445,7 @@ export const ZONES = [
   },
 
   // ===========================================================================
-  // ZONE 6 — THE HORIZON (the unwritten chapter) — full daylight (GDD §5)
+  // ZONE 6 — THE HORIZON (the unwritten chapter + the why) — full daylight (GDD §5)
   // ===========================================================================
   {
     key: 'horizon',
@@ -328,7 +461,18 @@ export const ZONES = [
       wallDark: 0x2a4a30, wallLight: 0x3a6242, trunk: 0x24401e,
       accent: 0xffe9a8,
     },
+    prelude: [
+      `Out of the buildings. Out of the dark. The whole world's lit now.`,
+      `Here's the part that's still being written.`,
+    ],
     intro: ['THE HORIZON', 'Full daylight. The whole world is lit.'],
+    thoughts: [
+      `The torch was never the point.`,
+      `Learning to see in the dark was.`,
+    ],
+    revelation: null,
+    torchBeat: null,
+    portalHiddenUntilRead: false,
     map: [
       '##############################',
       '#@...........................#',
@@ -352,17 +496,25 @@ export const ZONES = [
       '##############################',
     ],
     signs: [
-      'The story\'s still being written.\nThe torch was never the point — learning to see in the dark was.',
-      'Be 35 and free. Locked in until then.\nThen explore, grow, and learn for the love of it.',
+      {
+        quote: `The story's still being written.`,
+        inner: `The torch was never the point. Learning to see in the dark was. I can do that now — anywhere, with or without the light.`,
+      },
+      {
+        quote: `Be 35 and free. Locked in until then.`,
+        inner: `Money was the first motivator. Somewhere it stopped being about money and became about the work. I want these years hammer-down — so later I'm free to explore, grow, and learn things just for the love of it. Not retire. Just never owe anyone my time again.`,
+      },
     ],
     shards: [
       { skill: 'Curiosity', xp: 22 },
       { skill: 'Vision', xp: 20 },
       { skill: 'Freedom', xp: 20 },
     ],
-    // monitors 'MM' = contact terminal + the read-my-story escape hatch
+    // monitors 'MM' = contact terminal (the reveal) + the read-my-story escape hatch
     screens: ['contact', 'read-hatch'],
     npcs: [],
+    // shown once, after the final achievement / contact closes (§7 closing card)
+    closingCard: `Most of it happened in the dark. Thanks for walking through it with me.`,
     achievement: { title: 'The Horizon', desc: 'Out of the dark. The whole world, lit.' },
   },
 ];
