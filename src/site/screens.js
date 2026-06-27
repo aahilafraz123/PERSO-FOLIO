@@ -74,7 +74,7 @@ const SCREENS = {
   nasa: {
     title: 'mail — community@spaceappschallenge.org',
     body: `
-      <div class="crt-email" data-img="/assets/screens/nasa_email.png">
+      <div class="crt-email" data-img="./assets/screens/nasa_email.png">
         <div class="crt-email-head">
           <div class="crt-avatar">🚀</div>
           <div>
@@ -95,6 +95,28 @@ const SCREENS = {
     caption: 'Team Relentless — 2025 NASA Space Apps Global Nominee. ~1,290 teams of 11,500+ projects, worldwide.',
   },
 
+  comcast: {
+    title: 'mail — University Relations · Comcast',
+    body: `
+      <div class="crt-email" data-img="./assets/screens/comcast_offer.png">
+        <div class="crt-email-head">
+          <div class="crt-avatar">📡</div>
+          <div>
+            <div class="crt-email-from">Comcast University Relations</div>
+            <div class="crt-email-meta">universityrelations@comcast.com · Spring 2026</div>
+          </div>
+          <div class="crt-star">★</div>
+        </div>
+        <div class="crt-email-body">
+          <p><strong>Congratulations!</strong></p>
+          <p>On behalf of the Comcast University Relations Team, we are thrilled to welcome you to the <strong>Spring 2026 Co-op Program</strong>.</p>
+          <p>We are so excited that you've accepted our offer and look forward to an engaging, educational, and fun summer together.</p>
+          <p class="crt-email-foot">— Comcast University Relations Team</p>
+        </div>
+      </div>`,
+    caption: 'From zero interviews to Comcast. The wilderness was worth it.',
+  },
+
   aircast: {
     title: 'AirCast — air quality forecast',
     body: `
@@ -106,6 +128,7 @@ const SCREENS = {
         <span class="crt-marker" style="left:38%;top:70%">AQI</span>
       </div>`,
     caption: 'AI air-quality forecasting on NASA TEMPO satellite data + OpenAQ + OpenWeather. 6-hour AQI predictions, deployed on Azure with CI/CD.',
+    action: { label: 'View AirCast on GitHub ↗', go: 'https://github.com/allenvarghese05/aircast-nasa-hackathon', external: true },
   },
 
   calendar: {
@@ -189,7 +212,7 @@ function open(id) {
     const src = emailEl.getAttribute('data-img');
     const probe = new Image();
     probe.onload = () => {
-      emailEl.innerHTML = `<img class="crt-email-img" src="${src}" alt="NASA Global Nominee email">`;
+      emailEl.innerHTML = `<img class="crt-email-img" src="${src}" alt="${s.title}">`;
     };
     probe.src = src;
   }
@@ -197,7 +220,11 @@ function open(id) {
   root.querySelector('.screen-backdrop').addEventListener('click', close);
   root.querySelector('.screen-close').addEventListener('click', close);
   const act = root.querySelector('.screen-action');
-  if (act && s.action) act.addEventListener('click', () => { close(); location.hash = s.action.go; });
+  if (act && s.action) act.addEventListener('click', () => {
+    close();
+    if (s.action.external) { window.open(s.action.go, '_blank', 'noopener,noreferrer'); }
+    else { location.hash = s.action.go; }
+  });
 }
 
 export function initScreens() {
