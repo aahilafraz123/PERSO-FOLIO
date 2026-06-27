@@ -29,6 +29,15 @@ const CARDS = [
   'Nobody handed me either one.',
 ];
 
+// inner-voice context that floats over the room as the counter climbs — this is
+// the "set the scene" beat (a kid firing a template résumé into silence) that
+// replaces the old wordless, contextless desk animation
+const ROOM_LINES = [
+  { at: 1, body: "Final year of college. A degree on the way — and a résumé I'd built from a template and barely touched since." },
+  { at: 8, body: 'I sent it everywhere. The same résumé, the same words, into every open door I could find.' },
+  { at: 16, body: 'Not one reply. Not even a rejection — a rejection is at least an answer. This was only silence.' },
+];
+
 export default class PrologueScene extends Phaser.Scene {
   constructor() {
     super('prologue');
@@ -223,9 +232,10 @@ export default class PrologueScene extends Phaser.Scene {
       .setOrigin(0.5, 0).setScrollFactor(0).setDepth(1800).setShadow(0, 2, '#000', 4);
     this.updateCounter();
 
-    // fire an application every ~360ms until we hit the target
+    // fire an application steadily until we hit the target (paced so the
+    // context lines have room to breathe)
     this.sendTimer = this.time.addEvent({
-      delay: 360,
+      delay: 460,
       repeat: TARGET_APPS - 1,
       callback: () => this.sendApplication(),
     });
@@ -240,8 +250,15 @@ export default class PrologueScene extends Phaser.Scene {
     this.updateCounter();
     Audio.whoosh();
     this.appFx.explode(5, 288, 56);
-    // tiny bob on the kid as he hits send
-    this.tweens.add({ targets: this.kid, y: 102, duration: 90, yoyo: true });
+
+    // surface the contextual inner-voice line for this beat (single card whose
+    // text evolves; no more wordless desk animation)
+    const line = ROOM_LINES.find((l) => l.at === this.apps);
+    if (line) {
+      window.dispatchEvent(new CustomEvent('relentless:card', {
+        detail: { body: line.body, variant: 'body' },
+      }));
+    }
 
     if (this.apps >= TARGET_APPS) {
       // the silence — let it sit, one quiet line, then the lights die
