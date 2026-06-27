@@ -1089,7 +1089,7 @@ body.playing #exit-game { display: block; }
   animation: tx-scroll 24s linear infinite;
 }
 @keyframes tx-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.tx-body { padding: 24px 28px 22px; }
+.tx-body { padding: 32px 36px 30px; font-size: 1.06rem; line-height: 1.88; }
 .tx-footer {
   display: flex; align-items: center; justify-content: space-between;
   padding: 7px 20px; border-top: 1px solid rgba(45,255,138,0.07);
@@ -1251,6 +1251,55 @@ body.playing #exit-game { display: block; }
   position: absolute; right: 16px; bottom: 8px;
   color: var(--muted-dim); font-size: 0.7rem; letter-spacing: 0.06em;
 }
+
+/* ---- in-game narration cards + inner-voice line (DOM, never clipped) ---- */
+#game-card {
+  position: fixed; inset: 0; z-index: 280;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 6vw; text-align: center;
+  pointer-events: none; opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#game-card.open { opacity: 1; }
+.gc-inner { max-width: 780px; }
+.gc-title {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(1.8rem, 5vw, 2.6rem); margin: 0 0 12px;
+  color: var(--text); letter-spacing: 0.04em;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.85);
+}
+.gc-sub {
+  font-family: var(--font-mono); font-size: clamp(0.8rem, 2vw, 0.95rem);
+  color: var(--muted); margin: 0;
+}
+.gc-body {
+  font-family: var(--font-mono); font-size: clamp(1rem, 2.4vw, 1.2rem);
+  line-height: 1.6; color: #e6e8f5; margin: 0;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
+}
+.gc-revelation .gc-body { color: var(--gold); }
+.gc-hint {
+  position: fixed; right: 18px; bottom: 16px;
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted-dim);
+  letter-spacing: 0.04em;
+}
+.gc-hint:empty { display: none; }
+
+#game-objective {
+  position: fixed; top: 52px; left: 50%; transform: translateX(-50%);
+  z-index: 270; pointer-events: none;
+  max-width: min(680px, 86vw); text-align: center;
+  font-family: var(--font-mono); font-size: clamp(0.78rem, 1.8vw, 0.92rem);
+  color: #9fefff; line-height: 1.45;
+  background: rgba(5, 6, 10, 0.72); padding: 6px 14px; border-radius: 8px;
+  text-shadow: 0 1px 3px #000;
+  opacity: 0; transition: opacity 0.35s ease;
+}
+#game-objective.open { opacity: 1; }
+
+/* never show game narration outside the immersive game */
+body:not(.playing) #game-card,
+body:not(.playing) #game-objective { display: none; }
 
 /* ===========================================================================
    3D LAYER ANIMATION SYSTEM — The Fold + Three Planes + The Emergence
