@@ -57,8 +57,14 @@ export default class Guide {
 
   update(player, t) {
     if (!this.target) return;
-    const pulse = 0.5 + Math.sin(t / 300) * 0.28;
-    this.glow.setAlpha(pulse).setPosition(this.target.x, this.target.y);
+    // shrink + dim the beacon as the player gets close (and a touch less intense
+    // overall) so it doesn't balloon into a bright blob up close
+    const gd = Phaser.Math.Distance.Between(player.x, player.y, this.target.x, this.target.y);
+    const prox = Phaser.Math.Clamp((gd - 50) / 150, 0, 1); // 0 = close, 1 = far (>=200)
+    const scale = 0.36 + prox * 0.22; // ~0.36 close → ~0.58 far (was a flat 0.75)
+    const base = 0.30 + prox * 0.16;  // dimmer overall, dimmest up close
+    const pulse = base + Math.sin(t / 320) * 0.10;
+    this.glow.setScale(scale).setAlpha(Math.max(0, pulse)).setPosition(this.target.x, this.target.y);
     this.chevron
       .setPosition(this.target.x, this.target.y - 30 + Math.sin(t / 250) * 4)
       .setAlpha(0.9);
