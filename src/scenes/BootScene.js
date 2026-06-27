@@ -346,47 +346,79 @@ export default class BootScene extends Phaser.Scene {
       for (let c = 0; c < 3; c++) tex.add(i++, 0, c * 32, r * 32, 32, 32);
   }
 
+  /**
+   * The protagonist: a brown-skinned traveler in a sleek dark jacket with a
+   * neon-cyan accent, carrying a torch. Reads as a real person and pops against
+   * the dark. dir = 'down' | 'up' | 'side' (side faces right; flipped in-engine).
+   */
   drawPerson(ctx, ox, oy, dir, frame) {
     const P = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(ox + x, oy + y, w, h); };
-    const skin = '#e8b48a', skinDk = '#c98f63', hair = '#241a2e';
-    const hood = '#6b3fa0', hoodDk = '#4f2c86', pants = '#222238', boot = '#13131d';
-    const stick = '#6e4423', flame = '#ff7b00', flameHot = '#ffd27a';
 
-    const aDown = frame === 0 ? 1 : 0;
-    const bDown = frame === 2 ? 1 : 0;
-    P(12, 25, 4, 4 + aDown, pants);
-    P(16, 25, 4, 4 + bDown, pants);
-    P(12, 28 + aDown, 4, 1, boot);
-    P(16, 28 + bDown, 4, 1, boot);
+    const skin = '#a06a3f', skinDk = '#7c5130', skinLt = '#bb8254';
+    const hair = '#15110e', hairLt = '#2a2018';
+    const jkt = '#2b2742', jktDk = '#1c1930', jktLt = '#3d3862';
+    const cyan = '#00d9f5', cyanDk = '#0a7e94';
+    const pants = '#1a1a26', pantsDk = '#101019', boot = '#0c0c12';
+    const stick = '#5e3c1f', flame = '#ff8a1e', flameHot = '#ffd27a', core = '#fff6d8';
 
-    P(9, 14, 14, 12, hood);
-    P(9, 22, 14, 4, hoodDk);
-    P(8, 15, 2, 8, hoodDk);
-    P(22, 15, 2, 8, hoodDk);
+    const aDn = frame === 0 ? 1 : 0; // alternating leg lift for the walk
+    const bDn = frame === 2 ? 1 : 0;
 
+    // --- legs + boots ---
+    P(11, 24, 5, 4 + aDn, pants);
+    P(16, 24, 5, 4 + bDn, pants);
+    P(11, 24, 1, 4 + aDn, pantsDk);
+    P(20, 24, 1, 4 + bDn, pantsDk);
+    P(11, 27 + aDn, 5, 2, boot);
+    P(16, 27 + bDn, 5, 2, boot);
+
+    // --- torso / jacket ---
+    P(9, 13, 14, 12, jkt);
+    P(9, 13, 14, 2, jktLt);        // shoulder highlight
+    P(9, 22, 14, 3, jktDk);        // hem shadow
+    P(8, 14, 2, 9, jktDk);         // arms
+    P(22, 14, 2, 9, jktDk);
+    P(15, 15, 2, 9, cyanDk);       // glowing zipper
+    P(15, 15, 1, 9, cyan);
+    P(9, 14, 2, 1, cyan);          // shoulder accents (not covered by head)
+    P(21, 14, 2, 1, cyan);
+
+    // --- head ---
     if (dir === 'up') {
-      P(10, 4, 12, 11, hair);
+      P(10, 3, 12, 11, hair);
+      P(10, 3, 12, 3, hairLt);
+      P(10, 12, 12, 2, jktDk);     // collar behind the neck
     } else if (dir === 'side') {
-      P(10, 4, 12, 4, hair);
-      P(10, 4, 5, 10, hair);
-      P(15, 7, 6, 7, skin);
-      P(15, 13, 6, 1, skinDk);
-      P(18, 9, 2, 2, hair);
+      P(9, 4, 12, 4, hair);        // hair top
+      P(9, 5, 5, 9, hair);         // back hair
+      P(14, 6, 7, 8, skin);        // face
+      P(14, 6, 7, 1, skinLt);
+      P(20, 7, 1, 6, skinDk);      // front edge shadow
+      P(14, 13, 7, 1, skinDk);     // jaw
+      P(18, 9, 2, 2, hair);        // eye
     } else {
-      P(10, 4, 12, 4, hair);
-      P(10, 4, 2, 9, hair);
-      P(20, 4, 2, 9, hair);
-      P(12, 6, 8, 8, skin);
-      P(12, 13, 8, 1, skinDk);
-      P(13, 9, 2, 2, hair);
-      P(17, 9, 2, 2, hair);
+      P(10, 3, 12, 5, hair);       // hair
+      P(9, 4, 2, 7, hair);
+      P(21, 4, 2, 7, hair);
+      P(10, 3, 12, 1, hairLt);
+      P(11, 6, 10, 8, skin);       // face
+      P(11, 6, 10, 1, skinLt);     // forehead light
+      P(11, 13, 10, 1, skinDk);    // chin shadow
+      P(12, 9, 3, 1, hair);        // brows
+      P(17, 9, 3, 1, hair);
+      P(13, 10, 2, 2, hair);       // eyes
+      P(17, 10, 2, 2, hair);
+      P(13, 10, 1, 1, '#f0f0f5');  // eye glints
+      P(17, 10, 1, 1, '#f0f0f5');
+      P(15, 12, 2, 1, skinDk);     // nose hint
     }
 
-    // the torch (always on the figure's right; flips with the sprite)
-    P(24, 12, 2, 11, stick);
+    // --- torch (figure's right hand; flips with the sprite) ---
     const flick = frame === 1 ? 0 : 1;
+    P(22, 14, 1, 8, '#6a5236');     // warm rim on the lit side
+    P(24, 12, 2, 11, stick);
     P(22, 7 - flick, 6, 6, flame);
     P(23, 4 - flick, 4, 5, flameHot);
-    P(24, 5 - flick, 2, 2, '#fff6d8');
+    P(24, 5 - flick, 2, 2, core);
   }
 }
