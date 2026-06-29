@@ -1,0 +1,13 @@
+{
+  // Cloudflare Workers config — deploys the Vite build (./dist) as a static
+  // assets-only Worker. No server code: Cloudflare serves the files from its
+  // edge, same as Pages. `npx wrangler deploy` reads this.
+  "name": "aahilafraz",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "./dist",
+    // hash routing means the server only ever sees "/", but if a deep path is
+    // ever requested, hand back index.html instead of a 404.
+    "not_found_handling": "single-page-application"
+  }
+}
