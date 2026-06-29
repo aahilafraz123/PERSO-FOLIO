@@ -11,10 +11,15 @@
  * or keypress (we do it on the PLAY interaction) before expecting sound.
  */
 
+// Master switch for all game audio. Every sound routes through getCtx(), so
+// flipping this to false makes every cue a silent no-op. Set true to re-enable.
+const AUDIO_ENABLED = false;
+
 let ctx = null;
 let master = null;
 
 function getCtx() {
+  if (!AUDIO_ENABLED) return null;
   if (ctx) return ctx;
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return null;
@@ -146,6 +151,42 @@ export function stopCrackle() {
   src.stop(c.currentTime + 0.35);
   lfo.stop(c.currentTime + 0.35);
   crackleNodes = null;
+}
+
+// --- per-zone ambient pad: a soft drone that BRIGHTENS as the arc does -------
+// brightness 0..1 (zone index / 5) opens the lowpass + lifts the key, so the
+// SOUND warms from dark to light alongside the torch (GDD §11.7 audio-to-light).
+let ambientNodes = null;
+export function startZoneAmbient(brightness = 0.3) {
+  const c = getCtx();
+  if (!c || ambientNodes) return;
+  const g = c.createGain();
+  g.gain.value = 0.0;
+  g.gain.linearRampToValueAtTime(0.045, c.currentTime + 2.2);
+  const lp = c.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 220 + brightness * 1500; // brighter zones = more open
+  const base = 96 + brightness * 40;
+  const oscs = [base, base * 1.5, base * 2.01].map((f, i) => {
+    const o = c.createOscillator();
+    o.type = i === 0 ? 'triangle' : 'sine';
+    o.frequency.value = f;
+    o.detune.value = (i - 1) * 7;
+    o.connect(lp);
+    o.start();
+    return o;
+  });
+  lp.connect(g).connect(master);
+  ambientNodes = { oscs, g };
+}
+
+export function stopZoneAmbient() {
+  const c = getCtx();
+  if (!c || !ambientNodes) return;
+  const { oscs, g } = ambientNodes;
+  g.gain.linearRampToValueAtTime(0.0, c.currentTime + 0.6);
+  oscs.forEach((o) => o.stop(c.currentTime + 0.7));
+  ambientNodes = null;
 }
 
 // --- warm swell / ignite: when light is made -------------------------------

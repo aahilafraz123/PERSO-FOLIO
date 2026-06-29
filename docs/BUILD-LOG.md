@@ -203,3 +203,57 @@ narrating the arc back — that's the playtest only Aahil can run.
 - Confirm résumé specifics to surface in the in-game "résumé terminal" (Java,
   Python, Flask, SQL, Azure, certs AZ-900/AI-900/SC-900 from GDD §6/§11).
 - Want the real NASA email screenshot in, or keep the styled HTML render?
+
+---
+
+## v3 — Interactivity pass (each chapter gets its own VERB)
+
+Before this pass the only verb was READ (signs/screens/npcs) + walk-over shards, and
+the torch grew automatically. Goal: make the darkness→light thesis *playable* and give
+each chapter an interaction it couldn't do before. Built phase-by-phase, each verified
+with the preview MCP loop + a DEV `window.__game` bridge (drives the game headlessly).
+
+**New shared systems** (`src/systems/`):
+- `TorchResource.js` — torch as a tended resource: in opt-in zones it decays while still,
+  recovers while moving, dips on a `pulse()`. Hard-clamped to a `floor` so it's
+  **atmospheric only** — never dies, traps, or blocks reading.
+- `MiniGame.js` — canvas overlay for the forge-stoke + pitch-timing beats. Keyboard +
+  pointer, freezes the world, **auto-resolves on a timeout** (never traps mobile/idle).
+- `Fog.js` — world-space additive RT that "remembers" explored ground (cool, subtle).
+- `stations.js` — marker→behavior registry so new interactables don't bloat ZoneScene.
+  New map markers: `G` gate · `c` component · `A` anvil · `P` pitch · `W` workbench ·
+  `o` data node · `B` meeting door · `V` vuln · `R` relic · `F` ember.
+
+**Per-chapter verbs** (data in `src/data/story.js`, behavior in `ZoneScene`):
+- **I Wilderness — ENDURE:** torch decay; rejection signs pulse the flame; locked OFFER
+  gate (thud + shake, never opens — only the grind path works).
+- **II Hollow — SHIP INTO THE VOID:** workbenches that ship real work with *no* reward
+  (no XP/toast/chime — the silence is the point); shipping both reveals the exit.
+- **III Forge — BUILD + PITCH:** gather 6 components → forge them at the anvil (stoke
+  minigame) into a floating LearnFlow **companion** that adds light; the 150-users dot
+  wall; step on the stage → pitch timing minigame → the torch JUMP + the one revelation.
+- **IV Mission — DEPLOY:** wire 3 data-source globes into the control-room screens
+  (links converge); all three → AirCast goes live (48h-sprint counter).
+- **V Arena — OWN THE ROOM:** a gauntlet of meeting doors auto-joins as you pass
+  (“Meetings today: N”); a hidden, flickering **auth-vuln** — a secret, gold-beaconed
+  only after the main beats, granting the “Nobody Asked” achievement.
+- **VI Horizon — FREE ROAM:** full daylight, no decay/fog/beacon; the contact terminal
+  boots up and types itself line-by-line.
+
+**Cross-cutting:** cert relics AZ-900/AI-900/SC-900 (hidden, “✦ Relics n/3” tracker,
+“Certified” achievement) · sprint speed scales with the chapter · per-zone ambient pad
+brightens 1→6 + torch crackle · `prefers-reduced-motion` skips shake & auto-passes
+minigames · footstep-free juice (bursts, screen shake, applause).
+
+**Guidance:** stays maximally guided — guided stations (workbench/component/anvil/pitch/
+dataNode) join the beacon queue; secrets (vuln/relics) get a distinct **gold** beacon
+after the story beats, so nobody is ever stuck but the curious get a real payoff.
+
+**Bug fixes found via the end-to-end test:** the ZoneScene instance is reused across
+`scene.restart`, so per-zone transients now reset on entry (`portal`, `companion`,
+`_hub`, `_zoneFinished`, `_torchBeatFired`) — the Horizon finale was inheriting Arena's
+destroyed portal. `LightSystem`/`Fog` `update()` now guard a torn-down RT (a restart can
+fire one more update). Full playthrough verified: all 6 zone achievements fire in order.
+
+A completionist run lands ~LVL 6 (≈ one level per chapter) — kept natural rather than
+forcing an arbitrary round number.

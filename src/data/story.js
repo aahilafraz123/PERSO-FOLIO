@@ -30,6 +30,10 @@ export const ZONES = [
     name: 'THE WILDERNESS',
     subtitle: '0 interviews. 3 rounds. No light but the one you carry.',
     torchRadius: 165,
+    // ENDURE: out here the dark creeps back when you stand still or stop to read
+    // a rejection — only pushing forward feeds the flame (atmospheric; clamped so
+    // a sign is always readable). The whole chapter is "keep moving" made literal.
+    torchDecay: true,
     wallStyle: 'tree',
     next: 'hollow',
     portalLabel: 'THE GRIND →',
@@ -45,6 +49,8 @@ export const ZONES = [
       `Not even a no. Just silence — which is so much worse than a no.`,
     ],
     intro: ['THE WILDERNESS', 'Round A. Round B. Round C. The path was never lit.'],
+    briefing: `You're barely out of high school. First co-op cycle, a résumé you don't really understand, every door already shut. Nobody's coming to open one. Find your own way out of the dark.`,
+    position: `STATUS · UNEMPLOYED — 0 INTERVIEWS`,
     thoughts: [
       `No map out here. Nobody's coming to give me one.`,
       `Every sign says the same thing in a different font.`,
@@ -53,31 +59,43 @@ export const ZONES = [
     ],
     revelation: null,
     torchBeat: null,
-    portalHiddenUntilRead: true,
+    // CARRY & BURN: turn the rejections into fuel. Carry each of 5 letters to the
+    // campfire and burn it; the fire grows + the exit is gated until all 5 burn.
+    objective: { label: 'TURN THE REJECTIONS INTO FUEL', kind: 'burn' },
+    // the guide walks this authored sequence in strict story order
+    script: [
+      { t: 'burnloop', label: 'Burn the rejections', thought: 'Pick one up. Carry it to the fire — turn it into light.' },
+    ],
+    gatedByObjective: true,
+    beats: [
+      { at: 'first', text: `One down. The fire's a little taller.` },
+      { at: 'complete', text: `The dark's pulling back. There's a way through now.` },
+    ],
     map: [
       '##############################',
       '#@...........................#',
-      '#.....S....###...........*...#',
+      '#.....L....###...........*...#',
       '#..........###...............#',
       '#...............###..........#',
-      '#....*.........###.....S.....#',
+      '#....*.........###.....L.....#',
       '#..###.......................#',
       '#..###..........####.........#',
-      '#...............####.....M...#',
+      '#.......K.......####.....M...#',
+      '#.....L......G...............#',
       '#............................#',
-      '#.....S......###.............#',
       '#............###.......*.....#',
       '#......###...................#',
       '#......###........####.......#',
       '#.................####.......#',
-      '#....*..................S....#',
-      '#...........###.........S....#',
+      '#....*..................L....#',
+      '#...........###.........L....#',
       '#...........###..........>...#',
       '#............................#',
       '##############################',
     ],
-    // 5 signs — two-beat { quote, inner }. The 5th is nearest the exit.
-    signs: [
+    // 5 rejection LETTERS — two-beat { quote (on pickup), inner (on burn) }.
+    // The 5th sits nearest the exit, so it's the last one burned.
+    letters: [
       {
         quote: `"We've decided to move forward with other candidates."`,
         inner: `The fourth this week. I stopped reading past the first line.`,
@@ -108,6 +126,10 @@ export const ZONES = [
     // 1 monitor → the rejection inbox
     screens: ['rejections'],
     npcs: [],
+    // the locked OFFER gate — the door that won't open no matter how you push it
+    gates: [
+      { label: 'OFFER', line: `An OFFER gate. Locked. Like the door was never really open. There's no key out here — only the long way around.` },
+    ],
     // shown on the centered card when the hidden grind exit reveals (§8.1)
     portalRevealLine: `The way out was never going to be handed to me. I have to find it.`,
     achievement: { title: 'Still Standing', desc: `0 offers, didn't quit.` },
@@ -137,6 +159,9 @@ export const ZONES = [
       `It wasn't really a job. It was a test of whether I'd keep going with nobody watching.`,
     ],
     intro: ['THE HOLLOW', 'It looked like a job. It was really a trial.'],
+    briefing: `You got a yes — an unpaid seat at a place with no idea what to do with you. No manager. No map. Weeks of silence. Whether you keep going now is entirely on you.`,
+    position: `POSITION ACCEPTED · SOFTWARE CO-OP (UNPAID)`,
+    recap: `Zero interviews behind you. This is the first yes.`,
     thoughts: [
       `Nobody's going to tell me what to do here. That's the whole lesson.`,
       `Quiet rooms teach you things loud ones can't.`,
@@ -144,7 +169,21 @@ export const ZONES = [
     ],
     revelation: null,
     torchBeat: null,
-    portalHiddenUntilRead: false,
+    // GRIND IT OUT: find the work nobody assigned and grind it through (mash the
+    // rotating prompted key). The reward is silence. Ship all 3 → the exit appears.
+    objective: { label: 'DO THE WORK NOBODY ASSIGNED', kind: 'ship' },
+    script: [
+      { t: 'sign', i: 0, label: 'Look around', thought: "Nobody's going to tell you what to do here. That's the lesson." },
+      { t: 'ship', need: 1, label: 'Ship the work', thought: 'Find the work nobody assigned. Grind it out.' },
+      { t: 'ship', need: 2, label: 'Ship the work', thought: 'Again. No one will notice. Do it anyway.' },
+      { t: 'sign', i: 1, label: 'What it taught you', thought: "Quiet rooms teach you things loud ones can't." },
+      { t: 'ship', need: 3, label: 'Ship the work', thought: 'One more. This is the whole test.' },
+    ],
+    gatedByObjective: true,
+    beats: [
+      { at: 'first', text: `No reply. No thanks. You ship it anyway.` },
+      { at: 'complete', text: `Nobody noticed. You did. That was the whole test.` },
+    ],
     map: [
       '##############################',
       '#@.........#........#........#',
@@ -156,15 +195,15 @@ export const ZONES = [
       '#....#.....#.....M.......#.*.#',
       '#....#.....#.............#...#',
       '#..........######.#####......#',
-      '#....*..........#............#',
+      '#....*..........#....W.......#',
       '#...............#.....M......#',
       '#......####.....#............#',
       '#......#........#......*.....#',
-      '#......#...S....#............#',
-      '#..........................S.#',
+      '#......#...W....#............#',
+      '#..........................W.#',
       '#....####.........####.......#',
       '#.......................>....#',
-      '#............................#',
+      '#..R.........................#',
       '##############################',
     ],
     signs: [
@@ -176,13 +215,22 @@ export const ZONES = [
         quote: `They shipped what I built as their own. Right on their front page.`,
         inner: `I could've built that page in my sleep with one hand. Watching them undervalue the work taught me exactly what it was worth — and that I'd never let it be priced that low again.`,
       },
+    ],
+    // SHIP stations — press E to send real work into the void. By design there is
+    // NO toast, NO chime, NO XP: the silence is the lesson. A quiet line lands a
+    // beat later. Shipping both is what finally reveals the exit.
+    ships: [
       {
-        quote: `Shipped a Redis caching layer. Real work, in a silent room.`,
-        inner: `Nobody asked. Nobody noticed. I did it because it needed doing — and because I needed to know I could.`,
+        label: 'Redis caching layer',
+        line: `Shipped a Redis caching layer into the void. No ticket asked for it. Nobody noticed it land. I did it because it needed doing — and because I needed to know I could.`,
       },
       {
-        quote: `Migrated 30+ components, Angular → React. −25% bundle. −35% load.`,
-        inner: `Real numbers, real wins, in a place that gave me nothing to work with. This is where the grind got forged.`,
+        label: 'Angular → React · 30+ components',
+        line: `−25% bundle. −35% load. Real numbers, sent into silence. No applause came back. That was the whole lesson — and where the grind got forged.`,
+      },
+      {
+        label: 'A bug nobody filed',
+        line: `Found a bug nobody noticed, in code nobody owned. Fixed it on a Sunday. No ticket, no thanks — just better than it was. That was enough.`,
       },
     ],
     shards: [
@@ -194,6 +242,8 @@ export const ZONES = [
     // 2 monitors → wry placeholder landing + the résumé terminal
     screens: ['hollow-landing', 'resume'],
     npcs: [],
+    // hidden cert relic — gold-beaconed only after the chapter's beats are done
+    relics: [{ id: 'az900', name: 'AZ-900', xp: 16 }],
     achievement: { title: 'Forged in the Quiet', desc: 'Learned the grind the hard way.' },
   },
 
@@ -222,34 +272,53 @@ export const ZONES = [
       `This was the chapter that actually taught me — not how to pass a test. How to learn anything.`,
     ],
     intro: ['THE FORGE', 'Build your own weapon. 30-hour weeks. Pitch to anyone who\'ll listen.'],
+    briefing: `No one will hand you a real shot — so build your own. Forge a weapon out of six systems, piece by piece. Then put it in front of a room and make them care.`,
+    position: `POSITION · CO-FOUNDER & FOUNDING ENGINEER — LEARNFLOW`,
+    recap: `Zero interviews. One unpaid seat. Now you build your own.`,
+    objective: { label: 'FORGE LEARNFLOW', kind: 'forge' },
+    script: [
+      { t: 'sign', i: 0, label: 'The brief', thought: "Build the weapon. Then show it to anyone who'll look." },
+      { t: 'gather', label: 'Collect the systems', thought: 'Six systems, scattered. Gather every one.' },
+      { t: 'sign', i: 1, label: 'The numbers', thought: 'First time the work felt like it was actually mine.' },
+      { t: 'act', kind: 'anvil', label: 'Forge it', thought: 'Take them to the anvil. Forge one tool.' },
+      { t: 'sign', i: 2, label: 'The stage', thought: 'Put it in a full room and make them care.' },
+      { t: 'act', kind: 'pitch', label: 'Pitch it', thought: 'Step on the stage. Pitch it.' },
+    ],
+    gatedByObjective: true,
+    beats: [
+      { at: 'collected', text: `Six systems in hand. Take them to the anvil.` },
+      { at: 'forged', text: `It's real now. One tool, yours. Go make them watch.` },
+    ],
     thoughts: [
       `Build the weapon. Then show it to anyone who'll look.`,
       `First time the work felt like it was actually mine.`,
       `The light's bigger in here. I'm starting to see what I can do.`,
     ],
     revelation: `The light got bigger here. And I finally got it — it was never the world brightening. It was me. The confidence I never had growing up, I was building it one real thing at a time.`,
-    torchBeat: { afterSignIndex: 2, growTo: 320 }, // fire after the pitch sign
+    // BUILD + PITCH: the torch JUMP + revelation now fire when you land the pitch
+    // (the minigame), not on a sign — the beat is earned by doing, not reading.
+    torchBeat: null,
     portalHiddenUntilRead: false,
     map: [
       '##############################',
-      '#@..........................*#',
+      '#@..........c...............*#',
       '#...........####.............#',
       '#....S......####.....N.......#',
-      '#............................#',
+      '#......c............P........#',
       '#......*.....................#',
       '#.................####.......#',
+      '#....####....c...............#',
       '#....####.........####...M...#',
-      '#....####....................#',
-      '#............................#',
+      '#..........A.................#',
       '#.........*........S.........#',
-      '#............................#',
+      '#.................c..........#',
       '#....N.......####............#',
       '#............####......*.....#',
-      '#............................#',
+      '#.......c....................#',
       '#.......S....................#',
       '#..........####..........>...#',
-      '#..........####..............#',
-      '#............................#',
+      '#..........####.........c....#',
+      '#........................R...#',
       '##############################',
     ],
     signs: [
@@ -277,6 +346,22 @@ export const ZONES = [
       { name: 'Professor', lines: ['"You presented this to my class?"', '"...this is genuinely good work."'] },
       { name: 'Classmate', lines: ['"Wait — you BUILT this? The whole thing?"'] },
     ],
+    // BUILD: collect all six systems, then forge them into one tool at the anvil.
+    components: [
+      { name: 'OCR', note: 'Google Vision' },
+      { name: 'Whisper', note: 'transcription' },
+      { name: 'GPT-4', note: 'explanations' },
+      { name: 'Retrieval', note: '6-stage pipeline' },
+      { name: 'Supabase', note: 'data' },
+      { name: 'Electron', note: 'desktop' },
+    ],
+    anvils: [
+      { line: `Six systems, forged into one tool that actually worked. LearnFlow — built mostly alone, because building it was the point.` },
+    ],
+    // PITCH: step on the stage, land the beats — the light JUMPS and the one
+    // spoken revelation lands. growTo carries the torchBeat that used to fire on a sign.
+    pitches: [{ growTo: 320 }],
+    relics: [{ id: 'ai900', name: 'AI-900', xp: 16 }],
     achievement: { title: 'Built the Weapon', desc: '150+ users, 30-hour weeks, your own thing.' },
   },
 
@@ -304,6 +389,24 @@ export const ZONES = [
       `I needed to know if the work could stand next to the best in the world.`,
     ],
     intro: ['MISSION CONTROL', 'The work could stand on a world stage.'],
+    briefing: `You've been dropped into one of the biggest hackathons on Earth. Idea Friday, live URL by Sunday. The clock's already running — build your way out.`,
+    position: `TEAM RELENTLESS · NASA SPACE APPS — 48 HOURS`,
+    recap: `Rejections, an unpaid grind, a tool you built — now a world stage.`,
+    objective: { label: 'SHIP AIRCAST', kind: 'deploy' },
+    script: [
+      { t: 'sign', i: 0, label: 'The challenge', thought: 'Zero to production in 48 hours. Build your way out.' },
+      { t: 'wire', label: 'Wire the data sources', thought: 'Wire every source into the control room.' },
+      { t: 'sign', i: 1, label: 'The stakes', thought: "Most never find out if they're good enough at this level." },
+      { t: 'act', kind: 'lever', label: 'Deploy AirCast', thought: "Pipeline's hot. Pull the lever." },
+      // the recognition comes AFTER the work shipped — the email is the last beat
+      { t: 'screen', id: 'nasa', label: 'The recognition', thought: 'The work shipped. Then the recognition came — read it.' },
+    ],
+    gatedByObjective: true,
+    beats: [
+      { at: 'first', text: `One source live. Clock's still running.` },
+      { at: 'wired', text: `Pipeline's hot. Pull the lever.` },
+      { at: 'deployed', text: `AirCast is live. You shipped it in a weekend.` },
+    ],
     thoughts: [
       `Most people never find out if they're good enough at this level. I wanted to find out.`,
       `Cleaner air, real data, real users — built in one weekend.`,
@@ -314,22 +417,22 @@ export const ZONES = [
     map: [
       '##############################',
       '#@..........................*#',
-      '#............................#',
+      '#.....o......................#',
       '#....*.......######..........#',
       '#............#....#.....S.....#',
       '#............#....#...........#',
       '#............#.MM.#...........#',
       '#............#....#...........#',
       '#....S.......##..##.......*...#',
-      '#............................#',
-      '#............................#',
+      '#....................o.......#',
+      '#.............Y..............#',
       '#......*.....................#',
       '#.................####.......#',
       '#....S............####...N...#',
       '#............................#',
-      '#............................#',
+      '#..........o.................#',
       '#..........................>.#',
-      '#............................#',
+      '#...R........................#',
       '#............................#',
       '##############################',
     ],
@@ -358,6 +461,14 @@ export const ZONES = [
     npcs: [
       { name: 'Teammate', lines: ['"Global Nominee, bro."', '"~1,290 teams. Out of more than 11,500 projects. Worldwide."'] },
     ],
+    // DEPLOY: three data-source globes. Connect each to the control-room screens;
+    // wire all three and AirCast goes live — zero to production in 48 hours.
+    dataNodes: [
+      { name: 'NASA TEMPO', marker: 'NO₂' },
+      { name: 'OpenAQ', marker: 'PM2.5' },
+      { name: 'OpenWeather', marker: 'O₃' },
+    ],
+    relics: [{ id: 'sc900', name: 'SC-900', xp: 16 }],
     achievement: { title: 'Global Nominee', desc: 'Stood out on a world stage.' },
   },
 
@@ -385,6 +496,20 @@ export const ZONES = [
       `No safety net. Just: build something real and make it count.`,
     ],
     intro: ['THE ARENA', 'You carry your own light now.'],
+    briefing: `First real corporate room, and you don't get to ease in. The calendar's already overflowing. Cut through the noise, ship something that lands, and make the room remember your name.`,
+    position: `POSITION ACCEPTED · THE ROOM YOU WERE AIMING FOR`,
+    recap: `Zero interviews. One unpaid seat. A tool you built alone. A world stage. And now — the position you've been waiting for this whole time. Don't ease in.`,
+    objective: { label: 'EARN THE ROOM', kind: 'present' },
+    script: [
+      { t: 'sign', i: 0, label: 'The room', thought: "First room like this. Don't ease in — arrive." },
+      { t: 'act', kind: 'present', label: 'Present to leadership', thought: 'Through the noise. Reach the room that matters, and present.' },
+      { t: 'sign', i: 2, label: 'It reached upstairs', thought: "You earned it from zero, in a room you'd never operated in." },
+    ],
+    gatedByObjective: true,
+    beats: [
+      { at: 'boardroom', text: `This is the room that matters. Don't waste it.` },
+      { at: 'presented', text: `They noticed. It reached upstairs.` },
+    ],
     thoughts: [
       `More meetings in a week than most people here have in a month.`,
       `I don't carry a torch in here anymore. I am the light.`,
@@ -401,17 +526,17 @@ export const ZONES = [
       '#....######..#......#..####...#',
       '#.........#..........#....#...#',
       '#.........#.....*....#....#...#',
-      '#............................#',
+      '#.....B......B......B........#',
       '#...####.........#####.......#',
       '#...#..N#........#.MM#........#',
       '#...#...#........#...#........#',
       '#...#...#........#...#...*....#',
-      '#............................#',
-      '#............................#',
+      '#.........B........B.........#',
+      '#.......................X....#',
       '#....######.......#####......#',
       '#....#.S.#........#.N.#...>...#',
       '#....#...#........#...#.......#',
-      '#............................#',
+      '#.....................V......#',
       '#............................#',
       '##############################',
     ],
@@ -441,6 +566,24 @@ export const ZONES = [
       { name: 'A director', lines: ['"So walk me through what you built."', '"...nice. Really nice. Keep going."'] },
       { name: 'Leadership', lines: ['"That work got mentioned upstairs."', '"People noticed. Keep going."'] },
     ],
+    // OWN THE ROOM: meeting doors you can't help passing — the overload shown
+    // through friction, not a screenshot. Ambient (not a required beat).
+    meetings: [
+      { name: 'Daily Standup' },
+      { name: 'Product Sync' },
+      { name: '1:1 with the lead' },
+      { name: 'Architecture Review' },
+      { name: 'Sprint Planning' },
+    ],
+    // the hidden vuln hunt — NOT on the main path; gold-beaconed once the story
+    // beats are done (fully-guided), and rewards a secret achievement.
+    vulns: [
+      {
+        title: 'Critical auth vulnerability',
+        line: `Week one. A critical auth vulnerability, live in production. Nobody assigned it to me. I just noticed it was wrong — and fixed it before anyone asked.`,
+        achievement: { title: 'Nobody Asked', desc: 'Found and fixed a critical auth vuln in week one.' },
+      },
+    ],
     achievement: { title: 'In the Arena', desc: 'Walked in with something to prove. Proved it.' },
   },
 
@@ -466,6 +609,18 @@ export const ZONES = [
       `Here's the part that's still being written.`,
     ],
     intro: ['THE HORIZON', 'Full daylight. The whole world is lit.'],
+    briefing: `Out of the buildings. Out of the dark. The whole world's lit now. The story's still being written — so say what comes next.`,
+    position: `STATUS · STILL BEING WRITTEN`,
+    objective: { label: 'SEND IT', kind: 'send' },
+    script: [
+      { t: 'sign', i: 0, label: 'The story so far', thought: 'The torch was never the point.' },
+      { t: 'sign', i: 1, label: 'The why', thought: 'Learning to see in the dark was.' },
+      { t: 'screen', id: 'contact', label: 'Send it', thought: 'Reach the terminal. Say what comes next.' },
+    ],
+    beats: [
+      { at: 'terminal', text: `This part's still being written. Start typing.` },
+      { at: 'sent', text: `That's the story. The real one. Thanks for walking it.` },
+    ],
     thoughts: [
       `The torch was never the point.`,
       `Learning to see in the dark was.`,

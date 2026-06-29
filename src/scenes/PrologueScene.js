@@ -33,7 +33,7 @@ const CARDS = [
 // the "set the scene" beat (a kid firing a template résumé into silence) that
 // replaces the old wordless, contextless desk animation
 const ROOM_LINES = [
-  { at: 1, body: "Final year of college. A degree on the way — and a résumé I'd built from a template and barely touched since." },
+  { at: 1, body: "First co-op cycle. Barely out of high school, no idea how any of this really worked — just a résumé I'd built from a template and hardly touched since." },
   { at: 8, body: 'I sent it everywhere. The same résumé, the same words, into every open door I could find.' },
   { at: 16, body: 'Not one reply. Not even a rejection — a rejection is at least an answer. This was only silence.' },
 ];

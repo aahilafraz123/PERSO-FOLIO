@@ -10,3 +10,9 @@ dist
 # stray drops in the repo root (real assets live in public/)
 /Screenshot*.png
 /*.pdf
+
+# working scratch — planning notes, not part of the shipped repo
+plan.md
+
+# Playwright MCP capture output
+.playwright-mcp

@@ -29,6 +29,21 @@ export default class BootScene extends Phaser.Scene {
 
     // shared props
     this.makeSign();
+    this.makeGate();
+    this.makeWorkbench();
+    this.makeComponent();
+    this.makeAnvil();
+    this.makeStage();
+    this.makeArtifact();
+    this.makeGlobe();
+    this.makeDoorRoom();
+    this.makeAnomaly();
+    this.makeRelic();
+    this.makeLetter();
+    this.makeCampfire();
+    this.makeLever();
+    this.makePodium();
+    this.makeBarrier();
     this.makeEmber();
     this.makeLight();
     this.makeShard();
@@ -221,6 +236,309 @@ export default class BootScene extends Phaser.Scene {
       ctx.fillStyle = '#2c1d10';
       ctx.fillRect(9, 12, 14, 1);
       ctx.fillRect(9, 15, 10, 1);
+    });
+  }
+
+  // --- locked OFFER gate (Wilderness): heavy barred door, won't open ----------
+  makeGate() {
+    this.paint('gate', 36, 44, (ctx) => {
+      // stone posts
+      ctx.fillStyle = '#2a2622';
+      ctx.fillRect(1, 4, 6, 40);
+      ctx.fillRect(29, 4, 6, 40);
+      // dark doorway
+      ctx.fillStyle = '#0c0a10';
+      ctx.fillRect(7, 8, 22, 36);
+      // iron bars
+      ctx.fillStyle = '#4a4640';
+      for (let x = 9; x < 28; x += 5) ctx.fillRect(x, 9, 2, 34);
+      ctx.fillRect(7, 16, 22, 2);
+      ctx.fillRect(7, 30, 22, 2);
+      // OFFER plate
+      ctx.fillStyle = '#b08d2e';
+      ctx.fillRect(8, 1, 20, 7);
+      ctx.fillStyle = '#15110a';
+      ctx.fillRect(10, 3, 2, 3); ctx.fillRect(13, 3, 2, 3); ctx.fillRect(16, 3, 2, 3);
+      ctx.fillRect(19, 3, 2, 3); ctx.fillRect(22, 3, 2, 3);
+      // padlock
+      ctx.fillStyle = '#d8d2c4';
+      ctx.fillRect(16, 22, 5, 5);
+      ctx.fillStyle = '#8a857a';
+      ctx.fillRect(17, 19, 3, 3);
+    });
+  }
+
+  // --- workbench (Hollow): a desk where work gets shipped into the void -------
+  makeWorkbench() {
+    this.paint('workbench', 34, 30, (ctx) => {
+      // bench top
+      ctx.fillStyle = '#3a3e4f';
+      ctx.fillRect(2, 10, 30, 14);
+      ctx.fillStyle = '#4a4f64';
+      ctx.fillRect(2, 10, 30, 4);
+      // legs
+      ctx.fillStyle = '#23262f';
+      ctx.fillRect(4, 24, 3, 5);
+      ctx.fillRect(27, 24, 3, 5);
+      // a small dim terminal (no glow — quiet room)
+      ctx.fillStyle = '#1a1c24';
+      ctx.fillRect(7, 2, 12, 9);
+      ctx.fillStyle = '#2c4a52';
+      ctx.fillRect(9, 4, 8, 5);
+      ctx.fillStyle = '#3f6b74';
+      ctx.fillRect(10, 5, 5, 1);
+      ctx.fillRect(10, 7, 3, 1);
+      // tools on the bench
+      ctx.fillStyle = '#6b7088';
+      ctx.fillRect(22, 6, 7, 2);
+      ctx.fillRect(24, 4, 2, 5);
+    });
+  }
+
+  // --- Forge: a component chip the player gathers to forge LearnFlow ----------
+  makeComponent() {
+    this.paint('component', 22, 22, (ctx) => {
+      // a glowing chip / module fragment (warm forge tone)
+      ctx.fillStyle = '#ff9a3c';
+      ctx.fillRect(5, 5, 12, 12);
+      ctx.fillStyle = '#ffd27a';
+      ctx.fillRect(7, 7, 8, 8);
+      ctx.fillStyle = '#ff7b00';
+      ctx.fillRect(9, 9, 4, 4);
+      // pins
+      ctx.fillStyle = '#ffb14a';
+      for (let x = 6; x <= 16; x += 4) { ctx.fillRect(x, 2, 2, 3); ctx.fillRect(x, 17, 2, 3); }
+      for (let y = 6; y <= 16; y += 4) { ctx.fillRect(2, y, 3, 2); ctx.fillRect(17, y, 3, 2); }
+    });
+  }
+
+  // --- Forge: the anvil where all six components fuse -------------------------
+  makeAnvil() {
+    this.paint('anvil', 34, 30, (ctx) => {
+      ctx.fillStyle = '#1c1f28';
+      ctx.fillRect(12, 22, 10, 6);      // base
+      ctx.fillRect(14, 12, 6, 10);      // waist
+      ctx.fillStyle = '#2a2d38';
+      ctx.fillRect(5, 6, 24, 8);        // body
+      ctx.fillRect(2, 7, 6, 4);         // horn
+      ctx.fillStyle = '#3a3e4c';
+      ctx.fillRect(5, 6, 24, 2);        // top face
+      // hot glow on the face
+      ctx.fillStyle = 'rgba(255,123,0,0.5)';
+      ctx.fillRect(8, 5, 16, 2);
+    });
+  }
+
+  // --- Forge: the pitch stage (a lit floor platform) -------------------------
+  makeStage() {
+    this.paint('stage', 40, 40, (ctx) => {
+      ctx.fillStyle = 'rgba(255,180,74,0.10)';
+      ctx.fillRect(2, 2, 36, 36);
+      ctx.strokeStyle = 'rgba(255,210,122,0.55)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(3, 3, 34, 34);
+      ctx.fillStyle = 'rgba(255,210,122,0.7)';
+      // corner footlights
+      [[6, 6], [32, 6], [6, 32], [32, 32]].forEach(([x, y]) => ctx.fillRect(x - 1, y - 1, 3, 3));
+    });
+  }
+
+  // --- Forge: the forged LearnFlow artifact that floats with you afterward ----
+  makeArtifact() {
+    this.paint('artifact', 20, 24, (ctx) => {
+      ctx.fillStyle = '#ffb14a';
+      ctx.beginPath();
+      ctx.moveTo(10, 1); ctx.lineTo(19, 9); ctx.lineTo(10, 23); ctx.lineTo(1, 9);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#ffd790';
+      ctx.beginPath();
+      ctx.moveTo(10, 1); ctx.lineTo(14, 9); ctx.lineTo(10, 23);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#fff3d6';
+      ctx.fillRect(8, 4, 2, 6);
+    });
+  }
+
+  // --- Mission Control: a data-source globe (spins on connect) ---------------
+  makeGlobe() {
+    this.paint('globe', 30, 32, (ctx) => {
+      // stand
+      ctx.fillStyle = '#1a2238';
+      ctx.fillRect(12, 26, 6, 4);
+      ctx.fillRect(9, 29, 12, 2);
+      // sphere
+      ctx.fillStyle = '#16304a';
+      ctx.beginPath(); ctx.arc(15, 13, 12, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#1e4a6e';
+      ctx.beginPath(); ctx.arc(15, 13, 12, Math.PI * 0.15, Math.PI * 0.95); ctx.fill();
+      // continents
+      ctx.fillStyle = '#2f7d5a';
+      ctx.fillRect(9, 8, 5, 4); ctx.fillRect(16, 12, 6, 3); ctx.fillRect(12, 17, 4, 3);
+      // meridian + highlight
+      ctx.fillStyle = 'rgba(127,212,255,0.5)';
+      ctx.fillRect(14, 2, 1, 22);
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.beginPath(); ctx.arc(11, 9, 2, 0, Math.PI * 2); ctx.fill();
+    });
+  }
+
+  // --- Arena: a meeting-room door (you pass it, a meeting auto-joins) --------
+  makeDoorRoom() {
+    this.paint('door_room', 26, 34, (ctx) => {
+      ctx.fillStyle = '#2a2d4a';
+      ctx.fillRect(2, 2, 22, 32);            // frame
+      ctx.fillStyle = '#3c4068';
+      ctx.fillRect(4, 4, 18, 28);            // door
+      ctx.fillStyle = '#4a4f7a';
+      ctx.fillRect(4, 4, 18, 3);
+      // glass slit
+      ctx.fillStyle = '#ffcf3a';
+      ctx.fillRect(7, 9, 12, 7);
+      ctx.fillStyle = '#fff0c0';
+      ctx.fillRect(8, 10, 10, 2);
+      // handle
+      ctx.fillStyle = '#d8d2c4';
+      ctx.fillRect(18, 20, 2, 4);
+    });
+  }
+
+  // --- Arena: a subtle anomaly (the hidden auth vuln) ------------------------
+  makeAnomaly() {
+    this.paint('anomaly', 26, 26, (ctx) => {
+      // a glitchy, slightly-wrong panel
+      ctx.fillStyle = '#161a2a';
+      ctx.fillRect(4, 4, 18, 18);
+      ctx.fillStyle = '#ffcf3a';
+      ctx.fillRect(6, 7, 14, 2);
+      ctx.fillStyle = '#ff5a5a';
+      ctx.fillRect(6, 11, 9, 2);             // the off-colour "wrong" bar
+      ctx.fillStyle = '#ffcf3a';
+      ctx.fillRect(6, 15, 12, 2);
+      // glitch shards
+      ctx.fillStyle = 'rgba(255,90,90,0.6)';
+      ctx.fillRect(2, 9, 3, 1); ctx.fillRect(21, 14, 4, 1); ctx.fillRect(3, 18, 2, 1);
+    });
+  }
+
+  // --- cert relic: a gold medallion (hidden completionist pickup) ------------
+  makeRelic() {
+    this.paint('relic', 22, 22, (ctx) => {
+      // medallion
+      ctx.fillStyle = '#b8902e';
+      ctx.beginPath(); ctx.arc(11, 10, 9, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#ffcf3a';
+      ctx.beginPath(); ctx.arc(11, 10, 7, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff0c0';
+      ctx.beginPath(); ctx.arc(9, 8, 2.5, 0, Math.PI * 2); ctx.fill();
+      // a small star in the centre
+      ctx.fillStyle = '#8a6a14';
+      ctx.fillRect(10, 6, 2, 8); ctx.fillRect(7, 9, 8, 2);
+      // ribbon tails
+      ctx.fillStyle = '#c0392b';
+      ctx.fillRect(7, 17, 3, 4); ctx.fillRect(12, 17, 3, 4);
+    });
+  }
+
+  // --- Wilderness: a rejection letter you carry to the fire ------------------
+  makeLetter() {
+    this.paint('letter', 20, 22, (ctx) => {
+      ctx.fillStyle = '#d8d2c2';            // paper
+      ctx.fillRect(3, 2, 14, 18);
+      ctx.fillStyle = '#efe9da';            // highlight
+      ctx.fillRect(3, 2, 14, 3);
+      ctx.fillStyle = '#9a9482';            // folded corner
+      ctx.fillRect(12, 2, 5, 5);
+      ctx.fillStyle = '#7a7464';            // text lines
+      ctx.fillRect(5, 8, 10, 1); ctx.fillRect(5, 11, 10, 1);
+      ctx.fillRect(5, 14, 7, 1);
+      ctx.fillStyle = '#b33';               // a red "rejected" stamp tilt
+      ctx.fillRect(6, 16, 8, 2);
+    });
+  }
+
+  // --- Wilderness: the campfire that grows as you feed it rejections ----------
+  makeCampfire() {
+    this.paint('campfire', 30, 30, (ctx) => {
+      // logs
+      ctx.fillStyle = '#3a2616';
+      ctx.fillRect(6, 22, 18, 4);
+      ctx.fillRect(8, 24, 14, 3);
+      ctx.fillStyle = '#2a1c10';
+      ctx.fillRect(9, 23, 2, 3); ctx.fillRect(18, 23, 2, 3);
+      // flame
+      ctx.fillStyle = '#ff7b00';
+      ctx.beginPath(); ctx.moveTo(15, 6); ctx.lineTo(21, 22); ctx.lineTo(9, 22); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#ffb14a';
+      ctx.beginPath(); ctx.moveTo(15, 11); ctx.lineTo(19, 22); ctx.lineTo(11, 22); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#fff3d6';
+      ctx.beginPath(); ctx.moveTo(15, 15); ctx.lineTo(17, 22); ctx.lineTo(13, 22); ctx.closePath(); ctx.fill();
+    });
+  }
+
+  // --- Mission: the DEPLOY lever you pull once the pipeline's wired ----------
+  makeLever() {
+    this.paint('lever', 26, 30, (ctx) => {
+      // housing
+      ctx.fillStyle = '#1a2238';
+      ctx.fillRect(4, 14, 18, 14);
+      ctx.fillStyle = '#2a3656';
+      ctx.fillRect(4, 14, 18, 4);
+      // slot
+      ctx.fillStyle = '#0a0f1c';
+      ctx.fillRect(11, 16, 4, 10);
+      // handle (up = ready to pull)
+      ctx.fillStyle = '#7a8499';
+      ctx.fillRect(12, 4, 2, 12);
+      ctx.fillStyle = '#ff5a5a';
+      ctx.beginPath(); ctx.arc(13, 4, 3, 0, Math.PI * 2); ctx.fill();
+      // DEPLOY label strip
+      ctx.fillStyle = '#00d9f5';
+      ctx.fillRect(5, 24, 16, 2);
+    });
+  }
+
+  // --- Arena: the boardroom podium you present from -------------------------
+  makePodium() {
+    this.paint('podium', 26, 30, (ctx) => {
+      // stand
+      ctx.fillStyle = '#3c4068';
+      ctx.fillRect(7, 12, 12, 16);
+      ctx.fillStyle = '#4a4f7a';
+      ctx.fillRect(7, 12, 12, 3);
+      ctx.fillStyle = '#2a2d4a';
+      ctx.fillRect(9, 27, 8, 3);
+      // slanted top with a glowing slide
+      ctx.fillStyle = '#23263a';
+      ctx.fillRect(4, 8, 18, 6);
+      ctx.fillStyle = '#ffcf3a';
+      ctx.fillRect(6, 9, 14, 3);
+      ctx.fillStyle = '#fff0c0';
+      ctx.fillRect(7, 10, 7, 1);
+    });
+  }
+
+  // --- the locked exit barrier (dissolves when the objective is complete) -----
+  makeBarrier() {
+    this.paint('barrier', 40, 48, (ctx) => {
+      // stone posts
+      ctx.fillStyle = '#2a2630';
+      ctx.fillRect(2, 6, 7, 42);
+      ctx.fillRect(31, 6, 7, 42);
+      // locked energy field (reddish)
+      ctx.fillStyle = 'rgba(255,90,90,0.16)';
+      ctx.fillRect(9, 8, 22, 40);
+      // bars
+      ctx.fillStyle = '#4a4550';
+      for (let x = 11; x < 30; x += 5) ctx.fillRect(x, 8, 2, 40);
+      ctx.fillRect(9, 14, 22, 2);
+      ctx.fillRect(9, 40, 22, 2);
+      // big padlock
+      ctx.fillStyle = '#8a857a';
+      ctx.fillRect(17, 21, 6, 5); // shackle
+      ctx.fillStyle = '#d8d2c4';
+      ctx.fillRect(15, 25, 10, 9); // body
+      ctx.fillStyle = '#2a2630';
+      ctx.fillRect(19, 28, 2, 4); // keyhole
     });
   }
 

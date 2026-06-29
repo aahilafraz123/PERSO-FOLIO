@@ -4,6 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "description": "RELENTLESS — a top-down pixel-art RPG portfolio. v1: The Wilderness.",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -243,11 +243,21 @@ if (heroName) {
 // --- Vault page logic -------------------------------------------------------
 let vaultInited = false;
 function initVaultPage() {
-  // Staggered entrance — add .vp-visible to each card with a delay
+  // Keep any pinned-last card (e.g. RELENTLESS, this site itself) at the very
+  // end of the grid no matter where it sits in the HTML — append new projects
+  // above it and it still trails. appendChild is idempotent once it's last.
+  const grid = document.getElementById('vp-grid');
+  if (grid) grid.querySelectorAll('.vp-card[data-pin="last"]').forEach((c) => grid.appendChild(c));
+
   const cards = document.querySelectorAll('#vp-grid .vp-card');
+  // Force animation restart: strip class, reflow, re-add
+  cards.forEach((card) => card.classList.remove('vp-entering'));
   cards.forEach((card, i) => {
     card.style.animationDelay = `${i * 90}ms`;
-    card.classList.add('vp-entering');
+  });
+  // rAF ensures removal is committed before re-adding
+  requestAnimationFrame(() => {
+    document.querySelectorAll('#vp-grid .vp-card').forEach((card) => card.classList.add('vp-entering'));
   });
 
   // Mouse-tracking inner glow

@@ -10,6 +10,9 @@ export const GameState = {
   collectedShards: new Set(), // unique ids, so re-entering a zone can't double-count
   achievements: [], // { title, desc }
   visitedZones: new Set(),
+  relics: new Set(),  // cert relics found (AZ-900 / AI-900 / SC-900) — completionist
+  secrets: new Set(), // hidden beats found (the vuln hunt) — bonus achievements
+  meetingCount: 0,    // running tally for the Arena meeting-gauntlet gag
 
   // XP needed to reach the next level grows a little each time.
   xpForLevel(level) {
@@ -41,12 +44,37 @@ export const GameState = {
     return true;
   },
 
+  // a hidden relic / secret — collect once, award XP + (optionally) an achievement
+  collectRelic(id, xp = 14) {
+    if (this.relics.has(id)) return false;
+    this.relics.add(id);
+    this.addXp(xp);
+    this.emit({ type: 'relic', id });
+    return true;
+  },
+
+  findSecret(id) {
+    if (this.secrets.has(id)) return false;
+    this.secrets.add(id);
+    this.emit({ type: 'secret', id });
+    return true;
+  },
+
+  bumpMeetings(n = 1) {
+    this.meetingCount += n;
+    this.emit({ type: 'meeting', count: this.meetingCount });
+    return this.meetingCount;
+  },
+
   reset() {
     this.xp = 0;
     this.level = 1;
     this.collectedShards = new Set();
     this.achievements = [];
     this.visitedZones = new Set();
+    this.relics = new Set();
+    this.secrets = new Set();
+    this.meetingCount = 0;
     this.emit({ type: 'reset' });
   },
 

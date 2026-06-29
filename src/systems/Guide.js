@@ -40,12 +40,15 @@ export default class Guide {
     }
   }
 
-  show(pos, objective) {
+  show(pos, objective, { color = 0x00d9f5, chevron = '#9fefff' } = {}) {
     this.target = { x: pos.x, y: pos.y };
     // inner-voice line rendered as DOM (Phaser canvas text mis-wraps web fonts)
     window.dispatchEvent(new CustomEvent('relentless:objective', { detail: { text: objective || '' } }));
-    this.glow.setPosition(pos.x, pos.y).setVisible(true);
-    this.chevron.setVisible(true);
+    // a second language of light: cyan = guidance to story beats; gold = an
+    // optional secret you weren't asked to find (kept distinct from the reward).
+    this.glow.setTint(color).setPosition(pos.x, pos.y).setVisible(true);
+    this.chevron.setColor(chevron).setVisible(true);
+    this.dots.forEach((d) => d.setTint(color));
   }
 
   hide() {

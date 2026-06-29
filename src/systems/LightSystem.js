@@ -69,6 +69,7 @@ export default class LightSystem {
 
   /** Call every frame after the camera has updated. */
   update(player) {
+    if (!this.rt || !this.rt.scene) return; // torn down mid-restart
     const cam = this.scene.cameras.main;
     this.flicker = Math.sin(this.scene.time.now / 95) * 3.5
       + Math.sin(this.scene.time.now / 47) * 1.5; // layered = organic flame
@@ -88,5 +89,7 @@ export default class LightSystem {
   destroy() {
     this.rt?.destroy();
     this.stamp?.destroy();
+    this.rt = null;
+    this.stamp = null;
   }
 }

@@ -1,5 +1,6 @@
 import { GameState } from './state.js';
 import { VIEW_W, VIEW_H } from '../config/constants.js';
+import { ZONES } from '../data/story.js';
 
 /**
  * Hud — top-left level + XP bar, top-center zone name, and bottom-right
@@ -12,9 +13,10 @@ export default class Hud {
     const DEPTH = 1800;
     const mono = 'JetBrains Mono, Courier New, monospace';
 
-    // --- zone name (top center) ---
+    // --- level name (top center) ---
+    const levelNum = Math.max(1, ZONES.findIndex((z) => z.key === zone.key) + 1);
     scene.add
-      .text(VIEW_W / 2, 16, `CHAPTER ${zone.chapter} — ${zone.name}`, {
+      .text(VIEW_W / 2, 16, `LEVEL ${levelNum} — ${zone.name}`, {
         fontFamily: mono, fontSize: '13px', color: '#9aa0bd',
       })
       .setOrigin(0.5, 0)
@@ -53,6 +55,14 @@ export default class Hud {
       .setScrollFactor(0)
       .setDepth(DEPTH);
 
+    // cert-relic tracker (top-right) — only shows once you've found one
+    this.relicText = scene.add
+      .text(VIEW_W - 16, 58, '', { fontFamily: mono, fontSize: '11px', color: '#ffcf3a' })
+      .setOrigin(1, 0)
+      .setScrollFactor(0)
+      .setDepth(DEPTH)
+      .setShadow(0, 2, '#000', 4);
+
     // --- controls hint (bottom left) ---
     scene.add
       .text(16, VIEW_H - 22, 'ARROWS / WASD move   ·   E interact   ·   ESC exit', {
@@ -78,6 +88,10 @@ export default class Hud {
     this.levelText.setText(`LVL ${GameState.level}`);
     this.barFill.width = Math.max(0, (this.barW - 2) * frac);
     this.xpText.setText(`${GameState.xp} / ${need} XP`);
+    if (this.relicText) {
+      const n = GameState.relics.size;
+      this.relicText.setText(n ? `✦ Relics ${n}/3` : '');
+    }
   }
 
   flashLevel() {

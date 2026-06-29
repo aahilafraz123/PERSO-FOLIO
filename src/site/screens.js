@@ -154,12 +154,21 @@ const SCREENS = {
   contact: {
     title: 'contact — let\'s build something',
     body: `
-      <div class="crt-reveal">I'm Aahil.</div>
-      <div class="crt-contact">
+      <pre class="crt-term" id="contact-boot"></pre>
+      <div class="crt-contact" id="contact-links" style="opacity:0;transition:opacity .6s">
         <a href="#" data-edit>LinkedIn ↗</a>
         <a href="#" data-edit>GitHub ↗</a>
         <a href="#" data-edit>Email ↗</a>
       </div>`,
+    // the contact terminal boots up and prints itself line-by-line (see runTyper)
+    typer: [
+      '> establishing connection ...',
+      '> identity   : Aahil Afraz',
+      '> role       : Software Engineer',
+      '> status     : open to building something that matters',
+      '>',
+      '> reach me below ↓',
+    ],
     caption: 'That was my story — the real one. If you felt any of it, that was the whole point. Let\'s build something.',
   },
 
@@ -172,6 +181,25 @@ const SCREENS = {
 };
 
 let active = null;
+
+// type a screen's `typer` lines into its boot terminal, then reveal the links.
+// setInterval-based (not rAF) so it still advances in a backgrounded tab.
+function runTyper(root, lines) {
+  const pre = root.querySelector('#contact-boot');
+  const links = root.querySelector('#contact-links');
+  if (!pre) return;
+  let shown = '';
+  let li = 0;
+  let ci = 0;
+  const step = () => {
+    if (!root.isConnected) return; // modal closed mid-type
+    if (li >= lines.length) { if (links) links.style.opacity = '1'; return; }
+    const line = lines[li];
+    if (ci <= line.length) { pre.textContent = `${shown}${line.slice(0, ci)}`; ci += 1; setTimeout(step, 20); }
+    else { shown += `${line}\n`; li += 1; ci = 0; setTimeout(step, 220); }
+  };
+  step();
+}
 
 function close() {
   if (!active) return;
@@ -216,6 +244,8 @@ function open(id) {
     };
     probe.src = src;
   }
+
+  if (s.typer) runTyper(root, s.typer);
 
   root.querySelector('.screen-backdrop').addEventListener('click', close);
   root.querySelector('.screen-close').addEventListener('click', close);
