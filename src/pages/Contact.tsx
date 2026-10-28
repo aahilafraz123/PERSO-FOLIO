@@ -33,9 +33,13 @@ export default function Contact() {
   )
 
   return (
-    <main ref={root} className="theme-light relative isolate w-full max-w-full overflow-x-hidden">
-      {/* Ambient backdrop for the whole page; the footer's own opaque background covers it from there on. */}
-      <Caustics className="fixed inset-0 -z-10" />
+    <main ref={root} className="theme-light relative isolate w-full max-w-full overflow-x-clip">
+      {/* Ambient backdrop for the whole page, sticking inside it rather than fixed, so it ends where the page does. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="sticky top-0 h-svh">
+          <Caustics />
+        </div>
+      </div>
 
       <section className="pb-16 pt-40 md:pt-48">
         <div className="container-x">

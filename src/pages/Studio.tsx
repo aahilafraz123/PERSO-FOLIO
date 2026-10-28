@@ -118,8 +118,13 @@ export default function Studio() {
 
   return (
     <main className="theme-dark relative isolate w-full max-w-full overflow-x-clip">
-      <div aria-hidden className="film-grain" />
-      <Ambient source={light} strength={0.2} className="fixed inset-0 -z-10" />
+      {/* Backdrops stay on screen by sticking inside the page, not by being fixed, so they end where the page does. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-40">
+        <div className="film-grain sticky top-0 h-svh" />
+      </div>
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <Ambient source={light} strength={0.2} className="sticky top-0 h-svh w-full" />
+      </div>
 
       {/* Hero: the deck */}
       <section ref={hero} className="relative flex min-h-svh items-center overflow-hidden">

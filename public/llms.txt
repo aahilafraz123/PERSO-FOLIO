@@ -18,9 +18,6 @@
 - [NASDAQ ITCH Order Book](https://github.com/aahilafraz123/itch-orderbook): A C++20 limit order book that rebuilds real NASDAQ ITCH 5.0 data at 12.7M messages a second, p99 417 ns.
 - [LearnFlow](https://aahilafraz.com/work/learnflow): A production AI learning platform I founded and launched to 150+ beta users.
 - [StockAnalyzer](https://aahilafraz.com/work/stock-analyzer): Enter a stock ticker and get a research report in seconds.
-- [Transcriber](https://aahilafraz.com/work/transcriber): A transcription app that runs entirely on your Mac. No audio is uploaded.
-- [Angular → React migration](https://aahilafraz.com/work/enable-games): Moved a production game portal from Angular to React. First load 35% faster.
-- [PhillyFeelSafe](https://aahilafraz.com/work/phillyfeelsafe): An interactive safety map of Philadelphia, built by a four-person team.
 
 ## Elsewhere
 

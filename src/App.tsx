@@ -28,11 +28,13 @@ export default function App() {
           <div id="content" className="w-full max-w-full overflow-x-clip">
             <PageTransition>
               {/*
-                The page is a sheet that lifts off the footer, above it in z. The rounded bottom edge is a
-                clip-path rather than border-radius + overflow, because clip-path also clips fixed layers
-                inside pages (the Studio's ambient light), which would otherwise paint over the footer.
+                The page is a sheet that lifts off the footer, above it in z. Its rounded bottom corners are two
+                small caps in the footer's colour, not a clip-path: a clip-path on the whole page made the GPU
+                draw a surface as tall as the page, and past 16,384 device pixels (the home page at 2x) Chrome
+                can't hold it in one texture, so WebGL and animated layers flickered or stopped painting.
+                Pages keep their backdrops absolute + sticky rather than fixed, so nothing paints over the footer.
               */}
-              <div className="relative z-10 overflow-x-clip bg-background [clip-path:inset(0_round_0_0_28px_28px)] md:[clip-path:inset(0_round_0_0_48px_48px)]">
+              <div className="relative z-10 overflow-x-clip bg-background">
                 <Suspense fallback={<div className="min-h-svh" />}>
                   <Routes>
                     <Route path="/" element={<Home />} />
@@ -43,6 +45,8 @@ export default function App() {
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
+                <span aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-50 size-7 bg-[radial-gradient(circle_at_100%_0,transparent_27.5px,#050505_28px)] md:size-12 md:bg-[radial-gradient(circle_at_100%_0,transparent_47.5px,#050505_48px)]" />
+                <span aria-hidden className="pointer-events-none absolute bottom-0 right-0 z-50 size-7 bg-[radial-gradient(circle_at_0_0,transparent_27.5px,#050505_28px)] md:size-12 md:bg-[radial-gradient(circle_at_0_0,transparent_47.5px,#050505_48px)]" />
               </div>
               <Footer />
             </PageTransition>

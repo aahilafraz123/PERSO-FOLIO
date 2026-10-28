@@ -17,7 +17,7 @@ export default function Work() {
 
   return (
     <main className="theme-light relative isolate w-full max-w-full overflow-x-clip">
-      {/* Absolute, not fixed: a fixed layer inside the page sheet's clip-path stops the page painting past the first screen. */}
+      {/* Absolute, not fixed, so it ends where the page does instead of painting over the footer. */}
       <div aria-hidden className="vault-bg pointer-events-none absolute inset-0 -z-10" />
       <WorkHero />
       <Builds items={allBuilds} title={null} writeups />

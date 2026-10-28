@@ -58,7 +58,7 @@ export const about = {
   /** Rendered after the paragraphs, followed by a pointer to the photos beside it. */
   outside: "Outside of work I take photos and release music as Azrael.",
   facts: [
-    { label: "Now", value: "Software engineer, Zaro Health", href: "https://zarohealth.com/" },
+    { label: "Now", value: "Zaro Health, software engineer", href: "https://zarohealth.com/" },
     { label: "Previously", value: "Software engineering co-op, DevSecOps, Comcast" },
     { label: "Studying", value: "B.S. Software Engineering, minor in Finance, Drexel University, 2028" },
     { label: "Outside work", value: "Photography, and music as Azrael" },

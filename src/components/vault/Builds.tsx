@@ -141,7 +141,7 @@ export function Builds({ items = builds, eyebrow = "Projects", title = "Things I
                     <span aria-hidden className="grid size-5 place-items-center rounded-md bg-white text-[10px] text-foreground ring-1 ring-black/[0.06]">
                       {b.logo ? <img src={b.logo} alt="" className="size-3.5" /> : b.title[0]}
                     </span>
-                    {b.title}
+                    {b.chip ?? b.title}
                   </button>
                 </li>
               )
@@ -198,7 +198,13 @@ function Card({ b, writeup }: { b: Build; writeup: boolean }) {
       </div>
 
       {/* The picture, with how-it-works sliding up over it on hover or tap. */}
-      <div className="group/visual relative mx-6 aspect-[16/9] overflow-hidden rounded-2xl bg-[#f2f2f4] ring-1 ring-black/[0.06] md:mx-7">
+      {/* With no numbers under it, the picture grows to fill the card beside it. */}
+      <div
+        className={cn(
+          "group/visual relative mx-6 aspect-[16/9] overflow-hidden rounded-2xl bg-[#f2f2f4] ring-1 ring-black/[0.06] md:mx-7",
+          !b.metrics.length && "lg:aspect-auto lg:min-h-[18rem] lg:flex-1",
+        )}
+      >
         <Visual b={b} />
         <div
           data-lenis-prevent
@@ -207,7 +213,7 @@ function Card({ b, writeup }: { b: Build; writeup: boolean }) {
             open ? "translate-y-0" : "translate-y-full [@media(hover:hover)]:group-hover/visual:translate-y-0",
           )}
         >
-          <p className="eyebrow">How it works</p>
+          <p className="eyebrow">{b.more ?? "How it works"}</p>
           <ol className="mt-3 space-y-2.5">
             {b.points.map((p, i) => (
               <li key={p} className="flex gap-3 text-[13.5px] leading-snug text-foreground/85">
@@ -233,22 +239,34 @@ function Card({ b, writeup }: { b: Build; writeup: boolean }) {
           )}
         >
           {open ? <X className="size-3.5" /> : <Info className="size-3.5" />}
-          {open ? "Close" : "How it works"}
+          {open ? "Close" : (b.more ?? "How it works")}
         </button>
       </div>
 
-      <dl className="mx-6 mt-4 grid grid-cols-3 gap-4 md:mx-7">
-        {b.metrics.map((m) => (
-          <div key={m.label} className="min-w-0">
-            <dt className="bi-num text-[26px] font-semibold leading-none tracking-[-0.035em] tabular-nums md:text-[30px]" data-value={m.value}>
-              {m.value}
-            </dt>
-            <dd className="mt-2 text-[12px] leading-snug text-muted-foreground">{m.label}</dd>
-          </div>
-        ))}
-      </dl>
+      {b.metrics.length > 0 && (
+        <dl className="mx-6 mt-4 grid grid-cols-3 gap-4 md:mx-7">
+          {b.metrics.map((m) => (
+            <div key={m.label} className="min-w-0">
+              <dt className="bi-num text-[26px] font-semibold leading-none tracking-[-0.035em] tabular-nums md:text-[30px]" data-value={m.value}>
+                {m.value}
+              </dt>
+              <dd className="mt-2 text-[12px] leading-snug text-muted-foreground">{m.label}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
 
       <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 p-6 pt-5 md:px-7 md:pb-6">
+        {b.site && (
+          <a
+            href={b.site.href}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full bg-foreground px-4 text-[13px] font-semibold text-background transition-colors hover:bg-foreground/85"
+          >
+            {b.site.label} <ArrowUpRight className="size-3.5 opacity-60" />
+          </a>
+        )}
         <CodeButton b={b} />
         {writeup && (
           <Link
@@ -278,7 +296,7 @@ function Card({ b, writeup }: { b: Build; writeup: boolean }) {
 function Mark({ b }: { b: Build }) {
   return (
     <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-xl bg-white ring-1 ring-black/[0.08]">
-      {b.logo ? <img src={b.logo} alt="" className="size-6" /> : <span className="text-[16px] font-semibold">{b.title[0]}</span>}
+      {b.logo ? <img src={b.logo} alt="" className="max-h-7 max-w-[30px]" /> : <span className="text-[16px] font-semibold">{b.title[0]}</span>}
     </span>
   )
 }
@@ -315,6 +333,9 @@ function Visual({ b }: { b: Build }) {
     return (
       <>
         <img key={s.src} src={s.src} alt={s.alt} width={s.width} height={s.height} loading="lazy" className="size-full object-cover object-left-top" />
+        {s.illustration && (
+          <span className="absolute bottom-3 left-3 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur">Illustration</span>
+        )}
         {b.shots.length > 1 && (
           <div className="absolute left-3 top-3 flex gap-1 rounded-full bg-white/90 p-1 shadow-md backdrop-blur">
             {b.shots.map((x, i) => (
@@ -357,6 +378,18 @@ function Visual({ b }: { b: Build }) {
     return (
       <div className="absolute inset-0 flex items-center justify-center" style={{ background: b.art.bg }}>
         <img src={b.art.src} alt={b.art.alt} loading="lazy" className="h-[86%] w-auto rounded-2xl shadow-[0_30px_60px_-20px_rgb(0_0_0/0.6)]" />
+      </div>
+    )
+  if (b.brand)
+    return (
+      <div className="absolute inset-0 grid place-items-center overflow-hidden bg-white">
+        {/* The peacock's six colours, fanned out and blurred behind the logo. */}
+        <div
+          aria-hidden
+          className="absolute -bottom-1/2 left-1/2 aspect-square w-[120%] -translate-x-1/2 rounded-full opacity-45 blur-3xl"
+          style={{ background: "conic-gradient(from 270deg, #0db14b 0deg, #0089d0 30deg, #6460aa 60deg, #cc004c 90deg, #f37021 120deg, #fcb711 150deg, #fcb711 180deg, transparent 180deg)" }}
+        />
+        <img src={b.brand.logo} alt={b.brand.name} className="relative w-[44%] max-w-[320px] drop-shadow-[0_10px_30px_rgb(0_0_0/0.08)]" />
       </div>
     )
   if (b.flow) {

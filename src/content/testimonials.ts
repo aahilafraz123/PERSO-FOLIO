@@ -21,6 +21,8 @@ export type Testimonial = {
   profile?: string
   /** How we worked together, in their words where the source gives it. */
   relationship?: string
+  /** Plain-words gloss on the relationship, for anyone who doesn't know the term. */
+  relationshipHint?: string
   date: string
   /** Verbatim excerpt. Use "…" for any cut, never reword. */
   quote: string
@@ -79,7 +81,7 @@ export const testimonials: Testimonial[] = [
     quote:
       "He also demonstrated an impressive ability to leverage AI and emerging technologies to improve efficiency, accelerate analysis, and develop practical solutions for engineering and business needs.",
     highlight: "an impressive ability to leverage AI",
-    pull: "I highly recommend Aahil",
+    pull: "An impressive ability to leverage AI and emerging technologies.",
     full: junaid,
     source: {
       kind: "linkedin",
@@ -104,11 +106,12 @@ export const testimonials: Testimonial[] = [
     trait: "Speed",
     // LinkedIn lists him as senior to Aahil but not his manager, so nothing here may claim he managed him.
     relationship: "Aahil's skip-level leader",
+    relationshipHint: "his manager's manager",
     date: "Sep 17, 2026",
     quote:
       "He owned more scope than a typical co-op, was comfortable with ambiguity, and moved faster from idea to production, needing less hand-holding than most. … Aahil has what it takes.",
     highlight: "moved faster from idea to production",
-    pull: "Aahil has what it takes.",
+    pull: "He owned more scope than a typical co-op.",
     full: scott,
     source: {
       kind: "linkedin",

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { ArrowUpRight, Maximize2 } from "lucide-react"
+import { ArrowUpRight, Maximize2, UserCheck } from "lucide-react"
 import { profile } from "@/content/profile"
 import { verifiedTestimonials, type Testimonial } from "@/content/testimonials"
 import { BrandIcon } from "@/components/BrandIcon"
@@ -58,11 +58,19 @@ function RecCard({ t, onOpen }: { t: Testimonial; onOpen: () => void }) {
         </span>
         <div className="min-w-0">
           <p className="text-[16px] font-semibold leading-tight">{t.name}</p>
-          <p className="text-[13px] leading-snug text-muted-foreground">
-            {t.shortTitle.split(",")[0]}, Comcast{t.relationship && <> · {t.relationship}</>}
-          </p>
+          <p className="text-[13px] leading-snug text-muted-foreground">{t.shortTitle.split(",")[0]}, Comcast</p>
         </div>
       </div>
+
+      {/* Who they are to Aahil, up front, so nobody has to work it out from a job title. */}
+      {t.relationship && (
+        <p className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-[14px] font-semibold text-background">
+            <UserCheck className="size-4" /> {t.relationship}
+          </span>
+          {t.relationshipHint && <span className="text-[14px] font-medium text-foreground/70">{t.relationshipHint}</span>}
+        </p>
+      )}
 
       <blockquote className="mt-6 text-[28px] font-semibold leading-tight tracking-[-0.025em] md:text-[32px]">“{t.pull}”</blockquote>
 

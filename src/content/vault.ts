@@ -8,7 +8,15 @@ import { bySlug, type Metric } from "./projects"
  */
 
 /** A screenshot shown with a project. */
-export type Shot = { src: string; alt: string; label: string; width: number; height: number }
+export type Shot = {
+  src: string
+  alt: string
+  label: string
+  width: number
+  height: number
+  /** A generated image rather than a real screenshot: marked as such on the picture. */
+  illustration?: boolean
+}
 
 export type Build = {
   id: string
@@ -31,6 +39,8 @@ export type Build = {
   links: { label: string; href: string }[]
   /** Logo shown next to the title; projects without one get a monogram. */
   logo?: string
+  /** Internal work with nothing to screenshot: the company's own logo fills the picture. */
+  brand?: { logo: string; name: string }
   shots?: Shot[]
   /** Phone-size screenshots, shown layered. */
   phones?: Shot[]
@@ -38,6 +48,12 @@ export type Build = {
   art?: { src: string; alt: string; bg: string }
   /** For projects without screenshots: where the data comes from, what reads it, what comes out. */
   flow?: { inputs: string[]; engine: string; output: string }
+  /** Label for the button that slides up the details, said for this project. Default "How it works". */
+  more?: string
+  /** A live site, shown as the main button. */
+  site?: { label: string; href: string }
+  /** Shorter name for the jump chips, where the title alone would be unclear. */
+  chip?: string
 }
 
 const fromProject = (slug: string, b: Pick<Build, "line"> & Partial<Build>): Build => {
@@ -112,6 +128,7 @@ export const builds: Build[] = [
     ],
     stack: ["Python", "FastAPI", "LangGraph", "Claude", "MCP", "PayPal REST", "React", "TypeScript", "Docker"],
     repo: "https://github.com/aahilafraz123/agentguard-merchant",
+    more: "How it stops attacks",
     links: [{ label: "PayPal AI Hackathon", href: "https://paypalaihackathon.devpost.com/" }],
     logo: logos.paypal,
     shots: [
@@ -127,7 +144,13 @@ export const builds: Build[] = [
   fromProject("aircast", {
     titlePrefix: "NASA Space Apps Challenge 2025",
     kicker: "Global Nominee · Oct 2025",
-    line: "AI air-quality forecasts from NASA satellite data, built and shipped to Azure in 48 hours",
+    line: "Awarded Global Nominee: Top 1,290 of 11,500+ Teams Worldwide",
+    metrics: [
+      { value: "48h", label: "from idea to live on Azure" },
+      { value: "6h", label: "air-quality forecast ahead, on a live map" },
+      { value: "3", label: "data feeds combined: NASA TEMPO, OpenAQ, OpenWeather" },
+    ],
+    more: "What we built in 48 hours",
     logo: logos.nasaColor,
     art: {
       src: "/projects/aircast-nominee.webp",
@@ -156,9 +179,19 @@ export const builds: Build[] = [
     stack: ["C++20", "Linux", "NASDAQ ITCH 5.0", "GoogleTest", "Docker", "GitHub Actions", "perf"],
     repo: "https://github.com/aahilafraz123/itch-orderbook",
     links: [],
+    shots: [
+      {
+        src: "/projects/itch-orderbook.webp",
+        alt: "Art: an order book as glass sculpture, green bids and red asks stepping down to a bright line at the spread",
+        label: "Concept",
+        width: 1600,
+        height: 905,
+      },
+    ],
   },
   {
     id: "bankify",
+    more: "Read more",
     title: "Bankify",
     kicker: "Solo build · 2026",
     line: "An AI command center for your money that finds what's costing you and explains it in plain words",
@@ -186,6 +219,7 @@ export const builds: Build[] = [
     ],
   },
   fromProject("stock-analyzer", {
+    more: "What's in a report",
     line: "Type a ticker, get a research report: SEC filings, earnings calls and 10 live sources, read by Claude",
     points: [
       "Fetches 10 data sources at once, so a report takes as long as the slowest source, and any one failing never stops it",
@@ -204,6 +238,7 @@ export const builds: Build[] = [
     ],
   }),
   fromProject("learnflow", {
+    more: "What it does",
     line: "A production AI learning platform I founded and launched. 150+ beta users",
     codeNote: "Private repo, code on request",
     shots: [
@@ -213,6 +248,7 @@ export const builds: Build[] = [
         label: "Concept",
         width: 1600,
         height: 905,
+        illustration: true,
       },
     ],
   }),
@@ -223,21 +259,58 @@ export const builds: Build[] = [
  * place on the recruiter page. Cards here also link to the full write-up.
  */
 const build = (id: string) => builds.find((b) => b.id === id)!
+const comcastBuild = fromProject("security-analytics", {
+  titlePrefix: "Comcast Co-op",
+  chip: "Comcast",
+  line: "Just wrapped a 6-month software engineering co-op at Comcast, with a return offer. I built the AI security platform its engineering leaders use.",
+  logo: logos.comcast,
+  brand: { logo: logos.comcast, name: "Comcast" },
+  codeNote: comcastWork.note,
+  more: "Learn more about Aahil's journey",
+})
+
+/** Zaro Health's landing page, which I designed. Home page only: it points people at the live site. */
+const zaroBuild: Build = {
+  id: "zaro-health",
+  title: "The landing page",
+  titlePrefix: "Zaro Health",
+  chip: "Zaro Health",
+  kicker: "Software engineer · Aug 2026 – now",
+  line: "I designed Zaro Health's landing page from top to bottom, every section and every image. Go take a look at it live.",
+  summary: "Zaro Health's public site, designed and built by me, including the imagery, generated with Higgsfield.",
+  points: [
+    "Designed every section of the landing page, from the hero to the footer",
+    "Film-graded photography made with Higgsfield, so the images read as real",
+    "Built and shipped to production at zarohealth.com",
+  ],
+  metrics: [],
+  stack: ["Next.js", "Higgsfield"],
+  links: [],
+  site: { label: "Visit zarohealth.com", href: "https://zarohealth.com/" },
+  logo: logos.zaro,
+  shots: [
+    {
+      src: "/projects/zaro-landing.webp",
+      alt: "The zarohealth.com landing page, designed by Aahil: a hiker on a ridge at dusk under the line \"Your body knows. Now you will too.\"",
+      label: "Live site",
+      width: 1200,
+      height: 850,
+    },
+  ],
+  more: "What I designed",
+}
+
+/** Home page "Selected work": Comcast and Zaro first, then the two hackathons, then Bankify. */
+export const homeBuilds: Build[] = [comcastBuild, zaroBuild, build("agentguard"), build("aircast"), build("bankify")]
+
 export const allBuilds: Build[] = [
   build("agentguard"),
   build("aircast"),
-  fromProject("security-analytics", {
-    line: "One view of security risk for engineering leaders, inside the portal 30,000+ engineers use",
-    logo: logos.comcast,
-    codeNote: comcastWork.note,
-  }),
+  comcastBuild,
   build("itch-orderbook"),
   build("bankify"),
   build("stock-analyzer"),
   build("learnflow"),
-  fromProject("enable-games", { line: bySlug("enable-games")!.headline }),
-  fromProject("transcriber", { line: bySlug("transcriber")!.headline }),
-  fromProject("phillyfeelsafe", { line: bySlug("phillyfeelsafe")!.headline }),
 ]
 
 export type Design = {
