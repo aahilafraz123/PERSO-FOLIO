@@ -1,13 +1,22 @@
 {
-  // Cloudflare Workers config — deploys the Vite build (./dist) as a static
-  // assets-only Worker. No server code: Cloudflare serves the files from its
-  // edge, same as Pages. `npx wrangler deploy` reads this.
+  // Cloudflare Worker: serves the Vite build (./dist) from the edge and runs
+  // worker/index.ts only for /api/* (the contact form). `npm run deploy` builds and ships.
   "name": "aahilafraz",
-  "compatibility_date": "2025-01-01",
+  "main": "worker/index.ts",
+  "compatibility_date": "2025-09-01",
   "assets": {
     "directory": "./dist",
-    // hash routing means the server only ever sees "/", but if a deep path is
-    // ever requested, hand back index.html instead of a 404.
-    "not_found_handling": "single-page-application"
-  }
+    "binding": "ASSETS",
+    // Real paths (/work/aircast) are client routes: unknown paths get index.html.
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  // The Worker is the origin for both hostnames; Cloudflare manages their DNS and certificates.
+  // www is sent to the apex by a Redirect Rule on the zone (dashboard > Rules).
+  "routes": [
+    { "pattern": "aahilafraz.com", "custom_domain": true },
+    { "pattern": "www.aahilafraz.com", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+  // Secrets: wrangler secret put RESEND_API_KEY / CONTACT_TO
 }

@@ -1,120 +1,47 @@
-# RELENTLESS
+# aahilafraz.com
 
-A portfolio that isn't a page — it's an experience you can **read** or **play**.
+Personal site of Aahil Afraz: engineer, designer, photographer, and the artist Azrael.
 
-Live: **[aahilafraz.com](https://aahilafraz.com)**
+**Stack:** Vite · React 19 · TypeScript · Tailwind v4 · shadcn/ui + React Bits · GSAP (ScrollTrigger, SplitText) · Lenis · React Three Fiber · Cloudflare Workers
 
-Most engineering portfolios are a list. This one is a story about going from
-zero interviews to a seat in the arena, and it gives you two honest ways through
-it: a clean editorial bio if you have five minutes and a coffee, or a top-down
-pixel-art RPG if you'd rather walk the dark with a torch and find the story
-yourself. Same story, two doors.
+## Pages
 
----
+| Route | What |
+| --- | --- |
+| `/` | Hero (WebGL glass), proof marquee, wins bento, "five sides" persona, stacked selected work, studio teaser, hire-me |
+| `/work` | The Vault. Every project with results and receipts. Resume-linkable: `/work/<slug>` opens that project directly |
+| `/studio` | Music player (persists across pages), Spotify + Apple Music embeds, photo gallery with lightbox |
+| `/contact` | Inquiry form (emails via Resend) + Cal.com booking |
 
-## The idea
+## Editing content
 
-The whole thing is built on one image: **darkness to light.**
+Everything lives in `src/content/`:
 
-When you play, the screen starts almost black. You carry a torch, and the only
-part of the world you can see is the small circle of light around you. As you
-move through the chapters — the rejections, the grind, the first thing that
-actually shipped — the light grows. The torch radius *is* the confidence being
-earned. The mechanic and the message are the same thing. Nothing in the build
-survives if it doesn't serve that.
+- `profile.ts`: bio, links, services, skills, **`calLink`** (your Cal.com link, e.g. `"aahilafraz/intro"`)
+- `projects.ts`: the Vault. Slugs become `/work/<slug>` URLs
+- `tracks.ts`: music. Put audio in `public/music/`, covers in `public/music/covers/`, add an entry per track
+- `photos.ts`: photography. Drop originals into `/photos` (git-ignored) and ask Claude to convert them. Web versions land in `src/assets/photos/` as `<name>.jpg` + `<name>.thumb.jpg`, with sizes in `manifest.json`. Sets that must read left to right, edge to edge (carousel splits like `DPT1`, `DPT2`) go in `src/assets/photos/series-<key>/1.jpg, 2.jpg…`. Optional `captions` and `seriesTitles` in `photos.ts`
 
-## How it all connects
-
-The site is one front door with three rooms, routed by URL hash so any view is
-directly shareable and survives a refresh:
-
-| Route | What it is | Who it's for |
-| --- | --- | --- |
-| `#/` | **Landing** — the portal. Pick your path. | Everyone |
-| `#/read` | **Read My Story** — the journey as a fast, clean editorial bio across four chapters (Wilderness → Forge → World Stage → Arena). | Recruiters, skimmers |
-| `#/play` | **Play My Story** — the RPG. Same four chapters, walked with a torch in the dark. | Anyone who wants to feel it |
-| `#/vault` | **The Vault** — the receipts. Every real project with proof: NASA Global Nominee, 150+ users, the work that actually shipped. | Anyone evaluating the work |
-
-Read and Play are the *same narrative* in two registers. The Vault is the proof
-underneath both. Choosing **Play** strips the site chrome and lazily boots the
-game engine, so a recruiter reading the bio never pays the cost of downloading a
-game they didn't ask for.
-
-## Tech stack
-
-Deliberately lean — no framework on the site shell, no asset pipeline for the
-game.
-
-- **[Vite](https://vitejs.dev/)** — build tool and dev server. Outputs a fully
-  static `dist/` with no backend.
-- **[Phaser 3](https://phaser.io/)** — the game engine, lazy-loaded only when
-  you hit Play.
-- **Vanilla JS + CSS** — the entire site shell (landing, read, vault, routing,
-  animations) is hand-written, no React/Vue/framework.
-- **HTML Canvas + Web Audio** — the torch lighting, particle fields, and sound
-  are all generated in code.
-- **100% procedural art** — every sprite, tile, and texture in the game is
-  generated at runtime in `BootScene`. The game ships with **zero image
-  files**.
-- **Hosting:** Cloudflare Pages (static CDN) with Git-connected continuous
-  deploys. Push to `main` → live in seconds. Custom domain on Cloudflare.
-
-The result: the editorial story loads in a few KB of gzipped JS/CSS, and the
-heavy game engine only loads on demand.
-
-## Architecture
-
-The game is **data-driven** instead of hand-coded per level. One generic engine
-renders any zone from a data block, so chapters can be added or reordered
-without touching engine logic.
-
-```
-src/
-  main.js                 # site shell: hash routing, lazy game boot, vault logic
-  config/                 # Phaser config, tile/view constants
-  data/story.js           # the chapters as ASCII tilemaps + narrative data
-  game/boot.js            # boots / sleeps the Phaser game on demand
-  scenes/
-    BootScene.js          # generates ALL textures + the player sprite at runtime
-    PrologueScene.js      # the cold open
-    ZoneScene.js          # the one generic engine that renders every zone
-  entities/Player.js      # movement + animation
-  systems/
-    LightSystem.js        # the torch — darkness overlay + radial light (the core)
-    Fog.js, TorchResource.js, Guide.js, Objective.js, MiniGame.js, stations.js
-    Hud.js, audio.js, state.js
-  site/                   # the non-game website
-    screens.js, cards.js, dialogue.js, hero.js, site.css
-```
-
-## Run it locally
+## Develop
 
 ```bash
 npm install
-npm run dev       # http://localhost:5173
+npm run dev          # Vite dev server
+npm run cf:dev       # production build + Worker locally (tests /api/contact)
+npm run typecheck
 ```
 
-Build and preview the production bundle:
+## Deploy (Cloudflare Workers)
+
+One-time secrets for the contact form:
 
 ```bash
-npm run build     # → dist/  (static, deploy anywhere)
-npm run preview   # serve the built bundle locally
+npx wrangler secret put RESEND_API_KEY   # from resend.com
+npx wrangler secret put CONTACT_TO       # where inquiries are emailed
 ```
 
-Node 20+ (pinned to 22 via `.nvmrc`).
+Optionally set `CONTACT_FROM` (a sender on a domain verified in Resend) in `wrangler.jsonc` vars; otherwise Resend's onboarding sender is used.
 
-## Deploy
-
-It's a static site, so any static host works. This one runs on **Cloudflare
-Pages**:
-
-- Build command: `npm run build`
-- Output directory: `dist`
-- Production branch: `main`
-
-Every push to `main` triggers a rebuild and redeploy. Pull requests get their
-own preview URL. Hash routing means no redirect/rewrite rules are needed.
-
----
-
-*Working title borrowed from the NASA Space Apps team name. It fit.*
+```bash
+npm run deploy
+```

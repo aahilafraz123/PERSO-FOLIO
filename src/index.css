@@ -1,0 +1,712 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  /* brand */
+  --color-ember: var(--ember);
+  --color-ink: var(--ink);
+  --color-graphite: var(--graphite);
+  --color-hairline: var(--hairline);
+  --color-dim: var(--dim);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Dark-only site: Apple Pro-page palette. */
+:root {
+  --ink: #050505;
+  --graphite: #111113;
+  --hairline: rgb(255 255 255 / 0.08);
+  --dim: #8e8e93;
+  --ember: #ff6b2c;
+  /* Hero charcoal: a touch lifted off pure ink so the light bands read softer. */
+  --hero-bg: #141417;
+
+  --background: var(--ink);
+  --foreground: #f5f5f7;
+  --card: #0d0d0f;
+  --card-foreground: #f5f5f7;
+  --popover: #111113;
+  --popover-foreground: #f5f5f7;
+  --primary: #f5f5f7;
+  --primary-foreground: #050505;
+  --secondary: #1c1c1f;
+  --secondary-foreground: #f5f5f7;
+  --muted: #1c1c1f;
+  --muted-foreground: #a1a1a6;
+  --accent: #1c1c1f;
+  --accent-foreground: #f5f5f7;
+  --destructive: #ff453a;
+  --border: rgb(255 255 255 / 0.09);
+  --input: rgb(255 255 255 / 0.12);
+  --ring: rgb(255 255 255 / 0.35);
+  --radius: 0.875rem;
+  color-scheme: dark;
+}
+
+/*
+ * Light chapters. Any section (or portal) with .theme-light re-scopes the tokens,
+ * so bg-background / text-foreground / border-hairline etc. flip automatically.
+ * .theme-dark forces a dark island back inside a light area.
+ */
+.theme-light {
+  --hairline: rgb(0 0 0 / 0.08);
+  --dim: #6e6e73;
+  --background: #ffffff;
+  --foreground: #1d1d1f;
+  --card: #ffffff;
+  --card-foreground: #1d1d1f;
+  --popover: #ffffff;
+  --popover-foreground: #1d1d1f;
+  --primary: #1d1d1f;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f7;
+  --secondary-foreground: #1d1d1f;
+  --muted: #f5f5f7;
+  --muted-foreground: #6e6e73;
+  --accent: #f5f5f7;
+  --accent-foreground: #1d1d1f;
+  --border: rgb(0 0 0 / 0.08);
+  --input: rgb(0 0 0 / 0.1);
+  --ring: rgb(0 0 0 / 0.3);
+  color-scheme: light;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+/* Apple's off-white panel tone, for alternating light sections. */
+.theme-light.tone-mist {
+  --background: #f5f5f7;
+  --card: #ffffff;
+}
+.theme-dark {
+  --hairline: rgb(255 255 255 / 0.08);
+  --dim: #8e8e93;
+  --background: #050505;
+  --foreground: #f5f5f7;
+  --card: #0d0d0f;
+  --card-foreground: #f5f5f7;
+  --popover: #111113;
+  --popover-foreground: #f5f5f7;
+  --primary: #f5f5f7;
+  --primary-foreground: #050505;
+  --secondary: #1c1c1f;
+  --secondary-foreground: #f5f5f7;
+  --muted: #1c1c1f;
+  --muted-foreground: #a1a1a6;
+  --accent: #1c1c1f;
+  --accent-foreground: #f5f5f7;
+  --border: rgb(255 255 255 / 0.09);
+  --input: rgb(255 255 255 / 0.12);
+  --ring: rgb(255 255 255 / 0.35);
+  color-scheme: dark;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans antialiased;
+    background: #ffffff;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "cv11";
+  }
+  body {
+    @apply bg-background text-foreground;
+    min-height: 100dvh;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  ::selection {
+    background: var(--ember);
+    color: #050505;
+  }
+  :focus-visible {
+    outline: 2px solid var(--foreground);
+    outline-offset: 3px;
+  }
+}
+
+/* SplitText line masks: leave room for descenders (g, p, y). */
+.reveal-line-mask {
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+@layer utilities {
+  .container-x {
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-14;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Apple-style large display type */
+  .display-xl {
+    font-size: clamp(3rem, 8.2vw, 8.75rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-weight: 600;
+  }
+  .display-lg {
+    font-size: clamp(2.5rem, 5.6vw, 5.75rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+  }
+  .display-md {
+    font-size: clamp(2rem, 3.6vw, 3.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+  }
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground;
+  }
+  /* Silver-titanium gradient text */
+  .text-titanium {
+    background: linear-gradient(180deg, #ffffff 0%, #d2d2d7 45%, #7c7c82 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-ember-grad {
+    background: linear-gradient(100deg, #ffb38a 0%, #ff6b2c 45%, #ff3d6e 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Hero headline: brighter silver plus a soft shadow so it holds up over the light bands. */
+  .hero-title {
+    filter: drop-shadow(0 2px 28px rgb(0 0 0 / 0.55));
+  }
+  .hero-title .text-titanium {
+    background-image: linear-gradient(180deg, #ffffff 0%, #ececf0 55%, #b4b4ba 100%);
+  }
+  /* Eased stops (not a straight 2-stop ramp) so the black-to-white blend has no visible band. */
+  .hero-seam {
+    background: linear-gradient(
+      to bottom,
+      var(--hero-bg) 0%,
+      #18181b 12%,
+      #252528 26%,
+      #3d3d3f 40%,
+      #6f6f72 54%,
+      #a6a6a9 68%,
+      #d4d4d6 81%,
+      #f1f1f2 92%,
+      #ffffff 100%
+    );
+  }
+  .theme-light .text-titanium {
+    background-image: linear-gradient(180deg, #1d1d1f 0%, #3a3a3e 55%, #86868b 100%);
+  }
+  .theme-light .text-ember-grad {
+    background-image: linear-gradient(100deg, #ff7a3d 0%, #f0501c 45%, #e02c5c 100%);
+  }
+  /* SplitText wraps letters in child elements; each child re-clips the gradient. */
+  .text-titanium *,
+  .text-ember-grad * {
+    background-image: inherit;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hairline {
+    border-color: var(--hairline);
+  }
+  .glass {
+    background: rgb(22 22 24 / 0.88);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .mask-fade-x {
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .mask-fade-b {
+    mask-image: linear-gradient(180deg, #000 60%, transparent);
+  }
+  .perspective {
+    perspective: 1400px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .logo-mono {
+    filter: brightness(0) invert(1);
+    opacity: 0.55;
+    transition:
+      opacity 0.5s var(--ease-out-expo),
+      filter 0.5s var(--ease-out-expo);
+  }
+  .logo-mono:hover {
+    filter: none;
+    opacity: 1;
+  }
+  .theme-light .logo-mono {
+    filter: brightness(0);
+    opacity: 0.6;
+  }
+  .theme-light .logo-mono:hover {
+    filter: none;
+    opacity: 1;
+  }
+  /* Single-color logo that matches the current text color scheme. */
+  .logo-ink {
+    filter: brightness(0) invert(1);
+  }
+  .theme-light .logo-ink {
+    filter: brightness(0);
+  }
+  .theme-dark .logo-ink {
+    filter: brightness(0) invert(1);
+  }
+}
+
+/* Work hero: the pill inside the headline, a slow drift through the project hues. */
+@keyframes work-pill {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.work-pill {
+  background: linear-gradient(100deg, #ff6b2c, #ff3d6e, #7a5cff, #1a56c4, #ff6b2c);
+  background-size: 300% 100%;
+  animation: work-pill 9s ease-in-out infinite;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25), 0 10px 30px -10px rgb(255 107 44 / 0.6);
+}
+
+/* ---------- Home hero: the studio ---------- */
+
+/* Dusk at the top for the name, floor shadow at the bottom for the buttons. */
+.studio-shade {
+  background:
+    radial-gradient(ellipse 62% 40% at 50% 17%, rgb(7 5 5 / 0.72) 0%, rgb(7 5 5 / 0.38) 48%, transparent 78%),
+    linear-gradient(to bottom, rgb(7 5 5 / 0.6) 0%, transparent 26%, transparent 60%, rgb(7 5 5 / 0.82) 100%);
+}
+/* Foreground: a touch soft and darker than the room, like it's nearer than the focus. */
+.studio-chair-img {
+  filter: blur(1px) brightness(0.85);
+}
+/* Until the first frame decodes, the room is just the dark it'll fade up from.
+   Graded a touch darker and softer than the source: with the grain on top, the video's
+   compression blocks read as film rather than artefacts. */
+.studio canvas {
+  opacity: 0;
+  filter: brightness(0.86) contrast(1.08) saturate(1.06) blur(0.4px);
+  transition: opacity 0.6s ease;
+}
+.studio-grain {
+  position: absolute;
+  inset: -120px;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 0.96  0 0 0 0 0.9  0 0 0 1.6 -0.35'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  /* Jumps between offsets rather than sliding, like grain changing frame to frame. Transform only, so it never repaints. */
+  animation: studio-grain 0.9s steps(1) infinite;
+}
+.studio-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 78% 72% at 50% 50%, transparent 40%, rgb(5 3 3 / 0.38) 72%, rgb(5 3 3 / 0.78) 100%),
+    linear-gradient(to bottom, rgb(5 3 3 / 0.18), transparent 30%, transparent 70%, rgb(5 3 3 / 0.28));
+}
+@keyframes studio-grain {
+  0% { transform: translate(0, 0); }
+  12% { transform: translate(-38px, 22px); }
+  25% { transform: translate(27px, -51px); }
+  37% { transform: translate(-63px, -14px); }
+  50% { transform: translate(49px, 41px); }
+  62% { transform: translate(-17px, 66px); }
+  75% { transform: translate(71px, -29px); }
+  87% { transform: translate(-44px, -58px); }
+}
+.studio.is-ready canvas {
+  opacity: 1;
+}
+
+/* Labels pinned to objects in the footage. The root is a 0×0 point on the object. */
+.studio-tag {
+  --reveal: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.studio-tag-dot {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ember);
+  box-shadow: 0 0 0 3px rgb(255 107 44 / 0.2), 0 0 18px 3px rgb(255 107 44 / 0.65);
+}
+.studio-tag-dot::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: inherit;
+  border: 1px solid rgb(255 107 44 / 0.55);
+  animation: studio-ping 2.4s ease-out infinite;
+}
+.studio-tag-line {
+  position: absolute;
+}
+.studio-tag-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
+  padding: 9px 13px 10px;
+  border-radius: 12px;
+  background: rgb(12 9 8 / 0.55);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
+  box-shadow: 0 12px 40px -12px rgb(0 0 0 / 0.8);
+  transform: translateY(calc((1 - var(--reveal)) * 8px));
+}
+.studio-tag-kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+.studio-tag-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #f5f5f7;
+}
+.studio-tag[data-dir="down"] .studio-tag-line,
+.studio-tag[data-dir="up"] .studio-tag-line {
+  left: -0.5px;
+  width: 1px;
+  height: 46px;
+  transform: scaleY(var(--reveal));
+}
+.studio-tag[data-dir="down"] .studio-tag-line {
+  top: 9px;
+  transform-origin: top;
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.12));
+}
+.studio-tag[data-dir="down"] .studio-tag-card {
+  top: 58px;
+  left: -14px;
+}
+.studio-tag[data-dir="up"] .studio-tag-line {
+  bottom: 9px;
+  transform-origin: bottom;
+  background: linear-gradient(to top, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.12));
+}
+.studio-tag[data-dir="up"] .studio-tag-card {
+  bottom: 58px;
+  left: -14px;
+}
+.studio-tag[data-dir="left"] .studio-tag-line {
+  right: 9px;
+  top: -0.5px;
+  height: 1px;
+  width: 52px;
+  transform-origin: right;
+  transform: scaleX(var(--reveal));
+  background: linear-gradient(to left, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.12));
+}
+.studio-tag[data-dir="left"] .studio-tag-card {
+  right: 64px;
+  top: -24px;
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* The monitor. A panel laid exactly over the screen in the footage, the same colour, so it only
+   shows once it carries text. At the end it grows to fill the frame and becomes the white page. */
+.studio-screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  will-change: transform, width, height;
+}
+.studio-screen-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  border-radius: 2px;
+  box-shadow: 0 0 60px 12px rgb(255 238 216 / 0.28);
+}
+.studio-screen-text {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  overflow: hidden;
+  padding: 1.7em 2.1em;
+  color: #1d1d1f;
+  will-change: transform, width, height;
+}
+.studio-prompt {
+  margin-bottom: 1.4em;
+  font-family: var(--font-mono);
+  font-size: 0.6em;
+  letter-spacing: 0.02em;
+  color: rgb(29 29 31 / 0.5);
+}
+.studio-line {
+  font-size: 1.2em;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.studio-coda {
+  margin-top: 1.3em;
+  max-width: 32em;
+  font-size: 0.66em;
+  line-height: 1.45;
+  color: rgb(29 29 31 / 0.6);
+}
+.studio-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1.05em;
+  margin-left: 0.1em;
+  vertical-align: -0.16em;
+  background: var(--ember);
+  animation: studio-blink 1.06s steps(1) infinite;
+}
+.studio-prompt .studio-cursor {
+  width: 0.9em;
+  height: 1.6em;
+  vertical-align: -0.4em;
+}
+@keyframes studio-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes studio-ping {
+  from {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2.3);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-cursor,
+  .studio-tag-dot::after,
+  .studio-grain {
+    animation: none;
+  }
+}
+
+/* ---------- Studio: darkroom ---------- */
+
+/* Film grain. One static, fixed layer: composited once, costs nothing on scroll. */
+.film-grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 -0.2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- Touch & small screens ---------- */
+
+/* iOS Safari zooms the whole page into any field under 16px. Unlayered, so it beats utilities. */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* The tonearm's invisible grab band: a thumb needs far more than a cursor. */
+.arm-hit {
+  stroke-width: 64px;
+}
+@media (pointer: coarse) {
+  .arm-hit {
+    stroke-width: 150px;
+  }
+}
+
+/* Tonearm "grab me" pulse: grows out from the headshell and fades, on a slow breath. */
+@keyframes tonearm-pulse {
+  0% { transform: scale(0.75); opacity: 0.8; }
+  70%, 100% { transform: scale(1.6); opacity: 0; }
+}
+.tonearm-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: tonearm-pulse 2.2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+/* ---------- Studio: ambient light ---------- */
+
+/* Masked to a wide ellipse: the glow reaches the gutters, the corners fall off to pure black. */
+.ambient {
+  -webkit-mask-image: radial-gradient(ellipse 125% 100% at 50% 45%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 125% 100% at 50% 45%, #000 30%, transparent 100%);
+  transition: opacity 1.2s ease;
+}
+.ambient-img {
+  position: absolute;
+  inset: -12%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(64px) saturate(1.6);
+  transform: translateZ(0);
+}
+
+/* ---------- Studio: turntable ---------- */
+
+/* The playing track's color. Registered so it can be transitioned; AudioProvider sets it on <html>. */
+@property --track-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ff6b2c;
+}
+html {
+  transition: --track-accent 1.4s ease;
+}
+.deck {
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgb(255 255 255 / 0.06), transparent 55%),
+    linear-gradient(160deg, #1c1c1f 0%, #111113 45%, #09090a 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.09),
+    inset 0 -1px 0 rgb(0 0 0 / 0.7),
+    0 50px 120px -30px rgb(0 0 0 / 0.95),
+    0 0 0 1px rgb(255 255 255 / 0.04);
+}
+/* Machined platter rim with a strobe-dot ring. */
+.platter {
+  background:
+    radial-gradient(circle closest-side, transparent 0 95.5%, rgb(0 0 0 / 0.5) 96%, transparent 96.5%),
+    repeating-conic-gradient(rgb(255 255 255 / 0.28) 0 0.6deg, transparent 0.6deg 3deg),
+    conic-gradient(from 30deg, #2c2c30, #5a5a60, #232326, #4a4a50, #1f1f22, #55555b, #2c2c30);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 94%, #000 94.2%);
+  mask: radial-gradient(circle closest-side, transparent 0 94%, #000 94.2%);
+  box-shadow: 0 18px 40px -8px rgb(0 0 0 / 0.9);
+}
+.vinyl {
+  background:
+    radial-gradient(circle closest-side, transparent 0 34%, rgb(255 255 255 / 0.05) 34.4%, transparent 35.2%),
+    radial-gradient(circle closest-side, transparent 0 95.4%, rgb(255 255 255 / 0.07) 95.8%, transparent 97%),
+    repeating-radial-gradient(circle closest-side, #0b0b0c 0, #0b0b0c 1.5px, #19191b 2.2px, #0b0b0c 3px);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05), 0 6px 18px rgb(0 0 0 / 0.7);
+}
+/* Fixed reflections: they stay put while the record turns under them. */
+.vinyl-sheen {
+  background:
+    conic-gradient(from 25deg, transparent 0 8%, rgb(255 255 255 / 0.09) 13%, transparent 20% 52%, rgb(255 255 255 / 0.07) 60%, transparent 68%),
+    conic-gradient(from 115deg, transparent 0 20%, color-mix(in oklab, var(--track-accent) 22%, transparent) 25%, transparent 31%);
+  mix-blend-mode: screen;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Printing (the recruiter page especially): just the page, no site chrome. */
+@media print {
+  #content ~ *,
+  header,
+  footer {
+    display: none !important;
+  }
+}
+
+/* Recruiter page backdrop: a faint dot grid on off-white. */
+.vault-bg {
+  background-color: #fbfbfc;
+  background-image: radial-gradient(rgb(0 0 0 / 0.09) 1px, transparent 1.3px);
+  background-size: 22px 22px;
+}
+
+/* Recruiter page: the zarohealth.com capture drifting top to bottom where there's no hover. */
+@keyframes vault-pan {
+  to {
+    transform: translateY(calc(-100% + var(--h)));
+  }
+}

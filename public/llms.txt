@@ -1,0 +1,28 @@
+# Aahil Afraz
+
+> Software engineer and designer in Philadelphia. Starting at Zaro Health (https://zarohealth.com/). Previously a software engineering co-op on Comcast's DevSecOps team. NASA Space Apps 2025 Global Nominee (top 1,290 of 11,500+ projects). Co-founder of LearnFlow (150+ beta users). Also a photographer and the musician Azrael.
+
+## Pages
+
+- [Work](https://aahilafraz.com/work): projects, results and links to code
+- [Studio](https://aahilafraz.com/studio): photography and music
+- [Contact](https://aahilafraz.com/contact): freelance inquiries and booking
+- [For recruiters](https://aahilafraz.com/vault): resume, LinkedIn-verified recommendations, and projects on one page
+- [Resume](https://aahilafraz.com/resume.pdf)
+
+## Projects
+
+- [AirCast](https://aahilafraz.com/work/aircast): Named a NASA Space Apps Global Nominee (top 1,290 of 11,500+ projects).
+- [Security Analytics Platform](https://aahilafraz.com/work/security-analytics): One view of an organization's security posture for engineering leaders, with an agent that summarizes it.
+- [LearnFlow](https://aahilafraz.com/work/learnflow): An AI study app I co-founded and built. 150+ beta users.
+- [StockAnalyzer](https://aahilafraz.com/work/stock-analyzer): Enter a stock ticker and get a research report in seconds.
+- [Transcriber](https://aahilafraz.com/work/transcriber): A transcription app that runs entirely on your Mac. No audio is uploaded.
+- [Angular → React migration](https://aahilafraz.com/work/enable-games): Moved a production game portal from Angular to React. First load 35% faster.
+- [PhillyFeelSafe](https://aahilafraz.com/work/phillyfeelsafe): An interactive safety map of Philadelphia, built by a four-person team.
+
+## Elsewhere
+
+- [GitHub](https://github.com/aahilafraz123)
+- [LinkedIn](https://www.linkedin.com/in/aahil-afraz-21512826a/)
+- [Spotify](https://open.spotify.com/artist/7DexnXucyQOJVgTRN8o5Pm)
+- [Apple Music](https://music.apple.com/us/artist/azrael/1879744334)

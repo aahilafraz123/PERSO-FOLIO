@@ -16,3 +16,14 @@ plan.md
 
 # Playwright MCP capture output
 .playwright-mcp
+
+# wrangler local state
+.wrangler
+.dev.vars
+
+# original, full-size photo drops (web versions live in src/assets/photos)
+/photos
+
+# Source masters (transcoded copies live in public/music)
+Music/
+Album Covers/
