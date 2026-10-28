@@ -76,8 +76,8 @@ export function Wins() {
               </p>
               <p className="mt-3 max-w-md text-lg text-pretty text-foreground/90 md:text-xl">
                 Global Nominee out of{" "}
-                <CountUp to={11500} separator="," duration={2.2} className="font-semibold tabular-nums text-foreground" />+ projects
-                entered worldwide, for AirCast.
+                <CountUp to={11500} separator="," duration={2.2} className="font-semibold tabular-nums text-foreground" />+ teams
+                worldwide, for AirCast.
               </p>
             </div>
           </div>
@@ -95,12 +95,12 @@ export function Wins() {
 
         <Card to="/work/learnflow" className="md:col-span-2">
           <div className="relative flex h-full flex-col justify-between bg-[radial-gradient(120%_80%_at_0%_100%,rgb(52_199_89/0.12),transparent_60%)] p-7">
-            <p className="eyebrow">LearnFlow · Co-founder</p>
+            <p className="eyebrow">LearnFlow · Founding engineer</p>
             <div>
               <p className="text-7xl font-semibold tracking-tighter tabular-nums">
                 <CountUp to={150} duration={1.6} />+
               </p>
-              <p className="mt-2 text-lg text-muted-foreground">beta users on LearnFlow, the study app I co-founded.</p>
+              <p className="mt-2 text-lg text-muted-foreground">beta users on LearnFlow, the AI learning platform I founded and launched.</p>
             </div>
           </div>
         </Card>
@@ -119,7 +119,7 @@ export function Wins() {
           <div className="relative flex h-full items-end justify-between gap-6 p-7">
             <div>
               <p className="eyebrow mb-3">Now</p>
-              <p className="text-2xl font-semibold leading-tight tracking-tight">Starting at Zaro Health. Looking forward to building with the team.</p>
+              <p className="text-2xl font-semibold leading-tight tracking-tight">Software engineer at Zaro Health since August 2026.</p>
               <p className="mt-2 text-sm text-muted-foreground">zarohealth.com</p>
             </div>
             <p className="shrink-0 whitespace-nowrap text-[3.5rem] font-semibold leading-none tracking-tighter text-titanium">Zaro</p>

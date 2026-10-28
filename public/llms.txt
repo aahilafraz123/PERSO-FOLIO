@@ -1,6 +1,6 @@
 # Aahil Afraz
 
-> Software engineer and designer in Philadelphia. Starting at Zaro Health (https://zarohealth.com/). Previously a software engineering co-op on Comcast's DevSecOps team. NASA Space Apps 2025 Global Nominee (top 1,290 of 11,500+ projects). Co-founder of LearnFlow (150+ beta users). Also a photographer and the musician Azrael.
+> Software engineer and designer in Philadelphia, currently at Zaro Health (https://zarohealth.com/). Previously a software engineering co-op on Comcast's DevSecOps team, with a return offer. NASA Space Apps 2025 Global Nominee (top 1,290 of 11,500+ teams). Founding engineer of LearnFlow (150+ beta users). Drexel University, B.S. Software Engineering, Minor in Finance, 2028. Also a photographer and the musician Azrael.
 
 ## Pages
 
@@ -12,9 +12,11 @@
 
 ## Projects
 
-- [AirCast](https://aahilafraz.com/work/aircast): Named a NASA Space Apps Global Nominee (top 1,290 of 11,500+ projects).
-- [Security Analytics Platform](https://aahilafraz.com/work/security-analytics): One view of an organization's security posture for engineering leaders, with an agent that summarizes it.
-- [LearnFlow](https://aahilafraz.com/work/learnflow): An AI study app I co-founded and built. 150+ beta users.
+- [AgentGuard](https://github.com/aahilafraz123/agentguard-merchant): PayPal AI Hackathon. An MCP security proxy that checks AI-agent refunds; cut fraudulent payouts from $809 to $0 at 96% detection precision.
+- [AirCast](https://aahilafraz.com/work/aircast): Named a NASA Space Apps Global Nominee (top 1,290 of 11,500+ teams worldwide).
+- [Security Analytics Platform](https://aahilafraz.com/work/security-analytics): An LLM-powered security analytics platform covering 9,000+ applications, in one view for engineering leaders.
+- [NASDAQ ITCH Order Book](https://github.com/aahilafraz123/itch-orderbook): A C++20 limit order book that rebuilds real NASDAQ ITCH 5.0 data at 12.7M messages a second, p99 417 ns.
+- [LearnFlow](https://aahilafraz.com/work/learnflow): A production AI learning platform I founded and launched to 150+ beta users.
 - [StockAnalyzer](https://aahilafraz.com/work/stock-analyzer): Enter a stock ticker and get a research report in seconds.
 - [Transcriber](https://aahilafraz.com/work/transcriber): A transcription app that runs entirely on your Mac. No audio is uploaded.
 - [Angular → React migration](https://aahilafraz.com/work/enable-games): Moved a production game portal from Angular to React. First load 35% faster.

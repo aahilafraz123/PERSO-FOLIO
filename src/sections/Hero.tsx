@@ -37,7 +37,7 @@ const TAGS: Tag[] = [
 ]
 
 const PROMPT = "aahil@studio ~ % whoami"
-const LINES = ["Starting at Zaro Health.", "Shipped at Comcast.", "NASA Space Apps 2025 Global Nominee."]
+const LINES = ["Software engineer at Zaro Health.", "Shipped at Comcast.", "NASA Space Apps 2025 Global Nominee."]
 const CODA = "I designed, built and scored everything you're about to see."
 const TYPED = [PROMPT, ...LINES, CODA]
 const TYPED_TOTAL = TYPED.reduce((n, l) => n + l.length, 0)

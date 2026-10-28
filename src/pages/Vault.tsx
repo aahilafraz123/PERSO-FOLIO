@@ -89,7 +89,7 @@ function Hero() {
           <p className="hero-in mt-5 max-w-xl text-pretty text-[22px] leading-snug text-foreground/70 md:text-[26px]">
             Software engineer. I build AI products end to end, <span className="text-foreground">and design them with taste.</span>
           </p>
-          <p className="hero-in mt-4 text-[15px] text-muted-foreground">Drexel · B.S. Software Engineering · 2028 · {profile.location}</p>
+          <p className="hero-in mt-4 text-[15px] text-muted-foreground">Drexel · B.S. Software Engineering, Minor in Finance · 2028 · {profile.location}</p>
 
           <div className="hero-in mt-8 flex flex-wrap gap-2.5">
             <a

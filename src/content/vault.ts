@@ -61,7 +61,7 @@ const fromProject = (slug: string, b: Pick<Build, "line"> & Partial<Build>): Bui
 const dpx = bySlug("security-analytics")!
 export const comcastWork = {
   title: "DPX-Ray",
-  line: "LLM security analytics platform for 30,000+ engineers",
+  line: "LLM-powered security analytics platform covering 9,000+ applications",
   points: dpx.highlights,
   note: "Internal Comcast tool, no public code",
 }
@@ -79,9 +79,9 @@ export type Experience = {
 
 export const experience: Experience[] = [
   { org: "Comcast", role: "SWE Co-op", period: "2026", note: "Return offer", logo: logos.comcast, work: comcastWork },
-  { org: "Zaro Health", role: "SWE", period: "Sep 2026 – now", href: "https://zarohealth.com/" },
+  { org: "Zaro Health", role: "Software Engineer", period: "Aug 2026 – now", href: "https://zarohealth.com/" },
   { org: "NASA Space Apps", role: "Global Nominee", period: "2025", note: "Top 1,290 of 11.5k", logo: logos.nasaColor },
-  { org: "LearnFlow", role: "Co-founder", period: "2025", note: "150+ beta users" },
+  { org: "LearnFlow", role: "Founding Engineer", period: "2025", note: "150+ beta users" },
 ]
 
 export const certs = [
@@ -95,19 +95,19 @@ export const builds: Build[] = [
     id: "agentguard",
     title: "AgentGuard",
     titlePrefix: "PayPal AI Hackathon",
-    kicker: "AI agent security · 2026",
+    kicker: "AI agent security · Oct 2026",
     line: "Your AI support agent can issue refunds. AgentGuard makes sure nobody can talk it into one.",
     summary:
-      "A policy checkpoint between AI agents and PayPal. Every refund an agent asks for is checked against PayPal's own records, the merchant's refund policy and a Claude risk agent, then allowed, sent to the owner for review, or blocked.",
+      "An MCP security proxy between AI agents and PayPal. It intercepts the payment actions an agent takes through the PayPal Agent Toolkit, and checks every refund against PayPal's own records, the merchant's refund policy and a LangGraph risk pipeline (a Claude agent plus rules), then allows it, sends it to the owner for approval, or blocks it. Runs in the PayPal sandbox.",
     points: [
-      "Plugs in two ways: inside a Claude support agent, or as an MCP security proxy in front of PayPal's official MCP server, where all 28 tools pass through and refunds get checked first",
+      "Plugs in two ways: inside a Claude support agent, or as an MCP security proxy in front of PayPal's official MCP server (PayPal Agent Toolkit), where all 28 tools pass through and refunds get checked first",
       "LangGraph pipeline with a human in the loop: an escalated refund pauses the graph, checkpointed in SQLite, and PayPal is re-checked before the money moves",
-      "Red-team eval of 24 scripted chats on Sonnet and Haiku: unguarded agents paid attackers up to $487, AgentGuard paid $0, and no honest customer was refused",
+      "Adversarial evaluation harness on Sonnet and Haiku: fraudulent payouts went from $809 unguarded to $0 with AgentGuard, at 96% detection precision, and no honest customer was refused",
       "The model can only send a refund to a human, never approve one. The deterministic guard eval runs 30/30 in CI on every push",
     ],
     metrics: [
-      { value: "$0", label: "paid to attackers in 80 red-team runs, vs up to $487 unguarded" },
-      { value: "96%", label: "precision spotting manipulation, with Claude Haiku" },
+      { value: "$0", label: "in fraudulent payouts, down from $809 unguarded" },
+      { value: "96%", label: "detection precision on manipulation attempts" },
       { value: "9", label: "checks against PayPal's records before any refund moves" },
     ],
     stack: ["Python", "FastAPI", "LangGraph", "Claude", "MCP", "PayPal REST", "React", "TypeScript", "Docker"],
@@ -119,13 +119,6 @@ export const builds: Build[] = [
         src: "/projects/agentguard-demo.webp",
         alt: "AgentGuard live demo: an attacker claiming to be the store owner is blocked, and the merchant view shows the PayPal evidence",
         label: "Live demo",
-        width: 1440,
-        height: 900,
-      },
-      {
-        src: "/projects/agentguard-evals.webp",
-        alt: "AgentGuard eval scoreboard: $322 lost unguarded, $130 with prompt rules, $0 with AgentGuard",
-        label: "Red-team evals",
         width: 1440,
         height: 900,
       },
@@ -142,6 +135,28 @@ export const builds: Build[] = [
       bg: "linear-gradient(135deg, #01378d, #0b2a66 55%, #102040)",
     },
   }),
+  {
+    id: "itch-orderbook",
+    title: "NASDAQ ITCH Order Book",
+    kicker: "Systems programming · Sep 2026",
+    line: "A C++20 limit order book that rebuilds real NASDAQ market data at 12.7M messages a second",
+    summary:
+      "A limit order book on Linux that replays real NASDAQ ITCH 5.0 data, 268M+ messages, and rebuilds the book message by message, checked against a reference book the whole way.",
+    points: [
+      "Rebuilds the book from real NASDAQ ITCH 5.0 data (268M+ messages) at 12.7M messages a second, with a p99 of 417 ns",
+      "Verified against a reference book across 263M+ top-of-book checks with 0 mismatches",
+      "Heap allocations after warm-up cut from 80M to 3.6K with a preallocated order pool and an open-addressing index, profiled with perf",
+      "165 GoogleTest tests, run in Docker and on GitHub CI",
+    ],
+    metrics: [
+      { value: "12.7M", label: "messages a second, p99 of 417 ns" },
+      { value: "263M+", label: "top-of-book checks, 0 mismatches" },
+      { value: "80M → 3.6K", label: "heap allocations after warm-up" },
+    ],
+    stack: ["C++20", "Linux", "NASDAQ ITCH 5.0", "GoogleTest", "Docker", "GitHub Actions", "perf"],
+    repo: "https://github.com/aahilafraz123/itch-orderbook",
+    links: [],
+  },
   {
     id: "bankify",
     title: "Bankify",
@@ -189,7 +204,7 @@ export const builds: Build[] = [
     ],
   }),
   fromProject("learnflow", {
-    line: "The AI study app I co-founded and built. 150+ beta users",
+    line: "A production AI learning platform I founded and launched. 150+ beta users",
     codeNote: "Private repo, code on request",
     shots: [
       {
@@ -216,6 +231,7 @@ export const allBuilds: Build[] = [
     logo: logos.comcast,
     codeNote: comcastWork.note,
   }),
+  build("itch-orderbook"),
   build("bankify"),
   build("stock-analyzer"),
   build("learnflow"),

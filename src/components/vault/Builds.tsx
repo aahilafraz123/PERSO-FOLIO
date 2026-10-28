@@ -155,7 +155,7 @@ export function Builds({ items = builds, eyebrow = "Projects", title = "Things I
               <div id={`bi-at-${i}`} aria-hidden />
               <div className="bi-row mb-6 last:mb-0 lg:mb-10 [@media(min-width:1024px)_and_(min-height:860px)]:sticky" style={{ top: TOP + i * STEP }}>
                 <div className="bi-row-inner grid origin-top gap-6 lg:grid-cols-2">
-                  {row.map((x) => (x === "more" ? <MoreTile key="more" /> : <Card key={x.id} b={x} writeup={writeups && !!bySlug(x.id)} />))}
+                  {row.map((x) => (x === "more" ? <MoreTile key="more" wide={row.length === 1} /> : <Card key={x.id} b={x} writeup={writeups && !!bySlug(x.id)} />))}
                 </div>
               </div>
             </Fragment>
@@ -393,14 +393,17 @@ function Visual({ b }: { b: Build }) {
   )
 }
 
-/** Last card in the row: everything else lives on GitHub. */
-function MoreTile() {
+/** Last card in the row: everything else lives on GitHub. Alone in its row, it runs the full width as a shorter banner. */
+function MoreTile({ wide }: { wide: boolean }) {
   return (
     <a
       href={profile.links.github}
       target="_blank"
       rel="noreferrer"
-      className="bi-card group flex min-h-[22rem] flex-col justify-between rounded-3xl bg-[#111113] p-7 text-white md:p-9"
+      className={cn(
+        "bi-card group flex min-h-[22rem] flex-col justify-between rounded-3xl bg-[#111113] p-7 text-white md:p-9",
+        wide && "gap-10 lg:col-span-2 lg:min-h-0 lg:flex-row lg:items-center lg:justify-start lg:gap-12",
+      )}
     >
       <BrandIcon name="github" className="size-12 text-white" />
       <div>

@@ -24,7 +24,7 @@ const order: number[] = (() => {
 const US = order[Math.floor(NOMINEES * 0.62)]
 
 /**
- * 11,500 dots, one per project entered. The top 1,290 light up in sequence, then
+ * 11,500 dots, one per team entered. The top 1,290 light up in sequence, then
  * Team Relentless pulses. The grid is painted once; the reveal only paints newly lit
  * dots, and the loop stops for good when it finishes. The pulse is plain CSS.
  */

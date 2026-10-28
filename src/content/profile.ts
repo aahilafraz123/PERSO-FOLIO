@@ -3,7 +3,7 @@ export const profile = {
   first: "Aahil",
   role: "Software Engineer & Designer",
   location: "Philadelphia, PA",
-  school: "Drexel University · B.S. Software Engineering · 2028",
+  school: "Drexel University · B.S. Software Engineering, Minor in Finance · 2028",
   email: "", // public inquiry address, optional. The contact form works without it.
   artistName: "Azrael",
 
@@ -33,8 +33,9 @@ export const profile = {
   ],
 
   skills: [
-    "Java", "JavaScript", "Python", "SQL", "C", "GraphQL", "React", "Node.js", "Express", "Flask",
-    "LangChain", "MCP", "Docker", "Kubernetes", "AWS", "Azure", "PostgreSQL", "Redis", "GitHub Actions",
+    "Python", "Java", "SQL", "C", "C++", "Bash", "Flask", "Swift", "REST APIs", "GraphQL", "React",
+    "LangChain", "LangGraph", "MCP", "A2A", "RAG", "LLM Evaluation", "Langfuse",
+    "AWS", "Azure", "Kubernetes", "Docker", "CI/CD", "GitHub Actions", "Linux", "PostgreSQL",
   ],
 
   certs: ["Azure AI Fundamentals (AI-900)", "Azure Fundamentals (AZ-900)", "Security, Compliance & Identity (SC-900)"],
@@ -49,17 +50,17 @@ export const about = {
     { name: "img-2466", place: "Houston", region: "Texas", coords: "29.76° N, 95.37° W" },
   ],
   statement:
-    "I co-founded LearnFlow, a study app with 150+ beta users, and just wrapped my co-op on Comcast's DevX Protect team. Now I'm starting at Zaro Health, a fast-moving startup, where I want to bring fresh eyes and keep making the kind of impact I made at Comcast.",
+    "I founded LearnFlow, an AI learning platform with 150+ beta users, and finished my co-op on Comcast's DevSecOps team with a return offer. Now I'm a software engineer at Zaro Health, a fast-moving startup.",
   paragraphs: [
-    "I study software engineering at Drexel. I just finished my co-op on Comcast's DevX Protect team, where I built a security analytics platform for engineering leaders.",
+    "I study software engineering at Drexel, with a minor in finance. I finished my co-op on Comcast's DevSecOps team, where I built a security analytics platform for engineering leaders.",
     "Now I'm at Zaro Health, a preventive health startup. It's a small team that ships fast, which is exactly the pace I want to be building at.",
   ],
   /** Rendered after the paragraphs, followed by a pointer to the photos beside it. */
   outside: "Outside of work I take photos and release music as Azrael.",
   facts: [
-    { label: "Now", value: "Zaro Health, preventive health startup", href: "https://zarohealth.com/" },
-    { label: "Previously", value: "Software engineering co-op, DevX Protect team, Comcast" },
-    { label: "Studying", value: "B.S. Software Engineering, Drexel University, 2028" },
+    { label: "Now", value: "Software engineer, Zaro Health", href: "https://zarohealth.com/" },
+    { label: "Previously", value: "Software engineering co-op, DevSecOps, Comcast" },
+    { label: "Studying", value: "B.S. Software Engineering, minor in Finance, Drexel University, 2028" },
     { label: "Outside work", value: "Photography, and music as Azrael" },
     { label: "Based in", value: "Philadelphia, PA" },
   ] as { label: string; value: string; href?: string }[],
