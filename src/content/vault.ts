@@ -203,6 +203,27 @@ export const builds: Build[] = [
   }),
 ]
 
+/**
+ * For /work and the home page: every build above, plus the work that has a write-up but no
+ * place on the recruiter page. Cards here also link to the full write-up.
+ */
+const build = (id: string) => builds.find((b) => b.id === id)!
+export const allBuilds: Build[] = [
+  build("agentguard"),
+  build("aircast"),
+  fromProject("security-analytics", {
+    line: "One view of security risk for engineering leaders, inside the portal 30,000+ engineers use",
+    logo: logos.comcast,
+    codeNote: comcastWork.note,
+  }),
+  build("bankify"),
+  build("stock-analyzer"),
+  build("learnflow"),
+  fromProject("enable-games", { line: bySlug("enable-games")!.headline }),
+  fromProject("transcriber", { line: bySlug("transcriber")!.headline }),
+  fromProject("phillyfeelsafe", { line: bySlug("phillyfeelsafe")!.headline }),
+]
+
 export type Design = {
   name: string
   what: string

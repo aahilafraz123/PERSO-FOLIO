@@ -181,10 +181,5 @@ export const testimonials: Testimonial[] = [
 
 export const forProject = (slug: string) => testimonials.filter((t) => t.project === slug)
 
-const byId = (ids: string[]) => ids.map((id) => testimonials.find((t) => t.id === id)!)
-
-/** The home page's three, in order. Naresh's note lives on the DPX-Ray project instead. */
-export const homeTestimonials = byId(["junaid-butt", "scott-adams", "vamsi-manthena"])
-
-/** Recruiter page: only what anyone can check on LinkedIn. */
+/** Home and recruiter pages: only what anyone can check on LinkedIn. */
 export const verifiedTestimonials = testimonials.filter((t) => t.source.kind === "linkedin")

@@ -1,6 +1,8 @@
-import { Fragment, useRef, useState } from "react"
-import { ArrowRight, ArrowUpRight, Info, Lock, X } from "lucide-react"
+import { Fragment, useMemo, useRef, useState } from "react"
+import { Link } from "react-router"
+import { ArrowRight, ArrowUpRight, FileText, Info, Lock, X } from "lucide-react"
 import { builds, type Build } from "@/content/vault"
+import { bySlug } from "@/content/projects"
 import { profile } from "@/content/profile"
 import { BrandIcon } from "@/components/BrandIcon"
 import { useLenis } from "@/motion/SmoothScroll"
@@ -15,10 +17,6 @@ function parseMetric(v: string) {
   return { pre: m[1], n: Number(m[2].replace(/,/g, "")), post: m[3], commas: m[2].includes(",") }
 }
 
-/** Projects in rows of two, with the GitHub tile closing the last row. */
-const rows: (Build | "more")[][] = []
-;[...builds, "more" as const].forEach((x, i) => (i % 2 ? rows[rows.length - 1].push(x) : rows.push([x])))
-
 /** Rows stack only where a whole row fits on screen; elsewhere they simply follow each other. */
 const STACK = "(min-width: 1024px) and (min-height: 860px)"
 /** Where a row sticks, just under the floating header. Each later row sits a little lower, so the edges of earlier rows show above it. */
@@ -31,10 +29,28 @@ const STEP = 14
  * to a project. Hovering a card's picture (or tapping "How it works") slides up how it works
  * and what it's built with.
  */
-export function Builds() {
+type Props = {
+  items?: Build[]
+  eyebrow?: string
+  /** null where the page's own heading already introduces the projects: only the jump chips show. */
+  title?: string | null
+  /** Link each card that has one to its full write-up on /work. Off on the recruiter page. */
+  writeups?: boolean
+  /** A link to /work under the last row. */
+  allLink?: boolean
+}
+
+export function Builds({ items = builds, eyebrow = "Projects", title = "Things I've built.", writeups = false, allLink = false }: Props) {
   const root = useRef<HTMLElement>(null)
   const lenis = useLenis()
   const [active, setActive] = useState(0)
+
+  // Rows of two, with the GitHub tile closing the last row.
+  const rows = useMemo(() => {
+    const out: (Build | "more")[][] = []
+    ;[...items, "more" as const].forEach((x, i) => (i % 2 ? out[out.length - 1].push(x) : out.push([x])))
+    return out
+  }, [items])
 
   useGSAP(
     () => {
@@ -62,8 +78,21 @@ export function Builds() {
             scale: 0.92,
             autoAlpha: 0.35,
             ease: "none",
-            scrollTrigger: { trigger: rowEls[i + 1], start: "top bottom", end: `top ${TOP + (i + 1) * STEP + 40}px`, scrub: true },
+            scrollTrigger: { trigger: rowEls[i + 1], start: "top 70%", end: `top ${TOP + (i + 1) * STEP + 40}px`, scrub: true },
           })
+        })
+        // The row two back fades out first, so it never shows through the row in front once that one dims.
+        rowEls.slice(0, -2).forEach((row, i) => {
+          gsap.fromTo(
+            row.querySelector(".bi-row-inner"),
+            { autoAlpha: 0.35 },
+            {
+              autoAlpha: 0,
+              ease: "none",
+              immediateRender: false,
+              scrollTrigger: { trigger: rowEls[i + 2], start: "top bottom", end: "top 70%", scrub: true },
+            },
+          )
         })
       })
     },
@@ -79,17 +108,25 @@ export function Builds() {
   }
 
   return (
-    <section ref={root} id="projects" aria-labelledby="projects-title" className="relative pb-24 pt-12 md:pb-32 md:pt-20">
+    <section
+      ref={root}
+      id="projects"
+      aria-labelledby={title ? "projects-title" : undefined}
+      aria-label={title ? undefined : eyebrow}
+      className={cn("relative pb-24 md:pb-32", title ? "pt-12 md:pt-20" : "pt-10")}
+    >
       <div className="container-x">
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-          <div>
-            <p className="bi-head eyebrow">Projects</p>
-            <h2 id="projects-title" className="bi-head display-md mt-4">
-              Things I've built.
-            </h2>
-          </div>
+          {title && (
+            <div>
+              <p className="bi-head eyebrow">{eyebrow}</p>
+              <h2 id="projects-title" className="bi-head display-md mt-4">
+                {title}
+              </h2>
+            </div>
+          )}
           <ul className="bi-head flex flex-wrap gap-2" aria-label="Jump to a project">
-            {builds.map((b, i) => {
+            {items.map((b, i) => {
               const on = Math.floor(i / 2) === active
               return (
                 <li key={b.id}>
@@ -118,18 +155,29 @@ export function Builds() {
               <div id={`bi-at-${i}`} aria-hidden />
               <div className="bi-row mb-6 last:mb-0 lg:mb-10 [@media(min-width:1024px)_and_(min-height:860px)]:sticky" style={{ top: TOP + i * STEP }}>
                 <div className="bi-row-inner grid origin-top gap-6 lg:grid-cols-2">
-                  {row.map((x) => (x === "more" ? <MoreTile key="more" /> : <Card key={x.id} b={x} />))}
+                  {row.map((x) => (x === "more" ? <MoreTile key="more" /> : <Card key={x.id} b={x} writeup={writeups && !!bySlug(x.id)} />))}
                 </div>
               </div>
             </Fragment>
           ))}
         </div>
+
+        {allLink && (
+          <div className="mt-12 flex justify-center">
+            <Link
+              to="/work"
+              className="inline-flex h-12 items-center gap-2 rounded-full border border-foreground/10 bg-white px-6 text-[15px] font-semibold transition-colors hover:border-foreground/25"
+            >
+              See every project <ArrowUpRight className="size-4" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   )
 }
 
-function Card({ b }: { b: Build }) {
+function Card({ b, writeup }: { b: Build; writeup: boolean }) {
   const [open, setOpen] = useState(false)
   return (
     <article
@@ -202,6 +250,15 @@ function Card({ b }: { b: Build }) {
 
       <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 p-6 pt-5 md:px-7 md:pb-6">
         <CodeButton b={b} />
+        {writeup && (
+          <Link
+            to={`/work/${b.id}`}
+            preventScrollReset
+            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-foreground/15 px-4 text-[13px] font-semibold transition-colors hover:border-foreground/30"
+          >
+            <FileText className="size-3.5" /> Full write-up
+          </Link>
+        )}
         {b.links.map((l) => (
           <a
             key={l.href}
@@ -247,7 +304,10 @@ function CodeButton({ b }: { b: Build }) {
   return null
 }
 
-/** The picture for each card: a screenshot, layered phone screens, an image on its own colour, or a data flow. */
+/**
+ * The picture for each card: a screenshot, layered phone screens, an image on its own colour, or a
+ * data flow. Work with nothing to show (internal or older projects) gets its logo and stack.
+ */
 function Visual({ b }: { b: Build }) {
   const [shot, setShot] = useState(0)
   if (b.shots) {
@@ -317,7 +377,20 @@ function Visual({ b }: { b: Build }) {
       </div>
     )
   }
-  return null
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 p-6 [background-image:radial-gradient(rgb(0_0_0/0.08)_1px,transparent_1.3px)] [background-size:18px_18px]">
+      <span className="grid size-20 place-items-center rounded-2xl bg-white p-3 shadow-sm ring-1 ring-black/[0.06]">
+        {b.logo ? <img src={b.logo} alt="" className="max-h-full max-w-full" /> : <span className="text-3xl font-semibold">{b.title[0]}</span>}
+      </span>
+      <ul className="hidden max-w-sm flex-wrap justify-center gap-1.5 sm:flex">
+        {b.stack.slice(0, 6).map((s) => (
+          <li key={s} className="rounded-md bg-white px-2 py-0.5 font-mono text-[11px] text-foreground/75 ring-1 ring-black/[0.06]">
+            {s}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
 
 /** Last card in the row: everything else lives on GitHub. */

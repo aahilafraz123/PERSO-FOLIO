@@ -2,12 +2,12 @@ import { useNavigate, useParams } from "react-router"
 import { ArrowUpRight } from "lucide-react"
 import { bySlug } from "@/content/projects"
 import { profile } from "@/content/profile"
+import { allBuilds } from "@/content/vault"
 import { logos } from "@/components/logos"
 import { BrandIcon } from "@/components/BrandIcon"
 import { ProjectDialog } from "@/components/work/ProjectDialog"
 import { WorkHero } from "@/components/work/WorkHero"
-import { PlainWords } from "@/components/work/PlainWords"
-import { ProjectIndex } from "@/components/work/ProjectIndex"
+import { Builds } from "@/components/vault/Builds"
 import { usePageMeta } from "@/hooks/usePageMeta"
 
 export default function Work() {
@@ -16,51 +16,45 @@ export default function Work() {
   const navigate = useNavigate()
 
   return (
-    <main className="theme-light w-full max-w-full overflow-x-clip">
+    <main className="theme-light relative isolate w-full max-w-full overflow-x-clip">
+      {/* Absolute, not fixed: a fixed layer inside the page sheet's clip-path stops the page painting past the first screen. */}
+      <div aria-hidden className="vault-bg pointer-events-none absolute inset-0 -z-10" />
       <WorkHero />
-      <PlainWords />
-      <ProjectIndex />
+      <Builds items={allBuilds} title={null} writeups />
 
-      <section className="border-t border-hairline bg-[#f5f5f7]">
-        <div className="container-x grid gap-12 py-24 md:grid-cols-2">
-          <div>
-            <h2 className="display-md">Toolkit</h2>
-            <div className="mt-8 flex flex-wrap gap-2">
+      <section aria-label="Toolkit and credentials" className="container-x pb-24 md:pb-32">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-3xl border border-hairline bg-white p-7 md:p-8">
+            <p className="eyebrow">Toolkit</p>
+            <h2 className="mt-3 text-[28px] font-semibold tracking-[-0.025em]">What I build with.</h2>
+            <ul className="mt-6 flex flex-wrap gap-1.5">
               {profile.skills.map((s) => (
-                <span key={s} className="rounded-full border border-hairline px-4 py-2 text-sm text-foreground/80">
+                <li key={s} className="rounded-md bg-foreground/[0.06] px-2.5 py-1 font-mono text-[12px] text-foreground/80">
                   {s}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div>
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <h2 className="display-md">Credentials</h2>
-              <a
-                href={`${profile.links.linkedin}details/certifications/`}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-1.5 rounded-full border border-hairline px-3.5 py-1.5 text-xs font-semibold text-foreground/80 transition-colors hover:border-[#0a66c2]/30 hover:bg-[#0a66c2]/5 hover:text-[#0a66c2]"
-              >
-                <BrandIcon name="linkedin" className="size-3.5 text-[#0a66c2]" />
-                View certifications on LinkedIn
-                <ArrowUpRight className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </a>
-            </div>
-            <ul className="mt-8 space-y-4 text-foreground/80">
-              <li className="flex justify-between gap-4 border-b border-hairline pb-4">
-                <span>{profile.school}</span>
-              </li>
-              {profile.certs.map((c) => (
-                <li key={c} className="flex justify-between gap-4 border-b border-hairline pb-4">
-                  <span>{c}</span>
-                  <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-xs text-dim">
-                    <img src={logos.microsoft} alt="" className="size-3.5" />
-                    Microsoft Certified
-                  </span>
                 </li>
               ))}
             </ul>
+          </div>
+
+          <div className="flex flex-col rounded-3xl border border-hairline bg-white p-7 md:p-8">
+            <p className="eyebrow">Credentials</p>
+            <h2 className="mt-3 text-[28px] font-semibold tracking-[-0.025em]">{profile.school}</h2>
+            <ul className="mt-6 divide-y divide-hairline border-y border-hairline">
+              {profile.certs.map((c) => (
+                <li key={c} className="flex items-center justify-between gap-4 py-3.5 text-[15px]">
+                  <span>{c}</span>
+                  <img src={logos.microsoft} alt="Microsoft Certified" className="size-4 shrink-0" />
+                </li>
+              ))}
+            </ul>
+            <a
+              href={`${profile.links.linkedin}details/certifications/`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-flex h-10 items-center gap-2 self-start rounded-full border border-foreground/15 px-4 text-[13px] font-semibold transition-colors hover:border-foreground/30"
+            >
+              <BrandIcon name="linkedin" className="size-3.5 text-[#0a66c2]" /> Verify on LinkedIn <ArrowUpRight className="size-3.5 opacity-60" />
+            </a>
           </div>
         </div>
       </section>
