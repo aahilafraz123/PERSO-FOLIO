@@ -154,7 +154,7 @@ export function Builds({ items = builds, eyebrow = "Projects", title = "Things I
             <Fragment key={i}>
               <div id={`bi-at-${i}`} aria-hidden />
               <div className="bi-row mb-6 last:mb-0 lg:mb-10 [@media(min-width:1024px)_and_(min-height:860px)]:sticky" style={{ top: TOP + i * STEP }}>
-                <div className="bi-row-inner grid origin-top gap-6 lg:grid-cols-2">
+                <div className="bi-row-inner grid origin-top grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
                   {row.map((x) => (x === "more" ? <MoreTile key="more" wide={row.length === 1} /> : <Card key={x.id} b={x} writeup={writeups && !!bySlug(x.id)} />))}
                 </div>
               </div>
@@ -183,7 +183,7 @@ function Card({ b, writeup }: { b: Build; writeup: boolean }) {
     <article
       id={`build-${b.id}`}
       aria-labelledby={`build-${b.id}-title`}
-      className="bi-card flex flex-col rounded-3xl border border-hairline bg-white"
+      className="bi-card flex min-w-0 flex-col rounded-3xl border border-hairline bg-white"
     >
       <div className="p-6 pb-4 md:px-7 md:pt-6">
         <div className="flex items-center gap-3">
@@ -434,7 +434,7 @@ function MoreTile({ wide }: { wide: boolean }) {
       target="_blank"
       rel="noreferrer"
       className={cn(
-        "bi-card group flex min-h-[22rem] flex-col justify-between rounded-3xl bg-[#111113] p-7 text-white md:p-9",
+        "bi-card group flex min-h-[22rem] min-w-0 flex-col justify-between rounded-3xl bg-[#111113] p-7 text-white md:p-9",
         wide && "gap-10 lg:col-span-2 lg:min-h-0 lg:flex-row lg:items-center lg:justify-start lg:gap-12",
       )}
     >

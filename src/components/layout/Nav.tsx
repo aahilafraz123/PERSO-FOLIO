@@ -82,13 +82,18 @@ export function Nav() {
     queue()
     // Page transitions settle after the route changes, so look again once they have.
     const late = setTimeout(queue, 900)
+    // Mobile Safari restores scroll or jumps to a #hash after load, sometimes without a scroll event.
+    const later = setTimeout(queue, 2000)
     window.addEventListener("scroll", queue, { passive: true })
     window.addEventListener("resize", queue)
+    window.addEventListener("load", queue)
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(late)
+      clearTimeout(later)
       window.removeEventListener("scroll", queue)
       window.removeEventListener("resize", queue)
+      window.removeEventListener("load", queue)
     }
   }, [pathname])
 

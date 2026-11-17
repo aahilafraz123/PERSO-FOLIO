@@ -11,7 +11,7 @@ const kinds = ["Product / UI design", "Web or app build", "AI integration", "Ful
 const budgets = ["< $2k", "$2k – 5k", "$5k – 15k", "$15k+", "Not sure"]
 
 const field =
-  "h-12 rounded-xl border-transparent bg-[#f5f5f7] px-4 text-[15px] placeholder:text-dim transition-all duration-300 focus-visible:border-foreground/25 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-foreground/[0.06]"
+  "h-12 rounded-xl border-transparent bg-[#f5f5f7] px-4 text-base md:text-[15px] placeholder:text-dim transition-all duration-300 focus-visible:border-foreground/25 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-foreground/[0.06]"
 
 /** Label that lifts and darkens while its field (or a sibling in the same `group`) has focus. */
 const fieldLabel = "transition-all duration-300 group-focus-within:-translate-y-0.5 group-focus-within:text-foreground"
